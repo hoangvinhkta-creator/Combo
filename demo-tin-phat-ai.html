@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tín Phát AI — Hoàn thiện không gian sống</title>
+<style>
+:root{
+  --ink:#131b2e; --ink2:#3d4a66; --mut:#8a94ab;
+  --bg:#f5f7fb; --card:#ffffff; --line:#e4e9f2;
+  --blue:#1450e0; --blue2:#0d3db0; --sky:#eaf0ff;
+  --gold:#f5a623; --green:#12a35a; --greenbg:#e7f8ef;
+  --r:18px; --sh:0 8px 30px rgba(19,27,46,.08);
+  --tr:.35s cubic-bezier(.22,.9,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ===== HEADER ===== */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px 20px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px}
+.logo .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--blue),#5b8bff);color:#fff;display:grid;place-items:center;font-size:16px}
+.logo small{display:block;font-weight:600;font-size:10.5px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
+.hspacer{flex:1}
+.hbtn{font-size:13.5px;font-weight:700;color:var(--blue);background:var(--sky);padding:9px 16px;border-radius:99px;transition:var(--tr)}
+.hbtn:hover{background:var(--blue);color:#fff}
+
+/* progress bar */
+#progress{height:3px;background:linear-gradient(90deg,var(--blue),#6ea0ff);width:0;transition:width .4s ease}
+
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+
+/* ===== SCREENS ===== */
+.screen{display:none;animation:fadeUp .45s ease both}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ===== HERO ===== */
+.hero{text-align:center;padding:40px 0 12px}
+.badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--blue);background:var(--sky);padding:7px 14px;border-radius:99px;margin-bottom:18px}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(28px,4.6vw,44px);font-weight:800;line-height:1.16;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero p{max-width:560px;margin:16px auto 0;color:var(--ink2);font-size:16.5px;line-height:1.6}
+.handover{margin:26px auto 0;display:inline-flex;align-items:center;gap:12px;background:linear-gradient(120deg,#fff7e8,#fff);border:1.5px solid #ffd58a;border-radius:16px;padding:14px 20px;box-shadow:0 6px 20px rgba(245,166,35,.15);transition:var(--tr)}
+.handover:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(245,166,35,.25)}
+.handover .ic{font-size:26px}
+.handover b{display:block;font-size:15px}
+.handover span{font-size:12.5px;color:var(--ink2)}
+
+/* goal cards */
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:38px}
+.goal{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:26px 20px;text-align:left;transition:var(--tr);position:relative;overflow:hidden}
+.goal:hover{transform:translateY(-5px);border-color:var(--blue);box-shadow:var(--sh)}
+.goal .ic{font-size:32px;margin-bottom:12px;display:block}
+.goal b{font-size:16px;display:block;margin-bottom:6px}
+.goal span{font-size:13px;color:var(--mut);line-height:1.5;display:block}
+.goal .arrow{position:absolute;right:18px;bottom:16px;color:var(--blue);font-weight:800;opacity:0;transform:translateX(-6px);transition:var(--tr)}
+.goal:hover .arrow{opacity:1;transform:none}
+
+.trust{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;margin-top:44px;color:var(--mut);font-size:13px;font-weight:600}
+.trust span{display:flex;align-items:center;gap:7px}
+
+/* ===== QUESTION SCREENS ===== */
+.qhead{margin-bottom:26px}
+.back{font-size:13.5px;font-weight:700;color:var(--mut);display:inline-flex;align-items:center;gap:6px;margin-bottom:18px;transition:var(--tr)}
+.back:hover{color:var(--blue)}
+.step-eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.qhead h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:-.01em}
+.qhead p{color:var(--ink2);margin-top:8px;font-size:15px}
+
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.opts.wide{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.opt{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:20px 16px;text-align:center;transition:var(--tr);position:relative}
+.opt:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:var(--sh)}
+.opt.sel{border-color:var(--blue);background:var(--sky);box-shadow:0 0 0 3px rgba(20,80,224,.12)}
+.opt .ic{font-size:30px;display:block;margin-bottom:10px}
+.opt b{font-size:15px;display:block}
+.opt small{color:var(--mut);font-size:12.5px;display:block;margin-top:4px;line-height:1.45}
+.opt .chk{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;display:none;place-items:center;font-size:12px}
+.opt.sel .chk{display:grid}
+
+.next-row{margin-top:28px;display:flex;justify-content:flex-end}
+.cta{background:var(--blue);color:#fff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:99px;transition:var(--tr);box-shadow:0 8px 20px rgba(20,80,224,.3)}
+.cta:hover{background:var(--blue2);transform:translateY(-2px)}
+.cta:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.cta.ghost{background:#fff;color:var(--blue);border:1.5px solid var(--blue);box-shadow:none}
+
+/* budget slider */
+.budget-box{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:34px 30px;text-align:center}
+.budget-val{font-size:clamp(34px,6vw,52px);font-weight:800;color:var(--blue);letter-spacing:-.02em}
+.budget-val small{font-size:18px;color:var(--mut);font-weight:700}
+input[type=range]{width:100%;margin-top:26px;accent-color:var(--blue);height:6px}
+.budget-marks{display:flex;justify-content:space-between;color:var(--mut);font-size:12px;font-weight:600;margin-top:8px}
+.budget-note{margin-top:18px;font-size:13.5px;color:var(--ink2);background:var(--sky);display:inline-block;padding:8px 16px;border-radius:99px}
+
+/* ===== AI ANALYZE ===== */
+.ai-stage{text-align:center;padding:60px 0}
+.ai-ring{width:96px;height:96px;margin:0 auto 26px;border-radius:50%;border:5px solid var(--sky);border-top-color:var(--blue);animation:spin 1s linear infinite;display:grid;place-items:center;font-size:34px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-stage h2{font-size:24px;font-weight:800}
+#aiLine{margin-top:12px;color:var(--ink2);font-size:15px;min-height:24px;transition:opacity .3s}
+
+/* ===== RESULT ===== */
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:24px 0 30px}
+.tier{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:20px;text-align:center;transition:var(--tr);position:relative}
+.tier:hover{transform:translateY(-3px)}
+.tier.sel{border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,80,224,.12)}
+.tier .tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:11px;font-weight:800;padding:4px 12px;border-radius:99px;white-space:nowrap}
+.tier b{display:block;font-size:15px}
+.tier .tp{font-size:22px;font-weight:800;color:var(--blue);margin-top:6px}
+.tier small{color:var(--mut);font-size:12px}
+
+.result-grid{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+@media(max-width:860px){.result-grid{grid-template-columns:1fr}}
+
+.house{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:24px;position:sticky;top:80px}
+.house h3{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.compl-bar{height:10px;background:var(--sky);border-radius:99px;margin:14px 0 6px;overflow:hidden}
+.compl-fill{height:100%;background:linear-gradient(90deg,var(--blue),#6ea0ff);border-radius:99px;width:0;transition:width .8s ease}
+.compl-lbl{font-size:12.5px;color:var(--mut);font-weight:700}
+.room{margin-top:16px}
+.room-name{font-size:12.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.room-items{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:99px;background:var(--greenbg);color:var(--green);display:inline-flex;align-items:center;gap:5px;animation:pop .4s ease both}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.total-box{margin-top:22px;padding-top:18px;border-top:1.5px dashed var(--line)}
+.total-box .tl{font-size:13px;color:var(--mut);font-weight:700}
+.total-num{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.save-line{margin-top:8px;font-size:13.5px;font-weight:700;color:var(--green);background:var(--greenbg);padding:8px 12px;border-radius:10px;display:flex;align-items:center;gap:7px}
+
+.plist{display:flex;flex-direction:column;gap:14px}
+.pcard{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px;display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center;animation:fadeUp .5s ease both}
+.pcard .pic{width:56px;height:56px;border-radius:14px;background:var(--sky);display:grid;place-items:center;font-size:26px}
+.pcard b{font-size:15px;display:block}
+.pcard .model{font-size:12.5px;color:var(--mut);font-weight:600}
+.why{margin-top:8px;font-size:13px;color:var(--ink2);background:#f8fafd;border-left:3px solid var(--blue);padding:8px 12px;border-radius:0 10px 10px 0;line-height:1.5}
+.why b{font-size:12px;color:var(--blue);display:inline}
+.pprice{font-size:16px;font-weight:800;text-align:right;white-space:nowrap}
+.swap{display:block;margin-top:6px;font-size:12px;font-weight:700;color:var(--blue);transition:var(--tr)}
+.swap:hover{text-decoration:underline}
+
+.benefits{margin-top:26px;background:linear-gradient(120deg,#0f1b3d,#1a2f66);border-radius:var(--r);padding:26px;color:#fff}
+.benefits h3{font-size:16px;margin-bottom:14px}
+.blist{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;font-size:13.5px}
+.blist span{display:flex;align-items:center;gap:8px;opacity:.94}
+.blist .ck{color:#7ef0b0;font-weight:800}
+
+.final-cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+.final-cta .cta{flex:1;min-width:220px;text-align:center}
+
+/* lead modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;place-items:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
+.modal-bg.open{display:grid}
+.modal{background:#fff;border-radius:22px;padding:32px;max-width:420px;width:100%;animation:fadeUp .35s ease both}
+.modal h3{font-size:20px;font-weight:800}
+.modal p{color:var(--ink2);font-size:14px;margin-top:8px;line-height:1.5}
+.modal input{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 16px;font-size:14.5px;margin-top:12px;font-family:inherit;outline:none;transition:var(--tr)}
+.modal input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,80,224,.12)}
+.modal .cta{width:100%;margin-top:18px}
+.modal .close{position:absolute;top:14px;right:18px;font-size:22px;color:var(--mut)}
+.modal-inner{position:relative}
+.success{ text-align:center;display:none}
+.success .big{font-size:50px}
+
+/* upgrade / space / demo-note flows */
+.note{background:#fff8ec;border:1.5px solid #ffdfa1;border-radius:14px;padding:14px 18px;font-size:13.5px;color:#7a5a12;margin-bottom:22px;line-height:1.55}
+
+footer{border-top:1px solid var(--line);text-align:center;padding:26px;color:var(--mut);font-size:12.5px}
+</style>
+</head>
+<body>
+
+<header>
+  <div id="progress"></div>
+  <div class="hwrap">
+    <div class="logo">
+      <div class="mark">⚡</div>
+      <div>Tín Phát AI<small>Hoàn thiện không gian sống</small></div>
+    </div>
+    <div class="hspacer"></div>
+    <button class="hbtn" onclick="goHome()">↺ Bắt đầu lại</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ HOME ============ -->
+<section class="screen active" id="s-home">
+  <div class="hero">
+    <div class="badge"><span class="dot"></span> AI tư vấn miễn phí · chỉ 3 phút</div>
+    <h1>Hoàn thiện ngôi nhà của bạn,<br><em>không cần tự chọn từng món</em></h1>
+    <p>AI sẽ thiết kế trọn bộ thiết bị điện máy phù hợp nhất với ngôi nhà, gia đình và ngân sách của bạn — kèm lý do cho từng lựa chọn.</p>
+    <button class="handover" onclick="startFlow('full')">
+      <span class="ic">🔑</span>
+      <span style="text-align:left"><b>Tôi sắp nhận nhà</b><span>Nhận combo + kế hoạch giao lắp theo ngày nhận nhà</span></span>
+      <span style="color:var(--gold);font-weight:800">→</span>
+    </button>
+  </div>
+
+  <div class="goals">
+    <button class="goal" onclick="startFlow('full')">
+      <span class="ic">🏡</span><b>Hoàn thiện toàn bộ ngôi nhà</b>
+      <span>Chung cư, nhà phố hay biệt thự — AI lên trọn bộ từ phòng khách tới phòng giặt.</span>
+      <span class="arrow">→</span>
+    </button>
+    <button class="goal" onclick="startFlow('space')">
+      <span class="ic">🛋️</span><b>Hoàn thiện một không gian</b>
+      <span>Chỉ cần làm đẹp phòng khách, bếp, phòng ngủ hoặc phòng giặt.</span>
+      <span class="arrow">→</span>
+    </button>
+    <button class="goal" onclick="startFlow('upgrade')">
+      <span class="ic">🔄</span><b>Nâng cấp thiết bị đang dùng</b>
+      <span>Cho AI biết bạn đang dùng gì và chưa hài lòng điều gì.</span>
+      <span class="arrow">→</span>
+    </button>
+    <button class="goal" onclick="startFlow('budget')">
+      <span class="ic">💰</span><b>Xây combo theo ngân sách</b>
+      <span>Bạn có sẵn một khoản — AI chia ngân sách tối ưu nhất.</span>
+      <span class="arrow">→</span>
+    </button>
+  </div>
+
+  <div class="trust">
+    <span>✅ Giá tốt cam kết</span>
+    <span>🚚 Giao lắp đồng bộ 1 chuyến</span>
+    <span>🏢 Phục vụ 20+ dự án chung cư Hà Nội</span>
+    <span>⭐ 4.9/5 từ 1.200+ khách</span>
+  </div>
+</section>
+
+<!-- ============ Q: HOUSE TYPE ============ -->
+<section class="screen" id="s-housetype">
+  <div class="qhead">
+    <button class="back" onclick="goHome()">← Quay lại</button>
+    <div class="step-eyebrow">Bước 1</div>
+    <h2>Ngôi nhà của bạn thuộc loại nào?</h2>
+  </div>
+  <div class="opts wide">
+    <button class="opt" onclick="pick('houseType','apartment',this);show('s-project')"><span class="ic">🏢</span><b>Căn hộ chung cư</b><small>Vinhomes, Masteri, Lumi...</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('houseType','townhouse',this);show('s-floors')"><span class="ic">🏠</span><b>Nhà phố / Nhà mặt đất</b><small>Nhà ống, nhà liền kề</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('houseType','villa',this);show('s-floors')"><span class="ic">🏡</span><b>Biệt thự</b><small>Nhu cầu cao cấp, nhiều phòng</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('houseType','homestay',this);show('s-floors')"><span class="ic">🛎️</span><b>Phòng trọ / Homestay</b><small>Đầu tư cho thuê</small><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ Q: PROJECT ============ -->
+<section class="screen" id="s-project">
+  <div class="qhead">
+    <button class="back" onclick="show('s-housetype')">← Quay lại</button>
+    <div class="step-eyebrow">Bước 2</div>
+    <h2>Bạn ở dự án nào?</h2>
+    <p>AI sẽ dùng mặt bằng điển hình của dự án để tư vấn chính xác hơn.</p>
+  </div>
+  <div class="opts">
+    <button class="opt" onclick="pick('project','Vinhomes Ocean Park',this);show('s-apttype')"><span class="ic">🌊</span><b>Vinhomes Ocean Park</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('project','Lumi Hà Nội',this);show('s-apttype')"><span class="ic">✨</span><b>Lumi Hà Nội</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('project','Masteri Waterfront',this);show('s-apttype')"><span class="ic">🏙️</span><b>Masteri Waterfront</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('project','Imperia',this);show('s-apttype')"><span class="ic">🏛️</span><b>Imperia</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('project','The Matrix One',this);show('s-apttype')"><span class="ic">🧩</span><b>The Matrix One</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('project','Khác',this);show('s-apttype')"><span class="ic">📝</span><b>Dự án khác</b><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ Q: APT TYPE ============ -->
+<section class="screen" id="s-apttype">
+  <div class="qhead">
+    <button class="back" onclick="show('s-project')">← Quay lại</button>
+    <div class="step-eyebrow">Bước 3</div>
+    <h2>Loại căn hộ của bạn?</h2>
+  </div>
+  <div class="opts">
+    <button class="opt" onclick="pick('aptType','Studio',this);show('s-family')"><span class="ic">◻️</span><b>Studio</b><small>~30–40m²</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('aptType','1PN',this);show('s-family')"><span class="ic">🚪</span><b>1 Phòng ngủ</b><small>~45–55m²</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('aptType','2PN',this);show('s-family')"><span class="ic">🚪🚪</span><b>2 Phòng ngủ</b><small>~60–75m²</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('aptType','3PN',this);show('s-family')"><span class="ic">🚪🚪🚪</span><b>3 Phòng ngủ</b><small>~85–110m²</small><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('aptType','Duplex/Penthouse',this);show('s-family')"><span class="ic">👑</span><b>Duplex / Penthouse</b><small>&gt;120m²</small><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ Q: FLOORS (townhouse/villa) ============ -->
+<section class="screen" id="s-floors">
+  <div class="qhead">
+    <button class="back" onclick="show('s-housetype')">← Quay lại</button>
+    <div class="step-eyebrow">Bước 2</div>
+    <h2>Ngôi nhà của bạn có mấy tầng?</h2>
+  </div>
+  <div class="opts">
+    <button class="opt" onclick="pick('floors','1 tầng',this);show('s-family')"><span class="ic">🏠</span><b>1 tầng</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('floors','2 tầng',this);show('s-family')"><span class="ic">🏘️</span><b>2 tầng</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('floors','3 tầng',this);show('s-family')"><span class="ic">🏢</span><b>3 tầng</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('floors','4 tầng+',this);show('s-family')"><span class="ic">🌇</span><b>4 tầng trở lên</b><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ Q: FAMILY ============ -->
+<section class="screen" id="s-family">
+  <div class="qhead">
+    <button class="back" onclick="backFromFamily()">← Quay lại</button>
+    <div class="step-eyebrow">Để AI thiết kế đúng nhu cầu hơn…</div>
+    <h2>Ai sẽ sinh sống ở đây?</h2>
+    <p>Chỉ một câu hỏi — AI sẽ tự suy ra dung tích tủ lạnh, khối lượng máy giặt, số điều hòa...</p>
+  </div>
+  <div class="opts">
+    <button class="opt" onclick="pick('family','single',this);show('s-owned')"><span class="ic">👤</span><b>Người độc thân</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('family','couple',this);show('s-owned')"><span class="ic">💑</span><b>Cặp vợ chồng</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('family','kids',this);show('s-owned')"><span class="ic">👨‍👩‍👧</span><b>Gia đình có con nhỏ</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('family','multi',this);show('s-owned')"><span class="ic">👨‍👩‍👦‍👦</span><b>Gia đình nhiều thế hệ</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('family','rent',this);show('s-owned')"><span class="ic">🔑</span><b>Cho thuê</b><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ Q: OWNED ============ -->
+<section class="screen" id="s-owned">
+  <div class="qhead">
+    <button class="back" onclick="show('s-family')">← Quay lại</button>
+    <div class="step-eyebrow">Sắp xong rồi</div>
+    <h2>Bạn đã có sẵn thiết bị nào?</h2>
+    <p>AI sẽ loại các thiết bị này khỏi combo để không mua trùng. Chọn nhiều mục được nhé.</p>
+  </div>
+  <div class="opts" id="ownedOpts">
+    <button class="opt" data-k="tv" onclick="toggleOwned(this)"><span class="ic">📺</span><b>TV</b><span class="chk">✓</span></button>
+    <button class="opt" data-k="fridge" onclick="toggleOwned(this)"><span class="ic">🧊</span><b>Tủ lạnh</b><span class="chk">✓</span></button>
+    <button class="opt" data-k="washer" onclick="toggleOwned(this)"><span class="ic">🌀</span><b>Máy giặt</b><span class="chk">✓</span></button>
+    <button class="opt" data-k="ac" onclick="toggleOwned(this)"><span class="ic">❄️</span><b>Điều hòa</b><span class="chk">✓</span></button>
+    <button class="opt" data-k="dishwasher" onclick="toggleOwned(this)"><span class="ic">🍽️</span><b>Máy rửa bát</b><span class="chk">✓</span></button>
+    <button class="opt" data-k="none" onclick="ownNone(this)"><span class="ic">🆕</span><b>Chưa có gì</b><span class="chk">✓</span></button>
+  </div>
+  <div class="next-row"><button class="cta" onclick="show('s-budget')">Tiếp tục →</button></div>
+</section>
+
+<!-- ============ Q: BUDGET ============ -->
+<section class="screen" id="s-budget">
+  <div class="qhead">
+    <button class="back" onclick="budgetBack()">← Quay lại</button>
+    <div class="step-eyebrow">Bước cuối</div>
+    <h2>Ngân sách dự kiến của bạn?</h2>
+  </div>
+  <div class="budget-box">
+    <div class="budget-val"><span id="budgetNum">70</span> <small>triệu đồng</small></div>
+    <input type="range" id="budgetRange" min="30" max="150" step="10" value="70" oninput="updBudget(this.value)">
+    <div class="budget-marks"><span>30tr</span><span>60tr</span><span>90tr</span><span>120tr</span><span>150tr</span></div>
+    <div class="budget-note" id="budgetHint">💡 Mức phổ biến để hoàn thiện căn 2PN cho gia đình trẻ</div>
+  </div>
+  <div class="next-row"><button class="cta" onclick="runAI()">✨ Để AI thiết kế combo cho tôi</button></div>
+</section>
+
+<!-- ============ AI ANALYZE ============ -->
+<section class="screen" id="s-ai">
+  <div class="ai-stage">
+    <div class="ai-ring">🤖</div>
+    <h2>AI đang thiết kế combo phù hợp…</h2>
+    <div id="aiLine">Đang phân tích mặt bằng căn hộ…</div>
+  </div>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section class="screen" id="s-result">
+  <div class="qhead">
+    <button class="back" onclick="goHome()">← Làm lại từ đầu</button>
+    <div class="step-eyebrow">Kết quả gợi ý</div>
+    <h2 id="resultTitle">Combo của bạn đã sẵn sàng 🎉</h2>
+    <p id="resultSub"></p>
+  </div>
+
+  <div class="tiers" id="tiers"></div>
+
+  <div class="result-grid">
+    <div>
+      <div class="plist" id="plist"></div>
+      <div class="benefits">
+        <h3>🎁 Khi mua combo tại Tín Phát, bạn được</h3>
+        <div class="blist">
+          <span><span class="ck">✓</span> Miễn phí vận chuyển toàn bộ</span>
+          <span><span class="ck">✓</span> Lắp đặt đồng bộ trong 1 ngày</span>
+          <span><span class="ck">✓</span> Treo TV + đi dây gọn tường</span>
+          <span><span class="ck">✓</span> Quà tặng cư dân dự án</span>
+          <span><span class="ck">✓</span> Bảo hành chính hãng tại nhà</span>
+          <span><span class="ck">✓</span> Báo giá giữ giá 7 ngày</span>
+        </div>
+      </div>
+      <div class="final-cta">
+        <button class="cta" onclick="openLead()">🔒 Tôi muốn giữ giá này</button>
+        <button class="cta ghost" onclick="openLead()">📞 Đặt lịch tư vấn miễn phí</button>
+      </div>
+    </div>
+
+    <div class="house">
+      <h3>🏠 Ngôi nhà của bạn</h3>
+      <div class="compl-bar"><div class="compl-fill" id="complFill"></div></div>
+      <div class="compl-lbl"><span id="complPct">0</span>% hoàn thiện</div>
+      <div id="rooms"></div>
+      <div class="total-box">
+        <div class="tl">Tổng giá trị combo</div>
+        <div class="total-num" id="totalNum">0₫</div>
+        <div class="save-line">💚 Tiết kiệm <b id="saveNum" style="margin:0 3px">0₫</b> so với mua lẻ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPACE FLOW ============ -->
+<section class="screen" id="s-space">
+  <div class="qhead">
+    <button class="back" onclick="goHome()">← Quay lại</button>
+    <div class="step-eyebrow">Hoàn thiện một không gian</div>
+    <h2>Bạn muốn hoàn thiện khu vực nào?</h2>
+  </div>
+  <div class="opts">
+    <button class="opt" onclick="pick('space','living',this);show('s-family')"><span class="ic">🛋️</span><b>Phòng khách</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('space','kitchen',this);show('s-family')"><span class="ic">🍳</span><b>Bếp</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('space','bedroom',this);show('s-family')"><span class="ic">🛏️</span><b>Phòng ngủ</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('space','laundry',this);show('s-family')"><span class="ic">🧺</span><b>Phòng giặt</b><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ UPGRADE FLOW ============ -->
+<section class="screen" id="s-upgrade">
+  <div class="qhead">
+    <button class="back" onclick="goHome()">← Quay lại</button>
+    <div class="step-eyebrow">Nâng cấp thiết bị</div>
+    <h2>Bạn muốn thay thiết bị nào?</h2>
+  </div>
+  <div class="note">💡 Bản demo: chọn thiết bị, AI sẽ đề xuất 3 model nâng cấp kèm lý do.</div>
+  <div class="opts">
+    <button class="opt" onclick="pick('upgrade','tv',this);runAI()"><span class="ic">📺</span><b>TV</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('upgrade','fridge',this);runAI()"><span class="ic">🧊</span><b>Tủ lạnh</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('upgrade','washer',this);runAI()"><span class="ic">🌀</span><b>Máy giặt</b><span class="chk">✓</span></button>
+    <button class="opt" onclick="pick('upgrade','ac',this);runAI()"><span class="ic">❄️</span><b>Điều hòa</b><span class="chk">✓</span></button>
+  </div>
+</section>
+
+<!-- ============ LEAD MODAL ============ -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeLead()">
+  <div class="modal">
+    <div class="modal-inner">
+      <button class="close" onclick="closeLead()">✕</button>
+      <div id="leadForm">
+        <h3>Giữ giá combo trong 7 ngày</h3>
+        <p>Để lại thông tin, chuyên viên Tín Phát sẽ gửi báo giá chi tiết kèm mã giữ giá qua Zalo — <b>không cần tư vấn lại từ đầu</b>, chúng tôi đã có toàn bộ lựa chọn của bạn.</p>
+        <input type="text" id="leadName" placeholder="Họ và tên">
+        <input type="tel" id="leadPhone" placeholder="Số điện thoại (Zalo)">
+        <input type="text" id="leadDate" placeholder="Ngày nhận nhà dự kiến (nếu có)">
+        <button class="cta" onclick="submitLead()">Nhận báo giá & giữ giá</button>
+      </div>
+      <div class="success" id="leadSuccess">
+        <div class="big">🎉</div>
+        <h3>Đã ghi nhận!</h3>
+        <p>Chuyên viên sẽ liên hệ trong 15 phút (giờ làm việc). Combo của bạn đã được lưu kèm toàn bộ thông tin căn hộ.</p>
+        <button class="cta" onclick="closeLead()">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer>Bản demo ý tưởng — Điện Máy Tín Phát · AI tư vấn hoàn thiện không gian sống · Dữ liệu sản phẩm minh họa</footer>
+
+<script>
+/* ================= STATE ================= */
+const S = {flow:null, houseType:null, project:null, aptType:null, floors:null, family:null, space:null, upgrade:null, owned:new Set(), budget:70, tier:'balanced'};
+
+const STEPS = {home:0,'s-housetype':15,'s-project':30,'s-apttype':45,'s-floors':45,'s-family':60,'s-owned':75,'s-budget':90,'s-ai':95,'s-result':100,'s-space':30,'s-upgrade':50};
+
+function setProgress(id){document.getElementById('progress').style.width=(STEPS[id]??0)+'%';}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id); el.classList.add('active');
+  el.style.animation='none'; el.offsetHeight; el.style.animation='';
+  setProgress(id); window.scrollTo({top:0,behavior:'smooth'});
+}
+function goHome(){Object.assign(S,{flow:null,houseType:null,project:null,aptType:null,floors:null,family:null,space:null,upgrade:null,tier:'balanced'});S.owned=new Set();document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));show('s-home');setProgress('home');}
+function startFlow(f){S.flow=f;
+  if(f==='full')show('s-housetype');
+  else if(f==='space')show('s-space');
+  else if(f==='upgrade')show('s-upgrade');
+  else if(f==='budget')show('s-budget');
+}
+function pick(key,val,el){S[key]=val; if(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}}
+function backFromFamily(){
+  if(S.flow==='space')show('s-space');
+  else if(S.houseType==='apartment')show('s-apttype');
+  else show('s-floors');
+}
+function budgetBack(){ if(S.flow==='budget')goHome(); else show('s-owned'); }
+
+function toggleOwned(el){
+  const k=el.dataset.k;
+  document.querySelector('#ownedOpts [data-k=none]').classList.remove('sel');
+  S.owned.delete('none');
+  if(S.owned.has(k)){S.owned.delete(k);el.classList.remove('sel')}else{S.owned.add(k);el.classList.add('sel')}
+}
+function ownNone(el){
+  document.querySelectorAll('#ownedOpts .opt').forEach(o=>o.classList.remove('sel'));
+  S.owned=new Set(['none']); el.classList.add('sel');
+}
+function updBudget(v){
+  S.budget=+v; document.getElementById('budgetNum').textContent=v;
+  const h=document.getElementById('budgetHint');
+  if(v<=40)h.textContent='💡 Phù hợp Studio / 1PN hoặc hoàn thiện một không gian';
+  else if(v<=80)h.textContent='💡 Mức phổ biến để hoàn thiện căn 2PN cho gia đình trẻ';
+  else if(v<=110)h.textContent='💡 Hoàn thiện 3PN đầy đủ hoặc 2PN phân khúc cao cấp';
+  else h.textContent='💡 Trọn bộ cao cấp: OLED, máy rửa bát, robot toàn diện';
+}
+
+/* ================= CATALOG (demo, giá nghìn đồng) ================= */
+const CAT = {
+  tv:{room:'living',ic:'📺',name:'TV',opts:[
+    {t:'eco',b:'Samsung 43DU7000 43"',m:'Crystal UHD 4K',p:5300,why:'Phòng khách nhỏ, khoảng cách xem ~2m — 43" là tối ưu, không mỏi mắt.'},
+    {t:'bal',b:'Samsung 55U8500F 55"',m:'UHD 4K · Tizen OS',p:8400,why:'Khoảng cách sofa ~2,7m trong căn hộ của bạn — 55" là kích thước chuẩn theo khuyến nghị THX.'},
+    {t:'pre',b:'LG OLED evo C5 55"',m:'OLED · 120Hz',p:19000,why:'Màu đen tuyệt đối, phù hợp phòng khách nhiều ánh sáng cửa kính của dự án.'}]},
+  fridge:{room:'kitchen',ic:'🧊',name:'Tủ lạnh',opts:[
+    {t:'eco',b:'Samsung RT22M4032BY 236L',m:'Inverter 2 cánh',p:5050,why:'Đủ dùng cho 1–2 người, tiết kiệm điện ~12.700đ/tháng so với dòng thường.'},
+    {t:'bal',b:'Toshiba RT400 360L',m:'Inverter · Ngăn đông mềm',p:8900,why:'Gia đình bạn cần ~90L/người — 360L vừa vặn, có ngăn đông mềm trữ đồ tươi cho bé.'},
+    {t:'pre',b:'LG Side-by-side 519L',m:'InstaView · Lấy nước ngoài',p:16500,why:'Gia đình đông người, trữ thực phẩm cả tuần — cửa InstaView giảm 41% thất thoát hơi lạnh.'}]},
+  washer:{room:'laundry',ic:'🌀',name:'Máy giặt',opts:[
+    {t:'eco',b:'LG FV1410S4W1 10kg',m:'Cửa ngang · AI DD',p:6850,why:'10kg giặt được chăn mền, tần suất 2 ngày/lần cho gia đình bạn.'},
+    {t:'bal',b:'LG FV1412S3B 12kg',m:'AI DD · Hơi nước Steam',p:9400,why:'Giặt hơi nước diệt khuẩn — quan trọng khi nhà có trẻ nhỏ. 12kg dư tải cho cả nhà.'},
+    {t:'pre',b:'LG Tháp giặt sấy WashTower',m:'Giặt 14kg + Sấy bơm nhiệt 10kg',p:32000,why:'Ban công nhỏ của căn hộ không tiện phơi — sấy bơm nhiệt tiết kiệm 50% điện so với sấy thường.'}]},
+  ac:{room:'bedroom',ic:'❄️',name:'Điều hòa',opts:[
+    {t:'eco',b:'Casper 9000BTU Inverter ×2',m:'Cho 2 phòng ngủ',p:11800,why:'Phòng ngủ 12–15m² chỉ cần 9000BTU — lắp đủ 2 phòng thay vì 1 máy to.'},
+    {t:'bal',b:'Panasonic 9000BTU ×2 + 12000BTU ×1',m:'Inverter · Nanoe-X',p:23500,why:'Phòng khách hướng Tây của dự án cần 12000BTU; inverter tiết kiệm ~170.000đ điện/tháng mỗi máy.'},
+    {t:'pre',b:'Daikin Multi-S 3 dàn lạnh',m:'1 nóng 3 lạnh',p:38500,why:'Chỉ 1 cục nóng ngoài ban công kỹ thuật — giữ mặt tiền căn hộ gọn đẹp, chuẩn quy định dự án.'}]},
+  dishwasher:{room:'kitchen',ic:'🍽️',name:'Máy rửa bát',opts:[
+    {t:'eco',b:'Toshiba 8 bộ bán âm',m:'Sấy khí nóng',p:8900,why:'Bếp căn hộ nhỏ — bản 8 bộ vừa khoang tủ 45cm phổ biến của dự án.'},
+    {t:'bal',b:'Bosch SMS2IVW01P 13 bộ',m:'Serie 2 · Độc lập',p:13500,why:'Nhà nấu ăn thường xuyên — 13 bộ rửa 1 lần/ngày là đủ, tiết kiệm 30 phút mỗi tối.'},
+    {t:'pre',b:'Bosch Serie 6 14 bộ',m:'Zeolith sấy khô hoàn toàn',p:24000,why:'Sấy Zeolith khô cả đồ nhựa của bé — tiêu chuẩn cao nhất phân khúc.'}]},
+  robot:{room:'living',ic:'🤖',name:'Robot hút bụi',opts:[
+    {t:'eco',b:'Robot dòng PLUS',m:'Tự đổ rác · Lau nhà',p:7500,why:'Sàn gỗ căn hộ nhiều bụi mịn — robot dọn hằng ngày khi bạn đi làm.'},
+    {t:'bal',b:'Robot dòng TURBO',m:'Tự giặt giẻ lau',p:12500,why:'Nhà có trẻ nhỏ, sàn cần lau ướt thường xuyên — dòng TURBO tự giặt giẻ, không phải giặt tay.'},
+    {t:'pre',b:'Robot dòng OMNI All-in-One',m:'Tự đổ rác + giặt + sấy giẻ',p:19500,why:'Trạm All-in-One: 30 ngày không cần đụng tay — chuẩn "quên nó đi" cho nhà bận rộn.'}]},
+  purifier:{room:'bedroom',ic:'🌬️',name:'Máy lọc không khí',opts:[
+    {t:'eco',b:'Máy lọc 30m²',m:'HEPA H13',p:3200,why:'AQI Hà Nội thường xuyên trên 150 — lọc HEPA bảo vệ giấc ngủ cả nhà.'},
+    {t:'bal',b:'Máy lọc 45m² + cảm biến bụi',m:'HEPA H13 · Auto',p:5500,why:'Cảm biến PM2.5 tự tăng tốc khi ô nhiễm — đặc biệt cần cho phòng có trẻ nhỏ.'},
+    {t:'pre',b:'Máy lọc kèm hút ẩm 2-in-1',m:'HEPA + hút ẩm 16L',p:9800,why:'Nồm ẩm miền Bắc tháng 2–4: vừa lọc vừa hút ẩm, quần áo trong phòng luôn khô.'}]},
+  water:{room:'kitchen',ic:'💧',name:'Máy lọc nước',opts:[
+    {t:'eco',b:'RO 9 cấp để gầm',m:'Có vòi riêng',p:4200,why:'Nước uống trực tiếp, để gầm tủ bếp không chiếm diện tích căn hộ.'},
+    {t:'bal',b:'RO nóng nguội để gầm',m:'Vòi 3 chế độ',p:7900,why:'Pha sữa cho bé ban đêm không cần đun — vòi nóng 85°C tức thì.'},
+    {t:'pre',b:'RO Hydrogen nóng lạnh',m:'Kiềm hóa · Cảm ứng',p:12800,why:'Chuẩn nước uống cao cấp nhất, đồng bộ thẩm mỹ bếp hiện đại.'}]}
+};
+
+/* ================ AI LOGIC ================ */
+function neededCategories(){
+  let cats;
+  if(S.flow==='space'){
+    cats={living:['tv','robot'],kitchen:['fridge','dishwasher','water'],bedroom:['ac','purifier'],laundry:['washer']}[S.space]||Object.keys(CAT);
+  } else if(S.flow==='upgrade'){ cats=[S.upgrade]; }
+  else { cats=['tv','fridge','washer','ac','robot','purifier','water']; 
+    if(['kids','multi','couple'].includes(S.family)&&S.budget>=60)cats.splice(4,0,'dishwasher');
+  }
+  if(S.flow!=='upgrade') cats=cats.filter(c=>!S.owned.has(c));
+  return cats.length?cats:['tv'];
+}
+function tierOf(cat,tier){
+  const map={eco:0,balanced:1,premium:2};
+  return CAT[cat].opts[map[tier]];
+}
+function comboTotal(tier){return neededCategories().reduce((s,c)=>s+tierOf(c,tier).p,0);}
+
+const AI_LINES=['Đang phân tích mặt bằng căn hộ…','Tính công suất điều hòa theo hướng nhà…','Chọn kích thước TV theo khoảng cách xem…','Cân đối ngân sách giữa các thiết bị…','Áp dụng ưu đãi cư dân dự án…','Hoàn tất phương án tối ưu ✓'];
+function runAI(){
+  show('s-ai');
+  const el=document.getElementById('aiLine');let i=0;
+  const iv=setInterval(()=>{
+    i++;
+    if(i>=AI_LINES.length){clearInterval(iv);renderResult();show('s-result');return;}
+    el.style.opacity=0;setTimeout(()=>{el.textContent=AI_LINES[i];el.style.opacity=1},250);
+  },700);
+}
+
+/* ================ RESULT RENDER ================ */
+const fmtVnd=n=>(n*1000).toLocaleString('vi-VN')+'₫';
+const FAM_LABEL={single:'người độc thân',couple:'cặp vợ chồng',kids:'gia đình có con nhỏ',multi:'gia đình nhiều thế hệ',rent:'căn hộ cho thuê'};
+const ROOM_LABEL={living:'🛋️ Phòng khách',kitchen:'🍳 Bếp',bedroom:'🛏️ Phòng ngủ',laundry:'🧺 Phòng giặt'};
+
+function renderResult(){
+  // subtitle
+  const parts=[];
+  if(S.project&&S.project!=='Khác')parts.push(S.project);
+  if(S.aptType)parts.push('căn '+S.aptType);
+  if(S.floors)parts.push('nhà '+S.floors);
+  if(S.family)parts.push(FAM_LABEL[S.family]);
+  document.getElementById('resultSub').textContent = parts.length? 'Thiết kế riêng cho '+parts.join(' · ')+'. Mỗi sản phẩm đều có lý do — bạn có thể đổi từng món.' : 'Bạn có thể đổi từng sản phẩm, tổng tiền tự cập nhật.';
+
+  // tiers
+  const tEco=comboTotal('eco'),tBal=comboTotal('balanced'),tPre=comboTotal('premium');
+  document.getElementById('tiers').innerHTML=`
+    <button class="tier ${S.tier==='eco'?'sel':''}" onclick="setTier('eco')"><b>Tiết kiệm</b><div class="tp">${fmtVnd(tEco)}</div><small>Đủ dùng, chuẩn nhu cầu</small></button>
+    <button class="tier ${S.tier==='balanced'?'sel':''}" onclick="setTier('balanced')"><span class="tag">⭐ AI khuyến nghị</span><b>Cân bằng</b><div class="tp">${fmtVnd(tBal)}</div><small>Tối ưu giá / trải nghiệm</small></button>
+    <button class="tier ${S.tier==='premium'?'sel':''}" onclick="setTier('premium')"><b>Cao cấp</b><div class="tp">${fmtVnd(tPre)}</div><small>Trải nghiệm tốt nhất</small></button>`;
+
+  // product list
+  const cats=neededCategories();
+  document.getElementById('plist').innerHTML=cats.map((c,idx)=>{
+    const o=tierOf(c,S.tier);
+    return `<div class="pcard" style="animation-delay:${idx*.07}s">
+      <div class="pic">${CAT[c].ic}</div>
+      <div>
+        <b>${CAT[c].name}: ${o.b}</b>
+        <div class="model">${o.m}</div>
+        <div class="why"><b>Vì sao chọn:</b> ${o.why}</div>
+      </div>
+      <div><div class="pprice">${fmtVnd(o.p)}</div><button class="swap" onclick="swapItem('${c}')">↔ Đổi phương án</button></div>
+    </div>`;
+  }).join('');
+
+  // house sidebar
+  const rooms={};
+  cats.forEach(c=>{(rooms[CAT[c].room]??=[]).push(CAT[c].name)});
+  document.getElementById('rooms').innerHTML=Object.entries(ROOM_LABEL).filter(([k])=>rooms[k]).map(([k,lbl])=>`
+    <div class="room"><div class="room-name">${lbl}</div>
+    <div class="room-items">${rooms[k].map((n,i)=>`<span class="chip" style="animation-delay:${.3+i*.12}s">✓ ${n}</span>`).join('')}</div></div>`).join('');
+
+  const pct=Math.min(100,Math.round(cats.length/7*100));
+  setTimeout(()=>{document.getElementById('complFill').style.width=pct+'%'},150);
+  animateNum('complPct',0,pct,800,v=>Math.round(v));
+
+  // totals
+  const total=comboTotal(S.tier), save=Math.round(total*0.14);
+  animateNum('totalNum',0,total,1100,v=>fmtVnd(Math.round(v)));
+  animateNum('saveNum',0,save,1100,v=>fmtVnd(Math.round(v)));
+}
+function setTier(t){S.tier=t;renderResult();}
+function swapItem(c){
+  // cycle this one category's tier for demo
+  const order=['eco','balanced','premium'];
+  CAT[c]._ov = ((CAT[c]._ov??order.indexOf(S.tier))+1)%3;
+  const orig=tierOf; // simple: temporarily rotate options array
+  CAT[c].opts.push(CAT[c].opts.shift());
+  renderResult();
+}
+function animateNum(id,from,to,dur,fmt){
+  const el=document.getElementById(id);const t0=performance.now();
+  function step(t){const p=Math.min(1,(t-t0)/dur);const e=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*e);
+    if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+
+/* ================ LEAD ================ */
+function openLead(){document.getElementById('modalBg').classList.add('open');document.getElementById('leadForm').style.display='block';document.getElementById('leadSuccess').style.display='none';}
+function closeLead(){document.getElementById('modalBg').classList.remove('open');}
+function submitLead(){
+  const n=document.getElementById('leadName').value.trim(),p=document.getElementById('leadPhone').value.trim();
+  if(!n||!p){alert('Vui lòng nhập họ tên và số điện thoại nhé!');return;}
+  document.getElementById('leadForm').style.display='none';
+  document.getElementById('leadSuccess').style.display='block';
+}
+</script>
+</body>
+</html>
