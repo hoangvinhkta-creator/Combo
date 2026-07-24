@@ -178,13 +178,25 @@ function detectHeader(text){
   const t=noAccent(text);
   if(!t||t.length>60)return null;
   for(const [kw,g] of KEYWORDS){
-    if(t===kw||t.startsWith(kw+' ')||t.startsWith(kw)){
-      const brand=String(text).trim().slice(kw.length).trim()
-        .replace(/^[-–—:]\s*/,'');
-      return {group:g, brand:brand||''};
+    /* Chỉ khớp trọn từ: "Tivi" hoặc "Tivi Aqua".
+       KHÔNG dùng startsWith(kw) trần vì mã như "TVS-501" sẽ bị hiểu nhầm. */
+    if(t===kw || t.startsWith(kw+' ')){
+      let brand=String(text).trim().slice(kw.length).trim().replace(/^[-–—:]\s*/,'');
+      /* Tên hãng hợp lệ: không chứa số, không quá dài, tối đa 3 từ.
+         Loại bỏ trường hợp phần còn lại thực chất là MÃ MÁY (VD "2514DV3B"). */
+      if(!isBrandName(brand)) brand='';
+      return {group:g, brand:brand};
     }
   }
   return null;
+}
+/* Kiểm tra một chuỗi có phải tên hãng không */
+function isBrandName(b){
+  if(!b) return false;
+  if(b.length>22) return false;
+  if(/\d/.test(b)) return false;              /* có số → là mã máy */
+  if(b.split(/\s+/).length>3) return false;   /* quá nhiều từ */
+  return true;
 }
 /* Dòng model thật thường có chữ + số, không có khoảng trắng dài */
 function looksLikeModel(text){
@@ -273,9 +285,10 @@ function buildCatalog(rows, cfg){
     const tag   = String(r[cfg.COL_TAG]||'').trim();
     const seg   = String(r[cfg.COL_SEG]||'').trim();
 
-    /* Dòng tiêu đề nhóm: có chữ ở cột A nhưng không có giá */
+    /* Dòng tiêu đề nhóm: có chữ ở cột A, KHÔNG có giá và KHÔNG có hashtag.
+       Dòng nào đã có hashtag chắc chắn là sản phẩm nên không xét làm tiêu đề. */
     if(!price){
-      const h=detectHeader(rawModel);
+      const h = tag ? null : detectHeader(rawModel);
       if(h){
         curGroup=h.group; curBrand=h.brand;
         log.header++; log.headers.push({text:rawModel, group:h.group, brand:h.brand});
@@ -300,6 +313,10 @@ function buildCatalog(rows, cfg){
     if(!group){ log.noGroup++; continue; }
     if(!GROUPS[group]){ log.noGroup++; continue; }
 
+    /* Chỉ gán hãng khi dòng tiêu đề gần nhất CÙNG NHÓM với sản phẩm.
+       Tránh việc một tiêu đề TV làm hỏng tên của toàn bộ máy giặt bên dưới. */
+    const brand = (curGroup===group) ? curBrand : '';
+
     /* Phân khúc: ưu tiên cột AL, nếu trống sẽ tính theo phân vị giá sau */
     const pkSheet = segFromCell(seg);
     if(pkSheet) log.segFromSheet++;
@@ -307,8 +324,8 @@ function buildCatalog(rows, cfg){
     products.push({
       nhom: group,
       model: rawModel,
-      hang: curBrand,
-      ten: (curBrand? curBrand+' ' : '') + rawModel,
+      hang: brand,
+      ten: (brand? brand+' ' : '') + rawModel,
       gia: price,
       ton: stock>0 ? 1 : 0,
       giaTon: stock,
@@ -366,5 +383,5 @@ async function load(cfg){
 
 return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, COL_HINTS, detectColumns,
         load, parseCSV, buildCatalog,
-        num, noAccent, detectHeader, specOf, groupFromTag, segFromCell};
+        num, noAccent, detectHeader, isBrandName, specOf, groupFromTag, segFromCell};
 })();

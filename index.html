@@ -138,6 +138,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   color:var(--ink2);transition:var(--tr);display:inline-flex;align-items:center;gap:7px}
 .skChip:hover{background:var(--sky);color:var(--blue)}
 .skChip span{font-size:11px;font-weight:800;color:var(--blue)}
+
+/* ===== CHỌN LOẠI NHÀ (mục 4) ===== */
+.htRow{margin-bottom:13px}
+.htOpt{width:100%;text-align:center}
+.htPanel{margin-top:12px;padding:16px 18px;background:#f7f9fd;border:1.5px solid #d7e3fb;
+  border-radius:14px;animation:slideDown .28s cubic-bezier(.22,.9,.3,1) both}
+.htPanel .eb{margin-bottom:12px}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.htPanel{animation:none}}
 /* ===== CHỌN THIẾT BỊ THEO PHÒNG ===== */
 .pickAll{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:18px;
   background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:13px 18px}
@@ -206,20 +215,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .swapHead b{font-size:14.5px;font-weight:800}
 .swapClose{font-size:12.5px;font-weight:700;color:var(--mut);padding:6px 12px;border-radius:8px}
 .swapClose:hover{color:var(--red);background:var(--redbg)}
-.swapRow{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:16px}
-@media(max-width:640px){.swapRow{grid-template-columns:1fr;gap:8px}
-  .swLbl{padding-top:0}}
-.swLbl{font-size:11.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;padding-top:9px}
-.segBtns{display:flex;gap:7px;flex-wrap:wrap;min-width:0}
-.segB{font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:10px;background:#fff;
-  border:1.5px solid var(--line);color:var(--ink2);transition:var(--tr);
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
-.segB:hover:not(.dis){border-color:var(--blue);color:var(--blue)}
-.segB.on{background:var(--blue);border-color:var(--blue);color:#fff}
-.segB i{font-style:normal;font-size:11px;font-weight:800;background:rgba(0,0,0,.08);padding:1px 7px;border-radius:99px}
-.segB.on i{background:rgba(255,255,255,.25)}
-.segB.dis{opacity:.35;cursor:not-allowed}
-.swRangeWrap{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 20px 12px;min-width:0}
+.swRangeWrap{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 20px 12px;min-width:0;margin-bottom:16px}
 .swRangeTop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:2px}
 .swRangeTop b{font-size:16px;font-weight:800;color:var(--blue);letter-spacing:-.01em;white-space:nowrap}
 .dual.swDual{height:36px;margin:10px 0 0}
@@ -236,10 +232,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .siMain b{font-size:13.5px;display:block;font-weight:700;line-height:1.35;word-break:break-word}
 .siMeta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px}
 .siMeta .mm{font-size:11.5px;color:var(--mut);font-family:ui-monospace,monospace;font-weight:600}
-.segTag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px}
-.segTag.eco{background:#eef2f6;color:#5b6b7c}
-.segTag.bal{background:var(--sky);color:var(--blue)}
-.segTag.pre{background:#f3ecff;color:#7c3aed}
 .swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px}
 .swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:1px 7px;border-radius:99px}
 .swapItem .pz{font-size:15px;font-weight:800;white-space:nowrap}
@@ -259,7 +251,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <div class="wrap">
 
-<section class="sc on" id="sLoad">
+<section class="sc" id="sLoad">
   <div class="load"><div class="ring">📊</div>
   <h2 style="font-size:19px;color:var(--ink)">Đang tải bảng giá mới nhất…</h2>
   <p style="margin-top:8px;font-size:13.5px">Đọc trực tiếp từ hệ thống giá Tín Phát</p></div>
@@ -273,7 +265,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     <button class="cta" style="margin-top:18px" onclick="location.reload()">Thử lại</button></div>
 </section>
 
-<section class="sc" id="s0">
+<section class="sc on" id="s0">
   <div class="hero">
     <div class="bdg"><i></i> AI hoàn thiện không gian sống · chỉ 3 phút</div>
     <h1>Hôm nay bạn muốn làm gì?</h1>
@@ -288,7 +280,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     <button class="goal" onclick="go('budget')"><span class="ic">💰</span><b>Tham khảo combo theo ngân sách</b><span>Có sẵn một khoản — AI chia ngân sách theo ưu tiên của bạn.</span></button>
   </div>
   <div class="trust">
-    <span id="tStock">✅ Hơn 10.000++ sản phẩm được cập nhật liên tục</span>
+    <span>✅ Hơn 10.000++ sản phẩm được cập nhật liên tục</span>
     <span>🚚 Miễn phí giao lắp ngay khi bạn tạo xong kế hoạch phù hợp với nhu cầu</span>
     <span>💬 Tư vấn với chuyên viên 24/7</span>
   </div>
@@ -297,27 +289,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 <section class="sc" id="s1">
   <div class="qh"><button class="bk" onclick="home()">← Quay lại</button>
   <div class="eb">Hoàn thiện toàn bộ ngôi nhà</div><h2>Nhà của bạn thuộc loại nào?</h2></div>
-  <div class="opts">
-    <button class="opt" onclick="pick('house','apt',this);subShow('apt')"><span class="ic">🏢</span><b>Chung cư</b><small>Chọn loại căn hộ</small><span class="ck">✓</span></button>
-    <button class="opt" onclick="pick('house','town',this);subShow('town')"><span class="ic">🏠</span><b>Nhà phố / mặt đất</b><small>Chọn số tầng</small><span class="ck">✓</span></button>
-    <button class="opt" onclick="pick('house','stay',this);S.sub='Phòng trọ';show('s2')"><span class="ic">🛎️</span><b>Phòng trọ / homestay</b><span class="ck">✓</span></button>
-  </div>
-  <div class="sub" id="subApt" style="display:none">
-    <div class="eb">Chọn loại căn hộ</div>
-    <div class="opts">
-      <button class="opt" onclick="pick('sub','Studio',this);show('s2')"><span class="ic">◻️</span><b>Studio</b><span class="ck">✓</span></button>
-      <button class="opt" onclick="pick('sub','1PN',this);show('s2')"><span class="ic">🚪</span><b>1 Phòng ngủ</b><span class="ck">✓</span></button>
-      <button class="opt" onclick="pick('sub','2PN',this);show('s2')"><span class="ic">🚪🚪</span><b>2 Phòng ngủ</b><span class="ck">✓</span></button>
-    </div>
-  </div>
-  <div class="sub" id="subTown" style="display:none">
-    <div class="eb">Chọn số tầng</div>
-    <div class="opts">
-      <button class="opt" onclick="pick('sub','1 tầng',this);show('s2')"><span class="ic">🏠</span><b>1 tầng</b><span class="ck">✓</span></button>
-      <button class="opt" onclick="pick('sub','2 tầng',this);show('s2')"><span class="ic">🏘️</span><b>2 tầng</b><span class="ck">✓</span></button>
-      <button class="opt" onclick="pick('sub','3 tầng',this);show('s2')"><span class="ic">🏢</span><b>3 tầng</b><span class="ck">✓</span></button>
-    </div>
-  </div>
+  <div id="houseO"></div>
 </section>
 
 <section class="sc" id="s2">
@@ -504,7 +476,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
   </div>
 </div>
 
-<footer>Điện Máy Tín Phát · AI tư vấn hoàn thiện không gian sống · <span id="dataInfo"></span></footer>
+<footer>Điện Máy Tín Phát · AI hoàn thiện không gian sống · Bảng giá cập nhật liên tục</footer>
 <script src="parser.js"></script>
 <script>
 const S={flow:null,house:null,sub:null,fam:null,space:null,up:null,
@@ -518,21 +490,33 @@ const fmt=n=>Math.round(n*1000).toLocaleString('vi-VN')+'₫';
 const fmtM=n=>{const t=n/1000; return (t>=10?t.toFixed(0):t.toFixed(1).replace('.',','))+' tr';};
 
 /* ===== TẢI DỮ LIỆU ===== */
-async function boot(){
-  try{
-    const {products,log}=await TP.load();
-    DB=products;
+/* Tải dữ liệu NGẦM — trang chủ hiện ngay, không bắt khách chờ (mục 2) */
+let DATA_READY=null, dataOK=false;
+function boot(){
+  DATA_READY = TP.load().then(r=>{
+    DB=r.products;
     AVAIL=[...new Set(DB.map(p=>p.nhom))].filter(g=>G[g]);
     if(!DB.length)throw new Error('Bảng giá không có sản phẩm hợp lệ');
-    document.getElementById('dataInfo').textContent=log.ok+' sản phẩm trong bảng giá';
-    document.getElementById('tStock').textContent='✅ '+log.ok+' mã sản phẩm cập nhật liên tục';
-    show('s0');
-  }catch(e){
+    dataOK=true;
+    return r;
+  });
+  DATA_READY.catch(()=>{});
+}
+boot();
+
+/* Chờ dữ liệu sẵn sàng rồi mới chạy tiếp — chỉ hiện spinner nếu thực sự phải chờ */
+function withData(fn){
+  if(dataOK){ fn(); return; }
+  let waiting=true;
+  const t=setTimeout(()=>{ if(waiting) show('sLoad'); },350);
+  DATA_READY.then(()=>{
+    waiting=false; clearTimeout(t); fn();
+  }).catch(e=>{
+    waiting=false; clearTimeout(t);
     document.getElementById('errMsg').textContent=e.message||'Không kết nối được tới nguồn dữ liệu.';
     show('sErr');
-  }
+  });
 }
-document.addEventListener('DOMContentLoaded',boot);
 
 /* ===== ĐIỀU HƯỚNG ===== */
 function show(id){
@@ -550,18 +534,19 @@ function home(){
   Object.assign(S,{flow:null,house:null,sub:null,fam:null,space:null,up:null,lo:0,hi:0});
   S.picked=new Set();S.pickInit=false;S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
-  document.getElementById('subApt').style.display='none';
-  document.getElementById('subTown').style.display='none';
+  houseOpen=null;
   show('s0');
 }
-function go(f){S.flow=f;
-  if(f==='full')show('s1');
-  else if(f==='space'){buildSpace();show('s5')}
-  else if(f==='upgrade'){buildUp();show('s6')}
-  else show('s9');}
+function go(f){
+  withData(()=>{
+    S.flow=f;
+    if(f==='full'){buildHouse();show('s1');}
+    else if(f==='space'){buildSpace();show('s5')}
+    else if(f==='upgrade'){buildUp();show('s6')}
+    else show('s9');
+  });
+}
 function pick(k,v,el){S[k]=v;if(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}}
-function subShow(t){document.getElementById('subApt').style.display=t==='apt'?'block':'none';
-  document.getElementById('subTown').style.display=t==='town'?'block':'none';}
 function ownBack(){S.flow==='space'?show('s5'):show('s2')}
 function ownNext(){show('s4')}
 
@@ -750,6 +735,62 @@ function buildSpace(){
       '<span class="cnt">'+c+' mã</span><span class="ck">✓</span></button>';}).join('');
 }
 function pickSpace(rid,el){ pick('space',rid,el); S.picked=new Set(); S.pickInit=false; show('s3'); }
+
+/* ===== BƯỚC CHỌN LOẠI NHÀ — panel con mở ngay dưới mục đã chọn (mục 4) ===== */
+const HOUSE_TYPES=[
+  {id:'apt',  ic:'🏢', name:'Chung cư',            sub:'Chọn loại căn hộ',
+   opts:[{v:'Studio',ic:'◻️',l:'Studio'},{v:'1PN',ic:'🚪',l:'1 Phòng ngủ'},
+         {v:'2PN',ic:'🚪🚪',l:'2 Phòng ngủ'},{v:'3PN',ic:'🚪🚪🚪',l:'3 Phòng ngủ'},
+         {v:'Duplex / Penthouse',ic:'👑',l:'Duplex / Penthouse'}]},
+  {id:'town', ic:'🏠', name:'Nhà phố / mặt đất',   sub:'Chọn số tầng',
+   opts:[{v:'1 tầng',ic:'🏠',l:'1 tầng'},{v:'2 tầng',ic:'🏘️',l:'2 tầng'},
+         {v:'3 tầng',ic:'🏢',l:'3 tầng'},{v:'4 tầng trở lên',ic:'🌇',l:'4 tầng trở lên'}]},
+  {id:'stay', ic:'🛎️', name:'Phòng trọ / homestay', sub:'', opts:[]}
+];
+let houseOpen=null;
+
+function buildHouse(){
+  const host=document.getElementById('houseO');
+  host.innerHTML=HOUSE_TYPES.map(h=>{
+    const isOpen = houseOpen===h.id;
+    const picked = S.house===h.id;
+    let block='<button class="opt htOpt'+(picked||isOpen?' sel':'')+'" onclick="openHouse(\''+h.id+'\')">'+
+      '<span class="ic">'+h.ic+'</span><b>'+h.name+'</b>'+
+      (h.sub?'<small>'+(picked&&S.sub?'Đã chọn: '+S.sub:h.sub)+'</small>':'')+
+      '<span class="ck">✓</span></button>';
+    /* Panel con mở ngay bên dưới, đẩy các mục sau lùi xuống */
+    if(isOpen&&h.opts.length){
+      block+='<div class="htPanel"><div class="eb">'+h.sub.toUpperCase()+'</div>'+
+        '<div class="opts">'+h.opts.map(o=>
+          '<button class="opt'+(S.sub===o.v?' sel':'')+'" onclick="pickHouseSub(\''+h.id+'\',\''+o.v+'\')">'+
+          '<span class="ic">'+o.ic+'</span><b>'+o.l+'</b><span class="ck">✓</span></button>').join('')+
+        '</div></div>';
+    }
+    return '<div class="htRow">'+block+'</div>';
+  }).join('');
+}
+function openHouse(id){
+  const h=HOUSE_TYPES.find(x=>x.id===id);
+  if(!h.opts.length){                 /* Phòng trọ: chọn xong đi tiếp luôn */
+    S.house=id; S.sub='Phòng trọ'; houseOpen=null;
+    buildHouse(); show('s2'); return;
+  }
+  houseOpen = (houseOpen===id) ? null : id;   /* bấm lại thì đóng */
+  S.house=id;
+  buildHouse();
+  if(houseOpen){
+    setTimeout(()=>{
+      const el=document.querySelector('.htPanel');
+      if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },60);
+  }
+}
+function pickHouseSub(id,v){
+  S.house=id; S.sub=v; houseOpen=null;
+  buildHouse();
+  show('s2');
+}
+
 /* ===== BỐ CỤC THIẾT BỊ THEO TỪNG PHÒNG (mục 13) ===== */
 const ROOM_LAYOUT=[
   {id:'living', ic:'🛋️', name:'Phòng khách', devs:['tv','soundbar','robot']},
@@ -1119,7 +1160,6 @@ function toggleSwap(k,cur){
   const c=curP?curP.gia:pool[Math.floor(pool.length/2)];
   openSwap={
     k:k, g:g, cur:cur,
-    seg: curP?curP.pk:'bal',          /* phân khúc đang lọc */
     lo: Math.max(SWAP_MIN,Math.floor(c*0.6/1000)*1000),
     hi: Math.min(SWAP_MAX,Math.ceil(c*1.6/1000)*1000)
   };
@@ -1133,10 +1173,6 @@ function renderSwap(){
   if(!host)return;
   document.querySelectorAll('[id^=sp-]').forEach(e=>{if(e!==host)e.innerHTML=''});
   const g=openSwap.g;
-  /* Đếm số mã theo từng phân khúc để hiện trên nút */
-  const cnt={};['eco','bal','pre'].forEach(t=>{
-    cnt[t]=DB.filter(p=>p.nhom===g&&p.pk===t).length;});
-  const cntAll=DB.filter(p=>p.nhom===g).length;
 
   host.innerHTML=
    '<div class="swapPanel">'+
@@ -1144,22 +1180,12 @@ function renderSwap(){
       '<b>'+G[g].ic+' Chọn '+G[g].name.toLowerCase()+' khác</b>'+
       '<button class="swapClose" onclick="closeSwap()">✕ Đóng</button></div>'+
 
-    '<div class="swapRow"><span class="swLbl">Phân khúc</span>'+
-     '<div class="segBtns">'+
-      ['eco','bal','pre'].map(t=>
-        '<button class="segB'+(openSwap.seg===t?' on':'')+(cnt[t]?'':' dis')+'" '+
-        (cnt[t]?'onclick="setSwapSeg(\''+t+'\')"':'disabled')+'>'+
-        SEG_LABEL[t]+' <i>'+cnt[t]+'</i></button>').join('')+
-      '<button class="segB'+(openSwap.seg==='all'?' on':'')+'" onclick="setSwapSeg(\'all\')">Tất cả <i>'+cntAll+'</i></button>'+
-     '</div></div>'+
-
-    '<div class="swapRow"><span class="swLbl">Khoảng giá</span>'+
-     '<div class="swRangeWrap">'+
+    '<div class="swRangeWrap">'+
       '<div class="swRangeTop"><b id="swVal">—</b><span class="rangeCount" id="swCount">—</span></div>'+
       '<div class="dual swDual"><div class="track"></div><div class="fill" id="swFill"></div>'+
        '<input type="range" id="swLo" oninput="onSwap()"><input type="range" id="swHi" oninput="onSwap()"></div>'+
       '<div class="rangeMarks" id="swMarks"></div>'+
-     '</div></div>'+
+    '</div>'+
 
     '<div class="swapList" id="swList"></div>'+
    '</div>';
@@ -1169,7 +1195,6 @@ function renderSwap(){
      initLo:Math.max(SWAP_MIN,openSwap.lo),initHi:Math.min(SWAP_MAX,openSwap.hi)});
   onSwap();
 }
-function setSwapSeg(t){ if(!openSwap)return; openSwap.seg=t; renderSwap(); }
 
 function onSwap(){
   if(!openSwap)return;
@@ -1177,11 +1202,10 @@ function onSwap(){
     openSwap.lo=a;openSwap.hi=b;
     const v=document.getElementById('swVal');
     if(v)v.textContent=fmt(a)+'  –  '+fmt(b);
-    const g=openSwap.g, seg=openSwap.seg;
-    let list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b);
-    if(seg!=='all')list=list.filter(p=>p.pk===seg);
-    /* hàng tồn kho lên trước, sau đó theo giá tăng dần */
-    list.sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
+    const g=openSwap.g;
+    /* Lọc thuần theo khoảng giá — hàng tồn kho xếp lên trước (mục 5) */
+    const list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b)
+      .sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
     const nStock=list.filter(p=>p.ton===1).length;
 
     const el=document.getElementById('swCount');
@@ -1198,7 +1222,6 @@ function onSwap(){
         'onclick="chooseModel(\''+openSwap.k+'\',\''+esc+'\')">'+
         '<div class="siMain"><b>'+p.ten+'</b>'+
         '<div class="siMeta"><span class="mm">'+p.model+'</span>'+
-        '<span class="segTag '+p.pk+'">'+SEG_LABEL[p.pk]+'</span>'+
         (p.ton===1?'<span class="tagFast">⚡ Giao nhanh</span>':'')+
         (p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</div></div>'+
         '<div class="pz">'+fmt(p.gia)+'</div></button>';
