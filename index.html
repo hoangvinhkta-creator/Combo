@@ -152,6 +152,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .swapItem b{font-size:13.5px;display:block;font-weight:700}
 .swapItem .mm{font-size:11.5px;color:var(--mut);font-family:ui-monospace,monospace;margin-top:2px}
 .swapItem .pz{font-size:14px;font-weight:800;white-space:nowrap}
+.swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px;margin-left:6px;white-space:nowrap}
+.swapDiv{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;padding:10px 2px 4px;border-top:1px dashed var(--line);margin-top:4px}
 .swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:2px 7px;border-radius:99px;margin-left:6px}
 .swapEmpty{text-align:center;padding:22px;color:var(--mut);font-size:13px}
 footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var(--mut);font-size:12px}
@@ -672,6 +674,35 @@ function medianOf(g){
   const a=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((x,y)=>x-y);
   return a.length?a[Math.floor(a.length/2)]:0;
 }
+
+/* ============ ƯU TIÊN HÀNG CÓ SẴN KHO ============
+   Quy tắc 2 tầng:
+   (1) Nếu có hàng tồn nằm trong vùng chấp nhận quanh mức ngân sách phân bổ
+       (±35%) → CHỌN LUÔN hàng tồn gần nhất, bỏ qua hàng phải đặt.
+   (2) Nếu không có hàng tồn nào đủ gần → xét toàn bộ, hàng tồn vẫn được
+       giảm 40% điểm phạt khoảng cách.
+   Nhờ vậy hàng tồn gần như luôn thắng, trừ khi lệch giá quá xa so với
+   ngân sách khách chọn.                                                */
+const STOCK_WINDOW=0.35;   /* vùng chấp nhận quanh mức phân bổ */
+const STOCK_BONUS=0.60;    /* hệ số giảm điểm phạt cho hàng tồn */
+function pickNearest(pool,alloc){
+  if(!pool.length)return null;
+  /* Tầng 1: hàng tồn trong vùng chấp nhận */
+  const near=pool.filter(p=>p.ton===1&&Math.abs(p.gia-alloc)<=alloc*STOCK_WINDOW);
+  if(near.length){
+    let b=near[0],d0=Infinity;
+    near.forEach(p=>{const d=Math.abs(p.gia-alloc);if(d<d0){d0=d;b=p;}});
+    return b;
+  }
+  /* Tầng 2: xét toàn bộ, hàng tồn được ưu đãi điểm */
+  let best=pool[0],bs=Infinity;
+  pool.forEach(p=>{
+    let d=Math.abs(p.gia-alloc);
+    if(p.ton===1)d*=STOCK_BONUS;
+    if(d<bs-1e-9||(Math.abs(d-bs)<1e-9&&p.ton===1&&best.ton!==1)){bs=d;best=p;}
+  });
+  return best;
+}
 function buildCombo(){
   const gs=neededGroups();
   if(!gs.length)return [];
@@ -680,8 +711,16 @@ function buildCombo(){
   if(S.flow==='upgrade'){
     const pool=DB.filter(p=>gs.includes(p.nhom)&&p.gia>=S.lo&&p.gia<=S.hi).sort((a,b)=>a.gia-b.gia);
     if(!pool.length)return [];
-    const idx=[0,Math.floor((pool.length-1)/2),pool.length-1];
-    return [...new Set(idx)].map(i=>pool[i]).filter(Boolean).map(p=>({...p}));
+    /* 3 mốc giá tiêu biểu: thấp – giữa – cao, mỗi mốc ưu tiên hàng tồn gần đó */
+    const lo=pool[0].gia, hi=pool[pool.length-1].gia;
+    const marks=[lo, (lo+hi)/2, hi];
+    const seen={}, out=[];
+    marks.forEach(m=>{
+      const cand=pool.filter(p=>!seen[p.model]);
+      const p=pickNearest(cand,m);
+      if(p){seen[p.model]=1;out.push({...p});}
+    });
+    return out.sort((a,b)=>a.gia-b.gia);
   }
 
   /* Tổng trung vị để tính tỉ trọng */
@@ -700,10 +739,7 @@ function buildCombo(){
     }
     const share=sumMed?med[g]/sumMed:1/gs.length;
     const alloc=target*share;
-    /* chọn mã gần mức phân bổ nhất */
-    let best=pool[0],bd=Infinity;
-    pool.forEach(p=>{const d=Math.abs(p.gia-alloc);if(d<bd){bd=d;best=p;}});
-    out.push({...best});
+    out.push({...pickNearest(pool,alloc)});
   });
   return out;
 }
@@ -844,16 +880,25 @@ function onSwap(){
     openSwap.lo=a;openSwap.hi=b;
     document.getElementById('swVal').textContent=fmt(a)+' – '+fmt(b);
     const g=openSwap.g;
-    const list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b).sort((x,y)=>x.gia-y.gia);
+    /* Hàng có sẵn kho xếp lên trước, trong mỗi nhóm sắp theo giá tăng dần */
+    const list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b)
+      .sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
+    const nStock=list.filter(p=>p.ton===1).length;
     const el=document.getElementById('swCount');
     el.textContent=list.length?list.length+' mã phù hợp':'Không có mã nào';
     el.classList.toggle('none',!list.length);
-    document.getElementById('swList').innerHTML=list.length?list.map(p=>
-      '<button class="swapItem'+(p.model===openSwap.cur?' cur':'')+'" onclick="chooseModel(\''+g+'\',\''+
-      p.model.replace(/'/g,"\\'")+'\')">'+
-      '<div><b>'+p.ten+(p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</b>'+
-      '<div class="mm">'+p.model+'</div></div>'+
-      '<div class="pz">'+fmt(p.gia)+'</div></button>').join('')
+    let html='',divided=false;
+    list.forEach((p,i)=>{
+      if(nStock&&i===nStock&&!divided){divided=true;
+        html+='<div class="swapDiv">Các mã khác trong khoảng giá</div>';}
+      html+='<button class="swapItem'+(p.model===openSwap.cur?' cur':'')+'" onclick="chooseModel(\''+g+'\',\''+
+        p.model.replace(/'/g,"\\'")+'\')">'+
+        '<div><b>'+p.ten+(p.ton===1?'<span class="tagFast">⚡ Giao nhanh</span>':'')+
+        (p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</b>'+
+        '<div class="mm">'+p.model+'</div></div>'+
+        '<div class="pz">'+fmt(p.gia)+'</div></button>';
+    });
+    document.getElementById('swList').innerHTML=list.length?html
       :'<div class="swapEmpty">Kéo rộng khoảng giá để thấy thêm mã khác</div>';
   });
 }
