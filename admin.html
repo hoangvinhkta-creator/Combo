@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quản trị — Tín Phát AI Configurator</title>
+<style>
+:root{--ink:#101828;--ink2:#475467;--mut:#98a2b3;--bg:#f2f4f7;--card:#fff;--line:#e6e9ef;
+--blue:#1450e0;--blue2:#0d3db0;--sky:#eef3ff;--green:#12a35a;--greenbg:#e7f8ef;
+--red:#e34935;--redbg:#fdeceb;--gold:#f5a623;--goldbg:#fff8e8;--r:14px;--tr:.25s ease}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+header{background:#0f1b3d;color:#fff}
+.hw{max-width:1500px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:14px 20px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px}
+.logo .mk{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),#5b8bff);display:grid;place-items:center}
+.logo small{display:block;font-weight:600;font-size:10px;opacity:.6;letter-spacing:.07em;text-transform:uppercase}
+.sp{flex:1}
+.hb{font-size:13px;font-weight:700;padding:9px 16px;border-radius:9px;background:rgba(255,255,255,.12);transition:var(--tr)}
+.hb:hover{background:rgba(255,255,255,.22)}
+.hb.pri{background:var(--blue)}.hb.pri:hover{background:#2b62ea}
+.wrap{max-width:1500px;margin:0 auto;padding:20px}
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.tab{font-size:13.5px;font-weight:700;padding:10px 18px;border-radius:10px;background:#fff;border:1px solid var(--line);transition:var(--tr)}
+.tab:hover{border-color:var(--blue);color:var(--blue)}
+.tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.pane{display:none}.pane.on{display:block}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 17px}
+.stat .n{font-size:25px;font-weight:800;letter-spacing:-.02em}
+.stat .l{font-size:11.5px;color:var(--mut);font-weight:700;margin-top:2px}
+.stat.g .n{color:var(--green)}.stat.r .n{color:var(--red)}.stat.w .n{color:var(--gold)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.card h3{font-size:15px;font-weight:800;margin-bottom:4px}
+.card .sub{font-size:12.5px;color:var(--mut);line-height:1.55}
+.bar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 17px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar input[type=text]{border:1.5px solid var(--line);border-radius:9px;padding:9px 13px;font-size:13.5px;font-family:inherit;outline:none;min-width:210px}
+.bar input:focus{border-color:var(--blue)}
+.bar select{border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;font-size:13.5px;font-family:inherit;background:#fff;cursor:pointer;outline:none}
+.btn{font-size:13px;font-weight:700;padding:9px 16px;border-radius:9px;background:var(--sky);color:var(--blue);transition:var(--tr)}
+.btn:hover{background:var(--blue);color:#fff}
+.btn.pri{background:var(--blue);color:#fff}.btn.pri:hover{background:var(--blue2)}
+.tw{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:auto;max-height:64vh}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f8fafc;font-weight:800;text-align:left;padding:10px 12px;border-bottom:2px solid var(--line);position:sticky;top:0;z-index:5;white-space:nowrap;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:hover td{background:#fafbfc}
+.mono{font-family:ui-monospace,monospace;font-weight:600;font-size:12.5px}
+.num{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.pill{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;white-space:nowrap;display:inline-block}
+.pill.in{background:var(--greenbg);color:var(--green)}
+.pill.out{background:#fff4e5;color:#b57b0c}
+.pill.eco{background:#eef2f6;color:#5b6b7c}
+.pill.bal{background:var(--sky);color:var(--blue)}
+.pill.pre{background:#f3ecff;color:#7c3aed}
+.gname{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12.5px}
+.cov{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px}
+.cv{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.cv.ok{border-left:4px solid var(--green)}
+.cv.warn{border-left:4px solid var(--gold);background:var(--goldbg)}
+.cv.bad{border-left:4px solid var(--red);background:var(--redbg)}
+.cv b{font-size:13.5px;display:flex;align-items:center;gap:7px}
+.cv .d{font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.5}
+.cv .tiers{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.hdrlist{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.hd{font-size:12px;font-weight:700;padding:7px 12px;border-radius:9px;background:var(--greenbg);color:#0a6e3d}
+.hd.miss{background:var(--redbg);color:var(--red)}
+.sim{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
+.simc{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}
+.simc h4{font-size:13.5px;font-weight:800;margin-bottom:3px}
+.simc .m{font-size:11.5px;color:var(--mut);margin-bottom:11px}
+.simr{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:12.5px}
+.simr .l{color:var(--ink2)}
+.simr .v{font-weight:700;white-space:nowrap}
+.simt{margin-top:11px;padding-top:11px;border-top:2px solid var(--line);display:flex;justify-content:space-between;font-weight:800;font-size:14px}
+pre{background:#0f1b3d;color:#a8d5ff;padding:15px;border-radius:11px;font-size:12px;overflow:auto;line-height:1.7;font-family:ui-monospace,monospace;margin-top:12px}
+code{font-family:ui-monospace,monospace;background:#f2f4f7;padding:2px 6px;border-radius:5px;font-size:12px}
+table.ref{width:100%;border-collapse:collapse;margin-top:12px;font-size:12.5px}
+table.ref th,table.ref td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spacing:0;position:static;font-size:12.5px}
+.warn{background:var(--goldbg);border:1px solid #ffd58a;border-radius:11px;padding:13px 16px;font-size:13px;color:#7a5a12;line-height:1.55;margin-top:14px}
+.okbox{background:var(--greenbg);border:1px solid #9ae0bb;border-radius:11px;padding:13px 16px;font-size:13px;color:#0a6e3d;line-height:1.55;margin-top:14px}
+.loading{text-align:center;padding:60px;color:var(--mut)}
+.spin{width:44px;height:44px;margin:0 auto 16px;border:4px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.step{display:flex;gap:13px;margin-top:16px;align-items:flex-start}
+.step .no{width:25px;height:25px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:12.5px;font-weight:800;flex-shrink:0}
+.step b{display:block;font-size:13.5px}
+.step p{margin-top:3px;font-size:12.5px;color:var(--ink2);line-height:1.55}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hw">
+    <div class="logo"><div class="mk">⚙️</div><div>Quản trị dữ liệu<small>Tín Phát AI Configurator</small></div></div>
+    <div class="sp"></div>
+    <span id="srcInfo" style="font-size:12px;opacity:.65"></span>
+    <button class="hb" onclick="boot()">🔄 Tải lại</button>
+    <button class="hb" onclick="window.open('index.html','_blank')">👁 Xem trang khách</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab on" onclick="tab(0,this)">📊 Tổng quan</button>
+    <button class="tab" onclick="tab(1,this)">📦 Danh mục đã đọc</button>
+    <button class="tab" onclick="tab(2,this)">🎯 Độ phủ tồn kho</button>
+    <button class="tab" onclick="tab(3,this)">🧪 Mô phỏng combo</button>
+    <button class="tab" onclick="tab(4,this)">📖 Hướng dẫn</button>
+  </div>
+
+  <div id="loading" class="loading"><div class="spin"></div>Đang đọc bảng giá từ Google Sheet…</div>
+  <div id="main" style="display:none">
+
+  <div class="pane on" id="p0">
+    <div class="stats" id="stats"></div>
+    <div class="card">
+      <h3>Nhóm hàng nhận diện từ dòng tiêu đề cột A</h3>
+      <div class="sub">Hệ thống đọc các dòng tiêu đề như "Tivi Aqua", "Tủ lạnh Samsung" để phân loại toàn bộ sản phẩm bên dưới nó. Nếu một dòng tiêu đề không được nhận diện, các mã phía dưới sẽ bị bỏ qua.</div>
+      <div class="hdrlist" id="hdrs"></div>
+    </div>
+  </div>
+
+  <div class="pane" id="p1">
+    <div class="bar">
+      <input type="text" id="q" placeholder="🔍 Tìm mã model, tên…" oninput="renderTable()">
+      <select id="fg" onchange="renderTable()"><option value="">Tất cả nhóm</option></select>
+      <select id="ft" onchange="renderTable()"><option value="">Tất cả tồn kho</option><option value="1">Có sẵn kho</option><option value="0">Cần đặt hàng</option></select>
+      <select id="fp" onchange="renderTable()"><option value="">Tất cả phân khúc</option><option value="eco">Tiết kiệm</option><option value="bal">Tốt</option><option value="pre">Cao cấp</option></select>
+      <div class="sp"></div>
+      <span id="cnt" style="font-size:12.5px;color:var(--mut);font-weight:700"></span>
+    </div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th style="width:45px">Dòng</th><th style="width:150px">Nhóm</th><th style="width:145px">Mã model</th>
+        <th style="width:105px">Hãng</th><th style="width:100px">Thông số</th>
+        <th style="width:110px" class="num">Giá bán (Y)</th><th style="width:110px" class="num">Tồn (S)</th>
+        <th style="width:95px">Trạng thái</th><th style="width:95px">Phân khúc</th>
+        <th>Lý do hiển thị cho khách</th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table></div>
+  </div>
+
+  <div class="pane" id="p2">
+    <div class="card">
+      <h3>Độ phủ tồn kho theo nhóm & phân khúc</h3>
+      <div class="sub">AI chỉ đề xuất được sản phẩm nếu nhóm đó <b>có hàng sẵn kho</b> (cột S có giá). Nhóm nào thiếu phân khúc sẽ khiến khách chọn mức ngân sách đó nhận được mẫu tương đương ở mức khác.</div>
+    </div>
+    <div class="cov" id="cov"></div>
+  </div>
+
+  <div class="pane" id="p3">
+    <div class="card">
+      <h3>Mô phỏng combo khách sẽ nhận được</h3>
+      <div class="sub">Chạy đúng thuật toán của trang khách với 3 mức ngân sách, kịch bản "Hoàn thiện toàn bộ ngôi nhà — gia đình có con". Dấu ⚠ nghĩa là mã đó là mẫu thay thế vì phân khúc gốc hết hàng.</div>
+    </div>
+    <div class="sim" id="sim"></div>
+  </div>
+
+  <div class="pane" id="p4">
+    <div class="card">
+      <h3>📖 Cách hệ thống đọc bảng giá của bạn</h3>
+      <div class="sub">Trang khách <code>index.html</code> đọc <b>trực tiếp</b> từ Google Sheet đã xuất bản dạng CSV. Bạn sửa giá trên Sheet → khách vào web thấy giá mới ngay, không cần upload gì cả.</div>
+
+      <table class="ref">
+        <tr><th style="width:70px">Cột</th><th style="width:150px">Tên trong Sheet</th><th>Hệ thống dùng để làm gì</th></tr>
+        <tr><td><code>A</code></td><td>Mã model</td><td>Mã sản phẩm. Dòng nào là <b>tiêu đề nhóm</b> (VD "Tivi Aqua") thì tự nhận diện loại hàng + hãng cho toàn bộ dòng bên dưới.</td></tr>
+        <tr><td><code>S</code></td><td>Tín Phát tồn</td><td><b>Có giá = còn tồn kho.</b> AI ưu tiên tuyệt đối các mã này. Ô trống hoặc 0 = phải đặt hàng.</td></tr>
+        <tr><td><code>Y</code></td><td>Có lắp đặt</td><td><b>Giá bán cuối cùng</b> hiển thị cho khách. Ô trống hoặc ghi "hh" = không bán, bỏ qua dòng đó.</td></tr>
+      </table>
+
+      <div class="warn">⚠️ <b>Điều kiện bắt buộc:</b> Google Sheet phải được xuất bản công khai — vào <b>Tệp → Chia sẻ → Xuất bản lên web → chọn CSV → Xuất bản</b>. Nếu đổi link, sửa dòng <code>CSV_URL</code> ở đầu file <code>parser.js</code>.</div>
+
+      <h3 style="margin-top:24px">Hệ thống tự suy luận những gì?</h3>
+      <div class="sub">Sheet của bạn không có cột phân khúc hay lý do tư vấn — hệ thống tự sinh ra:</div>
+      <div class="step"><div class="no">1</div><div><b>Phân khúc (Tiết kiệm / Tốt / Cao cấp)</b>
+        <p>Tính theo phân vị giá <b>trong từng nhóm hàng</b>. Rẻ nhất 1/3 → Tiết kiệm · giữa → Tốt · đắt nhất 1/3 → Cao cấp. Tự cập nhật mỗi khi bạn đổi giá.</p></div></div>
+      <div class="step"><div class="no">2</div><div><b>Thông số kỹ thuật</b>
+        <p>Đọc từ mã model: <code>AQT55S80EUX</code> → 55 inch · <code>RT38K5982SL</code> → ~390L · <code>FV1412S3B</code> → 12kg · <code>FTKB25YVMV</code> → 9.000 BTU.</p></div></div>
+      <div class="step"><div class="no">3</div><div><b>Câu "Vì sao chọn" cho khách</b>
+        <p>Sinh từ thông số + nhóm hàng. VD 55 inch → "phù hợp khoảng cách xem khoảng 2,5m". Xem toàn bộ ở tab <b>Danh mục đã đọc</b>.</p></div></div>
+
+      <h3 style="margin-top:24px">Thuật toán chọn sản phẩm</h3>
+      <pre>1. Xác định nhóm thiết bị khách cần
+2. Xác định phân khúc theo ngân sách khách chọn
+3. LỌC CHỈ HÀNG CÒN TỒN (cột S có giá)
+4. Trong số còn tồn → chọn giá thấp nhất
+5. Nếu phân khúc đó hết sạch hàng
+   → nhảy sang phân khúc gần nhất còn hàng
+   → hiện ghi chú vàng "mẫu tương đương, giao ngay"
+6. Nếu khách bỏ tick "Chỉ hàng có sẵn kho"
+   → cho phép lấy cả hàng cần đặt (3–7 ngày)</pre>
+
+      <div class="okbox">💡 <b>Muốn tăng chất lượng tư vấn:</b> đảm bảo mỗi nhóm hàng chính có ít nhất 1 mã còn tồn ở cả 3 phân khúc. Kiểm tra ở tab <b>Độ phủ tồn kho</b> — ô đỏ nghĩa là khách chọn mức đó sẽ không nhận được đúng phân khúc mong muốn.</div>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<script src="parser.js"></script>
+<script>
+const G=TP.GROUPS;
+const PK={eco:'Tiết kiệm',bal:'Tốt',pre:'Cao cấp'};
+let DB=[], LOG=null;
+const fmt=n=>(n*1000).toLocaleString('vi-VN')+'₫';
+
+function tab(i,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',j===i));}
+
+async function boot(){
+  const ld=document.getElementById('loading');
+  ld.innerHTML='<div class="spin"></div>Đang đọc bảng giá từ Google Sheet…';
+  ld.style.display='block';
+  document.getElementById('main').style.display='none';
+  try{
+    const r=await TP.load();
+    DB=r.products;LOG=r.log;
+    document.getElementById('srcInfo').textContent='Google Sheet · đọc lúc '+new Date().toLocaleTimeString('vi-VN');
+    ld.style.display='none';
+    document.getElementById('main').style.display='block';
+    renderAll();
+  }catch(e){
+    ld.innerHTML='<div style="font-size:38px">⚠️</div>'+
+      '<h3 style="color:var(--ink);margin:10px 0 6px">Không đọc được bảng giá</h3>'+
+      '<p style="font-size:13.5px">'+(e.message||e)+'</p>'+
+      '<p style="font-size:12.5px;margin-top:10px">Kiểm tra Sheet đã "Xuất bản lên web → CSV" chưa, hoặc link trong <code>parser.js</code> còn đúng không.</p>'+
+      '<button class="btn pri" style="margin-top:16px" onclick="boot()">Thử lại</button>';
+  }
+}
+boot();
+
+function renderAll(){
+  const inS=DB.filter(p=>p.ton===1).length;
+  const gs=[...new Set(DB.map(p=>p.nhom))];
+  const core=Object.keys(G).filter(g=>G[g].core);
+  const gaps=core.filter(g=>!DB.some(p=>p.nhom===g&&p.ton===1)).length;
+
+  document.getElementById('stats').innerHTML=
+    '<div class="stat"><div class="n">'+LOG.ok+'</div><div class="l">Sản phẩm đọc được</div></div>'+
+    '<div class="stat g"><div class="n">'+inS+'</div><div class="l">Có sẵn kho (cột S)</div></div>'+
+    '<div class="stat"><div class="n">'+(LOG.ok-inS)+'</div><div class="l">Cần đặt hàng</div></div>'+
+    '<div class="stat"><div class="n">'+gs.length+'</div><div class="l">Nhóm hàng</div></div>'+
+    '<div class="stat '+(gaps?'r':'g')+'"><div class="n">'+gaps+'</div><div class="l">Nhóm chính thiếu hàng</div></div>'+
+    '<div class="stat w"><div class="n">'+LOG.noPrice+'</div><div class="l">Dòng bỏ qua</div></div>';
+
+  document.getElementById('hdrs').innerHTML=LOG.headers.length
+    ? LOG.headers.map(h=>'<span class="hd">'+G[h.group].ic+' '+h.text+' <span style="opacity:.6">→ '+G[h.group].name+'</span></span>').join('')
+    : '<span class="hd miss">Chưa nhận diện được dòng tiêu đề nào — kiểm tra lại cột A</span>';
+
+  document.getElementById('fg').innerHTML='<option value="">Tất cả nhóm</option>'+
+    gs.map(g=>'<option value="'+g+'">'+G[g].ic+' '+G[g].name+'</option>').join('');
+
+  renderTable();renderCov();renderSim();
+}
+
+function renderTable(){
+  const q=document.getElementById('q').value.toLowerCase().trim();
+  const fg=document.getElementById('fg').value,ft=document.getElementById('ft').value,fp=document.getElementById('fp').value;
+  const v=DB.filter(p=>(!q||(p.model+' '+p.ten).toLowerCase().includes(q))&&
+    (!fg||p.nhom===fg)&&(ft===''||String(p.ton)===ft)&&(!fp||p.pk===fp));
+  document.getElementById('cnt').textContent='Hiển thị '+v.length+' / '+DB.length+' sản phẩm';
+  document.getElementById('tb').innerHTML=v.map(p=>'<tr>'+
+    '<td style="color:var(--mut);font-size:11.5px">'+p._row+'</td>'+
+    '<td><span class="gname">'+G[p.nhom].ic+' '+G[p.nhom].name+'</span></td>'+
+    '<td class="mono">'+p.model+'</td>'+
+    '<td style="font-size:12.5px">'+(p.hang||'—')+'</td>'+
+    '<td style="font-size:12.5px;color:var(--ink2)">'+(p.ts||'—')+'</td>'+
+    '<td class="num">'+fmt(p.gia)+'</td>'+
+    '<td class="num" style="color:'+(p.giaTon?'var(--green)':'var(--mut)')+'">'+(p.giaTon?fmt(p.giaTon):'—')+'</td>'+
+    '<td><span class="pill '+(p.ton?'in':'out')+'">'+(p.ton?'● Có sẵn':'○ Đặt')+'</span></td>'+
+    '<td><span class="pill '+p.pk+'">'+PK[p.pk]+'</span></td>'+
+    '<td style="font-size:12px;color:var(--ink2);line-height:1.5">'+p.ld+'</td>'+
+  '</tr>').join('');
+}
+
+function renderCov(){
+  const gs=[...new Set(DB.map(p=>p.nhom))].sort((a,b)=>(G[b].core||0)-(G[a].core||0));
+  document.getElementById('cov').innerHTML=gs.map(function(g){
+    const all=DB.filter(p=>p.nhom===g), st=all.filter(p=>p.ton===1);
+    const miss=['eco','bal','pre'].filter(t=>!st.some(p=>p.pk===t));
+    const cls=!st.length?'bad':miss.length?'warn':'ok';
+    const msg=!st.length?'Không có mã nào còn tồn — AI không thể đề xuất nhóm này cho khách.'
+      :miss.length?'Thiếu hàng sẵn ở phân khúc: '+miss.map(t=>PK[t]).join(', ')+'. Khách chọn mức này sẽ nhận mẫu tương đương.'
+      :'Đủ cả 3 phân khúc — AI luôn chọn đúng mức ngân sách khách yêu cầu.';
+    const tiers=['eco','bal','pre'].map(function(t){
+      const n=st.filter(p=>p.pk===t).length;
+      return '<span class="pill '+(n?t:'')+'" style="'+(n?'':'background:var(--redbg);color:var(--red)')+'">'+PK[t]+': '+n+'</span>';
+    }).join('');
+    return '<div class="cv '+cls+'"><b>'+G[g].ic+' '+G[g].name+
+      (G[g].core?'':' <span style="font-weight:600;font-size:11px;color:var(--mut)">(phụ)</span>')+'</b>'+
+      '<div class="d">'+st.length+'/'+all.length+' mã có sẵn kho<br>'+msg+'</div>'+
+      '<div class="tiers">'+tiers+'</div></div>';
+  }).join('');
+}
+
+function bestOf(list,tier){
+  const s=list.slice().sort((a,b)=>a.gia-b.gia);
+  if(tier==='pre')return s[s.length-1];
+  if(tier==='bal')return s[Math.floor((s.length-1)/2)];
+  return s[0];
+}
+function sel(group,tier){
+  const pool=DB.filter(p=>p.nhom===group);
+  const order=tier==='eco'?['eco','bal','pre']:tier==='bal'?['bal','eco','pre']:['pre','bal','eco'];
+  for(let i=0;i<order.length;i++){
+    const c=pool.filter(p=>p.pk===order[i]&&p.ton===1);
+    if(c.length)return{p:bestOf(c,tier),alt:order[i]!==tier};
+  }
+  return null;
+}
+function renderSim(){
+  const need=['tv','fridge','washer','ac','water','robot','purifier','heater','dishwasher','dryer']
+    .filter(g=>DB.some(p=>p.nhom===g));
+  document.getElementById('sim').innerHTML=['eco','bal','pre'].map(function(tier){
+    const rows=[];let tot=0,alt=0;
+    need.forEach(function(g){
+      const r=sel(g,tier); if(!r)return;
+      tot+=r.p.gia; if(r.alt)alt++;
+      rows.push('<div class="simr"><span class="l">'+G[g].ic+' '+r.p.model+(r.alt?' <span style="color:var(--gold)">⚠</span>':'')+
+        '</span><span class="v">'+fmt(r.p.gia)+'</span></div>');
+    });
+    return '<div class="simc"><h4>Ngân sách: '+PK[tier]+'</h4>'+
+      '<div class="m">'+rows.length+' thiết bị'+(alt?' · '+alt+' mẫu thay thế do hết hàng':' · đúng phân khúc')+'</div>'+
+      rows.join('')+
+      '<div class="simt"><span>Tổng</span><span>'+fmt(tot)+'</span></div></div>';
+  }).join('');
+}
+</script>
+</body>
+</html>
