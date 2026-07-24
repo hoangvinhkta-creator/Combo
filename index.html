@@ -22,7 +22,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .sc{display:none;animation:fu .4s ease both}.sc.on{display:block}
 @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .hero{text-align:center;padding:34px 0 6px}
-.bdg{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--blue);background:var(--sky);padding:6px 13px;border-radius:99px;margin-bottom:16px}
+.bdg{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--blue);background:var(--sky);padding:8px 16px;border-radius:99px;margin-bottom:16px;max-width:92vw;line-height:1.45;text-align:left}
+.bdg b{background:var(--blue);color:#fff;padding:2px 9px;border-radius:99px;font-size:13px;font-weight:800;margin:0 2px}
 .bdg i{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pl 1.6s infinite;font-style:normal}
 @keyframes pl{0%,100%{opacity:1}50%{opacity:.3}}
 .hero h1{font-size:clamp(26px,4.4vw,40px);font-weight:800;line-height:1.18;letter-spacing:-.02em}
@@ -34,8 +35,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .goal .ic{font-size:30px;display:block;margin-bottom:10px}
 .goal b{font-size:15.5px;display:block;margin-bottom:5px}
 .goal span{font-size:12.5px;color:var(--mut);line-height:1.5;display:block}
-.trust{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;margin-top:36px;color:var(--mut);font-size:12.5px;font-weight:600;max-width:900px;margin-left:auto;margin-right:auto}
-.trust span{display:inline-flex;align-items:center;gap:6px}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px;
+  max-width:860px;margin-left:auto;margin-right:auto}
+.trust span{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;
+  background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px 14px}
+.trust i{font-size:22px;font-style:normal;line-height:1}
+.trust em{font-style:normal;font-size:12.5px;font-weight:600;color:var(--ink2);line-height:1.5}
+@media(max-width:720px){.trust{grid-template-columns:1fr;gap:10px}
+  .trust span{flex-direction:row;text-align:left;gap:12px;padding:13px 16px}
+  .trust em br{display:none}}
 .qh{margin-bottom:24px}
 .bk{font-size:13px;font-weight:700;color:var(--mut);display:inline-flex;gap:6px;margin-bottom:16px;transition:var(--tr)}
 .bk:hover{color:var(--blue)}
@@ -205,6 +213,35 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   border:1.5px solid #c5d8ff;border-radius:var(--r);padding:16px 20px;font-size:13.5px;line-height:1.6}
 .contactNote b{display:block;color:var(--blue);font-size:14px;margin-bottom:4px}
 .contactNote span{color:var(--ink2);font-size:12.5px}
+
+
+
+.imgBox{max-width:520px}
+#imgPreview{width:100%;border-radius:12px;border:1.5px solid var(--line);margin-top:14px;display:block}
+/* ===== KHỐI TIẾT KIỆM NỔI BẬT ===== */
+.saveBox{margin-top:12px;background:linear-gradient(135deg,#0a8f4d,#12a35a);
+  border-radius:14px;padding:16px 18px;color:#fff;box-shadow:0 6px 20px rgba(18,163,90,.28)}
+.saveTop{display:flex;align-items:center;gap:12px}
+.saveIc{font-size:30px;line-height:1}
+.saveLbl{font-size:12px;font-weight:700;opacity:.9;letter-spacing:.02em}
+.saveNum{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+.saveWhy{margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.25);
+  font-size:11.5px;line-height:1.55;opacity:.95}
+/* ===== BỘ LỌC TRONG PANEL ĐỔI MẪU ===== */
+.fltBlock{margin-bottom:14px}
+.fltLbl{font-size:11.5px;font-weight:800;color:var(--mut);text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:8px}
+.chipRow{display:flex;gap:7px;flex-wrap:wrap}
+.fchip{font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:99px;background:#fff;
+  border:1.5px solid var(--line);color:var(--ink2);transition:var(--tr);
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.fchip:hover{border-color:var(--blue);color:var(--blue)}
+.fchip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.fchip i{font-style:normal;font-size:10.5px;font-weight:800;background:rgba(0,0,0,.07);
+  padding:1px 7px;border-radius:99px}
+.fchip.on i{background:rgba(255,255,255,.25)}
+.fchip.qchip{background:#f2f4f7;border-color:transparent}
+.fchip.qchip:hover{background:var(--sky);border-color:var(--blue)}
 /* ===== ĐỔI MẪU ===== */
 .pc > [id^="sp-"]{grid-column:1 / -1}
 .pc > [id^="sp-"]:empty{display:none}
@@ -267,7 +304,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <section class="sc on" id="s0">
   <div class="hero">
-    <div class="bdg"><i></i> AI hoàn thiện không gian sống · chỉ 3 phút</div>
+    <div class="bdg"><i></i> AI hoàn thiện không gian sống · Chỉ <b>3 phút</b> có ngay bản thiết kế tối ưu ngân sách</div>
     <h1>Hôm nay bạn muốn làm gì?</h1>
     <p>AI của Điện máy Tín Phát sẽ giúp bạn chọn thiết bị phù hợp nhất<br>
     với ngôi nhà và tối ưu ngân sách.<br>
@@ -280,9 +317,9 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     <button class="goal" onclick="go('budget')"><span class="ic">💰</span><b>Tham khảo combo theo ngân sách</b><span>Có sẵn một khoản — AI chia ngân sách theo ưu tiên của bạn.</span></button>
   </div>
   <div class="trust">
-    <span>✅ Hơn 10.000++ sản phẩm được cập nhật liên tục</span>
-    <span>🚚 Miễn phí giao lắp ngay khi bạn tạo xong kế hoạch phù hợp với nhu cầu</span>
-    <span>💬 Tư vấn với chuyên viên 24/7</span>
+    <span><i>✅</i><em>Hơn 10.000++ sản phẩm<br>cập nhật liên tục</em></span>
+    <span><i>💬</i><em>Tư vấn với chuyên viên<br>24/7</em></span>
+    <span><i>🚚</i><em>Miễn phí giao lắp ngay khi<br>bạn tạo xong kế hoạch</em></span>
   </div>
 </section>
 
@@ -416,7 +453,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <section class="sc" id="sR">
   <div class="qh"><button class="bk" onclick="home()">← Thiết kế lại từ đầu</button>
-  <div class="eb">Kết quả gợi ý</div><h2>Combo của bạn đã sẵn sàng 🎉</h2><p id="rSub"></p></div>
+  <div class="eb">Kết quả gợi ý</div><h2 id="rTitle">Combo của bạn đã sẵn sàng 🎉</h2><p id="rSub"></p></div>
   <div class="rangeBox" style="margin-bottom:18px;padding:20px 24px">
     <div class="rangeHead" style="margin-bottom:2px">
       <div><div class="rangeVal" style="font-size:20px" id="rsVal">—</div>
@@ -435,7 +472,8 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <div id="skippedBox"></div>
       <div class="ben"><h3>🎁 Quyền lợi khi mua tại Điện máy Tín Phát</h3>
         <div class="bl">
-          <span><i>✓</i> Đội ngũ tư vấn và kỹ thuật chuyên nghiệp, hỗ trợ đầy đủ sau bán hàng</span>
+          <span><i>✓</i> Đội ngũ tư vấn và kỹ thuật chuyên nghiệp</span>
+          <span><i>✓</i> Hỗ trợ sau bán hàng trọn đời</span>
           <span><i>✓</i> Miễn phí lắp đặt vận chuyển nội thành Hà Nội</span>
           <span><i>✓</i> Lắp đặt đồng bộ một lần duy nhất</span>
           <span><i>✓</i> Bảo hành điện tử chính hãng tại nhà</span>
@@ -446,9 +484,8 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
         <span>Phương án trên là gợi ý tự động. Chuyên viên sẽ giúp bạn chọn đúng dung tích, công suất và cập nhật chương trình khuyến mại đang chạy.</span>
       </div>
       <div class="fc">
-        <button class="cta" onclick="openLead()">🔒 Tôi muốn giữ giá này</button>
-        <button class="cta gh" onclick="openLead()">📞 Đặt lịch tư vấn</button>
-        <button class="cta gh" onclick="saveProject()">📸 Lưu dự án</button>
+        <button class="cta" onclick="openLead()">🎁 Tôi muốn nhận thêm ưu đãi</button>
+        <button class="cta gh" onclick="saveProject()">💾 Lưu phương án</button>
       </div>
     </div>
     <div class="side">
@@ -457,8 +494,16 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <div class="cl"><span id="cp">0</span>% hoàn thiện</div>
       <div id="rms"></div>
       <div class="tb"><div class="tl">Tổng giá trị combo</div><div class="tn" id="tn">0₫</div>
-      <div class="sl">💚 Tiết kiệm <b id="sn">0₫</b> so với mua lẻ</div>
-      <div class="sl" id="budNote" style="display:none;margin-top:8px"></div></div>
+      <div class="saveBox">
+        <div class="saveTop">
+          <span class="saveIc">💰</span>
+          <div><div class="saveLbl">Bạn tiết kiệm được</div>
+          <div class="saveNum" id="sn">0₫</div></div>
+        </div>
+        <div class="saveWhy">so với mua lẻ từng món — nhờ gộp chi phí vận chuyển,
+        nhân công lắp đặt và chăm sóc khách hàng vào một lần duy nhất</div>
+      </div>
+      <div class="sl" id="budNote" style="display:none;margin-top:10px"></div></div>
     </div>
   </div>
 </section>
@@ -466,13 +511,25 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <div class="modal" id="md" onclick="if(event.target===this)closeLead()">
   <div class="mb"><button class="cl2" onclick="closeLead()">✕</button>
-    <div id="lf"><h3>Giữ giá combo trong 7 ngày</h3>
-      <p style="color:var(--ink2);font-size:13.5px;margin-top:7px;line-height:1.5">Chuyên viên sẽ gửi báo giá chi tiết qua Zalo — đã có sẵn toàn bộ lựa chọn của bạn, không phải tư vấn lại từ đầu.</p>
+    <div id="lf"><h3>Nhận thêm ưu đãi cho phương án của bạn</h3>
+      <p style="color:var(--ink2);font-size:13.5px;margin-top:7px;line-height:1.5">Chuyên viên sẽ gửi báo giá chi tiết kèm ưu đãi riêng qua Zalo — đã có sẵn toàn bộ lựa chọn của bạn, không phải tư vấn lại từ đầu.</p>
       <input id="ln" placeholder="Họ và tên"><input id="lp" placeholder="Số điện thoại (Zalo)"><input id="ld" placeholder="Ngày nhận nhà dự kiến (nếu có)">
-      <button class="cta" onclick="subLead()">Nhận báo giá & giữ giá</button></div>
+      <button class="cta" onclick="subLead()">Nhận ưu đãi & báo giá</button></div>
     <div class="succ" id="ls"><div style="font-size:46px">🎉</div><h3>Đã ghi nhận!</h3>
       <p style="color:var(--ink2);font-size:13.5px;margin-top:7px">Chuyên viên sẽ liên hệ trong 15 phút. Combo của bạn đã được lưu.</p>
       <button class="cta" onclick="closeLead()">Đóng</button></div>
+  </div>
+</div>
+
+<div class="modal" id="imgModal" onclick="if(event.target===this)closeImgModal()">
+  <div class="mb imgBox"><button class="cl2" onclick="closeImgModal()">✕</button>
+    <h3>💾 Phương án của bạn</h3>
+    <p style="color:var(--ink2);font-size:13px;margin-top:6px;line-height:1.5">
+      Trên điện thoại: <b>bấm giữ vào ảnh</b> rồi chọn "Lưu ảnh" hoặc "Chia sẻ".<br>
+      Trên máy tính: ảnh đã được tải về, hoặc bấm nút bên dưới.</p>
+    <img id="imgPreview" alt="Phương án hoàn thiện không gian sống">
+    <a class="cta" id="imgDownload" download style="display:block;text-align:center;
+      text-decoration:none;margin-top:14px">⬇ Tải ảnh về máy</a>
   </div>
 </div>
 
@@ -740,8 +797,7 @@ function pickSpace(rid,el){ pick('space',rid,el); S.picked=new Set(); S.pickInit
 const HOUSE_TYPES=[
   {id:'apt',  ic:'🏢', name:'Chung cư',            sub:'Chọn loại căn hộ',
    opts:[{v:'Studio',ic:'◻️',l:'Studio'},{v:'1PN',ic:'🚪',l:'1 Phòng ngủ'},
-         {v:'2PN',ic:'🚪🚪',l:'2 Phòng ngủ'},{v:'3PN',ic:'🚪🚪🚪',l:'3 Phòng ngủ'},
-         {v:'Duplex / Penthouse',ic:'👑',l:'Duplex / Penthouse'}]},
+         {v:'2PN',ic:'🚪🚪',l:'2 Phòng ngủ'},{v:'3PN',ic:'🚪🚪🚪',l:'3 Phòng ngủ'}]},
   {id:'town', ic:'🏠', name:'Nhà phố / mặt đất',   sub:'Chọn số tầng',
    opts:[{v:'1 tầng',ic:'🏠',l:'1 tầng'},{v:'2 tầng',ic:'🏘️',l:'2 tầng'},
          {v:'3 tầng',ic:'🏢',l:'3 tầng'},{v:'4 tầng trở lên',ic:'🌇',l:'4 tầng trở lên'}]},
@@ -793,10 +849,14 @@ function pickHouseSub(id,v){
 
 /* ===== BỐ CỤC THIẾT BỊ THEO TỪNG PHÒNG (mục 13) ===== */
 const ROOM_LAYOUT=[
-  {id:'living', ic:'🛋️', name:'Phòng khách', devs:['tv','soundbar','robot']},
-  {id:'kit',    ic:'🍳', name:'Bếp',         devs:['fridge','cooktop','hood','dishwasher','water','hotcold']},
-  {id:'bed',    ic:'🛏️', name:'Phòng ngủ',   devs:['ac','fan','purifier','tv']},
-  {id:'bath',   ic:'🚿', name:'Phòng tắm / Giặt', devs:['washer','dryer','heater']}
+  {id:'living', ic:'🛋️', name:'Phòng khách',
+   devs:['tv','soundbar','robot','purifier','dehum','ac']},
+  {id:'kit',    ic:'🍳', name:'Bếp',
+   devs:['fridge','cooktop','hood','dishwasher','water','hotcold']},
+  {id:'bed',    ic:'🛏️', name:'Phòng ngủ',
+   devs:['ac','fan','purifier','dehum','tv']},
+  {id:'bath',   ic:'🚿', name:'Phòng tắm / Giặt',
+   devs:['washer','dryer','heater']}
 ];
 /* Khoá duy nhất cho mỗi ô chọn: phòng + nhóm (TV xuất hiện ở 2 phòng) */
 function dk(r,g){ return r+':'+g; }
@@ -962,14 +1022,22 @@ function buildCombo(){
   if(S.flow==='upgrade'){
     const pool=DB.filter(p=>gs.includes(p.nhom)&&p.gia>=S.lo&&p.gia<=S.hi).sort((a,b)=>a.gia-b.gia);
     if(!pool.length)return [];
-    /* 3 mốc giá tiêu biểu: thấp – giữa – cao, mỗi mốc ưu tiên hàng tồn gần đó */
     const lo=pool[0].gia, hi=pool[pool.length-1].gia;
     const marks=[lo, (lo+hi)/2, hi];
     const seen={}, out=[];
-    marks.forEach(m=>{
-      const cand=pool.filter(p=>!seen[p.model]);
-      const p=pickNearest(cand,m);
-      if(p){seen[p.model]=1;out.push({...p});}
+    marks.forEach((m,idx)=>{
+      const key='up'+idx;                       /* mỗi gợi ý một khoá riêng */
+      if(S.skipped.has(key))return;             /* đã bỏ qua thì không hiện */
+      let p;
+      if(S.pinned[key]){
+        p=pool.find(x=>x.model===S.pinned[key]);
+        if(p&&seen[p.model])p=null;
+      }
+      if(!p){
+        const cand=pool.filter(x=>!seen[x.model]);
+        p=pickNearest(cand,m);
+      }
+      if(p){seen[p.model]=1;out.push({...p,_slot:key,_room:G[p.nhom].room,_alt:true});}
     });
     return out.sort((a,b)=>a.gia-b.gia);
   }
@@ -1045,10 +1113,18 @@ function render(){
   const combo=buildCombo();
   const p=[];if(S.sub)p.push(S.sub);if(S.fam)p.push(FAM[S.fam]);
   if(S.flow==='space'&&ROOMS[S.space])p.push(ROOMS[S.space].replace(/^\S+\s/,''));
-  document.getElementById('rSub').textContent=
-    (p.length?'Thiết kế cho '+p.join(' · ')+'. ':'')+
-    'Ngân sách '+fmt(S.lo)+' – '+fmt(S.hi)+'. Bấm "Đổi mẫu" ở từng dòng để chọn mã khác.';
+  document.getElementById('rSub').textContent = S.flow==='upgrade'
+    ? 'Hãy tham khảo hoặc lựa chọn thêm sản phẩm phù hợp hơn nhờ bộ lọc thông minh ở nút "Đổi mẫu".'
+    : (p.length?'Thiết kế cho '+p.join(' · ')+'. ':'')+
+      'Ngân sách '+fmt(S.lo)+' – '+fmt(S.hi)+'. Bấm "Đổi mẫu" ở từng dòng để chọn mã khác.';
 
+  /* Tiêu đề đổi theo luồng */
+  const tEl=document.getElementById('rTitle');
+  if(tEl){
+    tEl.textContent = S.flow==='upgrade'
+      ? 'Đã có gợi ý dành cho bạn 🎉'
+      : 'Combo của bạn đã sẵn sàng 🎉';
+  }
   const RN={living:'Phòng khách',kit:'Bếp',bed:'Phòng ngủ',bath:'Phòng tắm / Giặt'};
   document.getElementById('pl').innerHTML=combo.length?combo.map((x,i)=>{
     const k=x._slot||dk(G[x.nhom].room,x.nhom);
@@ -1094,12 +1170,19 @@ function render(){
   }).join('');
 
   const tot=combo.reduce((s,x)=>s+x.gia,0);
-  const totalSlots=availableSlots().filter(sl=>S.picked.has(sl.key)).length;
-  const pct=Math.round(combo.length/Math.max(1,totalSlots)*100);
+  let pct;
+  if(S.flow==='upgrade'){
+    pct=100;                                     /* luồng nâng cấp: luôn coi là đủ */
+  } else {
+    const totalSlots=availableSlots().filter(sl=>S.picked.has(sl.key)).length;
+    pct=Math.min(100,Math.round(combo.length/Math.max(1,totalSlots)*100));
+  }
   setTimeout(()=>document.getElementById('cf').style.width=pct+'%',120);
   anim('cp',0,pct,700,v=>Math.round(v));
   anim('tn',0,tot,900,v=>fmt(Math.round(v)));
   anim('sn',0,Math.round(tot*.12),900,v=>fmt(Math.round(v)));
+  const swEl=document.querySelector('.saveBox');
+  if(swEl)swEl.style.display=combo.length?'':'none';
 
   /* cảnh báo vượt / dưới ngân sách */
   const w=document.getElementById('budNote');
@@ -1149,7 +1232,7 @@ function onResultRange(){
 }
 
 /* ===== ĐỔI MẪU: chọn theo phân khúc + khoảng giá (mục 9, 10) ===== */
-const SWAP_MIN=10000, SWAP_MAX=100000;   /* 10 triệu – 100 triệu */
+const SWAP_MIN=1000, SWAP_MAX=50000;   /* 1 triệu – 50 triệu */
 const SEG_LABEL={eco:'Tiết kiệm',bal:'Cân bằng',pre:'Cao cấp'};
 
 function toggleSwap(k,cur){
@@ -1160,8 +1243,9 @@ function toggleSwap(k,cur){
   const c=curP?curP.gia:pool[Math.floor(pool.length/2)];
   openSwap={
     k:k, g:g, cur:cur,
-    lo: Math.max(SWAP_MIN,Math.floor(c*0.6/1000)*1000),
-    hi: Math.min(SWAP_MAX,Math.ceil(c*1.6/1000)*1000)
+    brand:'all',
+    lo: Math.max(SWAP_MIN,Math.floor(c*0.55/500)*500),
+    hi: Math.min(SWAP_MAX,Math.ceil(c*1.7/500)*500)
   };
   renderSwap();
 }
@@ -1174,12 +1258,36 @@ function renderSwap(){
   document.querySelectorAll('[id^=sp-]').forEach(e=>{if(e!==host)e.innerHTML=''});
   const g=openSwap.g;
 
+  /* Danh sách hãng có trong nhóm, kèm số mã */
+  const brands={};
+  DB.filter(p=>p.nhom===g).forEach(p=>{
+    const b=p.hang||'Khác';
+    brands[b]=(brands[b]||0)+1;
+  });
+  const brandList=Object.keys(brands).sort((a,b)=>brands[b]-brands[a]);
+
   host.innerHTML=
    '<div class="swapPanel">'+
     '<div class="swapHead">'+
       '<b>'+G[g].ic+' Chọn '+G[g].name.toLowerCase()+' khác</b>'+
       '<button class="swapClose" onclick="closeSwap()">✕ Đóng</button></div>'+
 
+    /* --- Lọc theo hãng --- */
+    (brandList.length>1?
+    '<div class="fltBlock"><div class="fltLbl">Hãng</div>'+
+     '<div class="chipRow">'+
+       '<button class="fchip'+(openSwap.brand==='all'?' on':'')+'" onclick="setSwapBrand(\'all\')">'+
+         'Tất cả <i>'+DB.filter(p=>p.nhom===g).length+'</i></button>'+
+       brandList.map(b=>
+         '<button class="fchip'+(openSwap.brand===b?' on':'')+'" onclick="setSwapBrand(\''+
+         b.replace(/'/g,"\\'")+'\')">'+b+' <i>'+brands[b]+'</i></button>').join('')+
+     '</div></div>':'')+
+
+    /* --- Lọc theo mức giá nhanh --- */
+    '<div class="fltBlock"><div class="fltLbl">Mức giá</div>'+
+     '<div class="chipRow" id="swQuick"></div></div>'+
+
+    /* --- Thanh trượt tinh chỉnh --- */
     '<div class="swRangeWrap">'+
       '<div class="swRangeTop"><b id="swVal">—</b><span class="rangeCount" id="swCount">—</span></div>'+
       '<div class="dual swDual"><div class="track"></div><div class="fill" id="swFill"></div>'+
@@ -1190,10 +1298,29 @@ function renderSwap(){
     '<div class="swapList" id="swList"></div>'+
    '</div>';
 
+  /* Nút mức giá nhanh — tự sinh theo dải giá thực của nhóm */
+  const ps=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((a,b)=>a-b);
+  const q=t=>ps[Math.floor((ps.length-1)*t)];
+  const QUICK=[
+    {l:'Tất cả',      lo:SWAP_MIN, hi:SWAP_MAX},
+    {l:'Phổ thông',   lo:SWAP_MIN, hi:Math.max(SWAP_MIN+500,q(0.34))},
+    {l:'Tầm trung',   lo:q(0.30),  hi:q(0.70)},
+    {l:'Cao cấp',     lo:q(0.66),  hi:SWAP_MAX}
+  ];
+  document.getElementById('swQuick').innerHTML=QUICK.map((x,i)=>
+    '<button class="fchip qchip" onclick="setSwapQuick('+Math.round(x.lo)+','+Math.round(x.hi)+')">'+
+    x.l+'</button>').join('');
+
   mountRange({lo:'swLo',hi:'swHi',fill:'swFill',marks:'swMarks'},
-    {min:SWAP_MIN,max:SWAP_MAX,step:1000,
-     initLo:Math.max(SWAP_MIN,openSwap.lo),initHi:Math.min(SWAP_MAX,openSwap.hi)});
+    {min:SWAP_MIN,max:SWAP_MAX,step:500,
+     initLo:Math.max(SWAP_MIN,openSwap.lo),initHi:Math.min(SWAP_MAX,openSwap.hi),
+     prices:ps});
   onSwap();
+}
+function setSwapBrand(b){ if(!openSwap)return; openSwap.brand=b; renderSwap(); }
+function setSwapQuick(lo,hi){
+  const a=document.getElementById('swLo'), b=document.getElementById('swHi');
+  if(a&&b){ a.value=lo; b.value=hi; onSwap(); }
 }
 
 function onSwap(){
@@ -1202,10 +1329,10 @@ function onSwap(){
     openSwap.lo=a;openSwap.hi=b;
     const v=document.getElementById('swVal');
     if(v)v.textContent=fmt(a)+'  –  '+fmt(b);
-    const g=openSwap.g;
-    /* Lọc thuần theo khoảng giá — hàng tồn kho xếp lên trước (mục 5) */
-    const list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b)
-      .sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
+    const g=openSwap.g, br=openSwap.brand||'all';
+    let list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b);
+    if(br!=='all') list=list.filter(p=>(p.hang||'Khác')===br);
+    list.sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
     const nStock=list.filter(p=>p.ton===1).length;
 
     const el=document.getElementById('swCount');
@@ -1228,8 +1355,8 @@ function onSwap(){
     });
     const lh=document.getElementById('swList');
     if(lh)lh.innerHTML=list.length?html:
-      '<div class="swapEmpty">Không có mã nào trong phân khúc và khoảng giá này.<br>'+
-      'Thử chọn phân khúc khác hoặc kéo rộng khoảng giá.</div>';
+      '<div class="swapEmpty">Không có mã nào khớp bộ lọc.<br>'+
+      'Thử chọn hãng khác hoặc kéo rộng khoảng giá.</div>';
   });
 }
 function chooseModel(k,model){
@@ -1265,16 +1392,17 @@ function anim(id,a,b,d,f){const el=document.getElementById(id);if(!el)return;con
    Watermark logo in chìm lớn phủ toàn ảnh để tránh sao chép.
    ================================================================== */
 /* Dán logo dạng base64 vào đây để in chìm. Để trống thì dùng watermark chữ. */
-const LOGO_BASE64 = '';
+const LOGO_BASE64 = 'data:image/png;base64,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';
 
 function saveProject(){
   const combo=buildCombo();
   if(!combo.length){alert('Chưa có thiết bị nào trong phương án.');return;}
-  const btn=event&&event.target; if(btn)btn.textContent='⏳ Đang tạo ảnh…';
+  const btn=document.querySelector('.fc .cta.gh');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Đang tạo…';}
+  const done=()=>{ if(btn){btn.disabled=false;btn.textContent='💾 Lưu phương án';} };
   const draw=(logoImg)=>{
-    try{ renderProjectImage(combo,logoImg); }
-    catch(e){ alert('Không tạo được ảnh: '+e.message); }
-    if(btn)btn.textContent='📸 Lưu dự án';
+    try{ renderProjectImage(combo,logoImg,done); }
+    catch(e){ alert('Không tạo được ảnh: '+e.message); done(); }
   };
   if(LOGO_BASE64){
     const im=new Image();
@@ -1284,7 +1412,46 @@ function saveProject(){
   } else draw(null);
 }
 
-function renderProjectImage(combo,logoImg){
+/* Xuất ảnh: ưu tiên chia sẻ trực tiếp (điện thoại), fallback tải file (máy tính) */
+function deliverImage(blob){
+  const fileName='TinPhat_PhuongAn_'+new Date().toISOString().slice(0,10)+'.png';
+  const file=new File([blob],fileName,{type:'image/png'});
+
+  /* 1. Điện thoại: mở bảng chia sẻ → lưu ảnh, gửi Zalo, gửi tin nhắn... */
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    navigator.share({
+      files:[file],
+      title:'Phương án hoàn thiện không gian sống',
+      text:'Phương án điện máy từ Điện Máy Tín Phát'
+    }).catch(()=>{ showImageFallback(blob,fileName); });
+    return;
+  }
+  /* 2. Máy tính: tải file + hiện ảnh để bấm chuột phải lưu/copy */
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=fileName;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  showImageFallback(blob,fileName);
+}
+
+/* Hiện ảnh trong khung xem — bấm giữ để lưu trên điện thoại */
+function showImageFallback(blob,fileName){
+  const url=URL.createObjectURL(blob);
+  const m=document.getElementById('imgModal');
+  document.getElementById('imgPreview').src=url;
+  const dl=document.getElementById('imgDownload');
+  dl.href=url; dl.download=fileName;
+  m.classList.add('on');
+  m._url=url;
+}
+function closeImgModal(){
+  const m=document.getElementById('imgModal');
+  m.classList.remove('on');
+  if(m._url){setTimeout(()=>URL.revokeObjectURL(m._url),500);m._url=null;}
+}
+
+function renderProjectImage(combo,logoImg,done){
   const W=1080, PAD=64;
   const RN={living:'PHÒNG KHÁCH',kit:'BẾP',bed:'PHÒNG NGỦ',bath:'PHÒNG TẮM / GIẶT'};
 
@@ -1303,7 +1470,7 @@ function renderProjectImage(combo,logoImg){
   H += 150;                                      /* thanh tiến độ */
   roomsOrder.forEach(r=>{ H += 58 + byRoom[r].length*46 + 18; });
   if(missNames.length) H += 110;
-  H += 190;                                      /* tổng tiền + ghi chú */
+  H += 340;                                      /* tổng tiền + tiết kiệm + ghi chú */
   H += 90;                                       /* footer */
   H = Math.max(H, 900);
 
@@ -1319,12 +1486,25 @@ function renderProjectImage(combo,logoImg){
 
   /* ---- WATERMARK in chìm phủ toàn ảnh ---- */
   g.save();
-  g.globalAlpha=0.06;
-  g.translate(W/2,H/2); g.rotate(-Math.PI/9);
   if(logoImg){
-    const lw=W*1.05, lh=lw*(logoImg.height/logoImg.width);
+    /* Logo lớn in chìm giữa ảnh */
+    g.globalAlpha=0.07;
+    g.translate(W/2,H/2); g.rotate(-Math.PI/10);
+    const lw=W*1.15, lh=lw*(logoImg.height/logoImg.width);
     g.drawImage(logoImg,-lw/2,-lh/2,lw,lh);
+    g.restore();
+    /* Lặp logo mờ hơn phủ kín phần còn lại để chống cắt ghép */
+    g.save();
+    g.globalAlpha=0.045;
+    const tw=W*0.42, th=tw*(logoImg.height/logoImg.width);
+    for(let yy=-th; yy<H+th; yy+=th*1.75){
+      for(let xx=-tw; xx<W+tw; xx+=tw*1.5){
+        g.drawImage(logoImg,xx+((yy/th|0)%2?tw*0.7:0),yy,tw,th);
+      }
+    }
   } else {
+    g.globalAlpha=0.06;
+    g.translate(W/2,H/2); g.rotate(-Math.PI/9);
     g.fillStyle='#0f1b3d';
     g.textAlign='center'; g.textBaseline='middle';
     g.font='800 118px Segoe UI, Arial';
@@ -1341,6 +1521,20 @@ function renderProjectImage(combo,logoImg){
 
   /* ---- Header ---- */
   g.fillStyle='#ffffff'; g.textAlign='left'; g.textBaseline='alphabetic';
+  if(logoImg){
+    /* Logo trắng hoá đặt góc phải header */
+    const hw=132, hh=hw*(logoImg.height/logoImg.width);
+    const tmp=document.createElement('canvas');
+    tmp.width=logoImg.width; tmp.height=logoImg.height;
+    const tg=tmp.getContext('2d');
+    tg.drawImage(logoImg,0,0);
+    tg.globalCompositeOperation='source-in';
+    tg.fillStyle='#ffffff';
+    tg.fillRect(0,0,tmp.width,tmp.height);
+    g.save(); g.globalAlpha=.95;
+    g.drawImage(tmp,W-PAD-hw,46,hw,hh);
+    g.restore();
+  }
   g.font='800 20px Segoe UI, Arial';
   g.globalAlpha=.75; g.fillText('ĐIỆN MÁY TÍN PHÁT',PAD,74); g.globalAlpha=1;
   g.font='800 44px Segoe UI, Arial';
@@ -1411,7 +1605,21 @@ function renderProjectImage(combo,logoImg){
   g.fillText('TỔNG GIÁ TRỊ PHƯƠNG ÁN',PAD+26,y+38); g.globalAlpha=1;
   g.font='800 40px Segoe UI, Arial';
   g.fillText(fmt(tot),PAD+26,y+82);
-  y+=134;
+  y+=120;
+
+  /* ---- Tiết kiệm (nổi bật) ---- */
+  const save=Math.round(tot*0.12);
+  const sg=g.createLinearGradient(PAD,0,W-PAD,0);
+  sg.addColorStop(0,'#0a8f4d'); sg.addColorStop(1,'#12a35a');
+  g.fillStyle=sg; roundRect(g,PAD,y,W-PAD*2,116,14); g.fill();
+  g.fillStyle='#ffffff'; g.globalAlpha=.9; g.font='700 17px Segoe UI, Arial';
+  g.fillText('💰  BẠN TIẾT KIỆM ĐƯỢC',PAD+26,y+36); g.globalAlpha=1;
+  g.font='800 38px Segoe UI, Arial';
+  g.fillText(fmt(save),PAD+26,y+76);
+  g.globalAlpha=.9; g.font='600 14px Segoe UI, Arial';
+  g.fillText('nhờ gộp chi phí vận chuyển, lắp đặt và chăm sóc khách hàng vào một lần',PAD+26,y+100);
+  g.globalAlpha=1;
+  y+=146;
 
   /* ---- Ghi chú ---- */
   g.fillStyle='#fff8e8'; roundRect(g,PAD,y,W-PAD*2,72,12); g.fill();
@@ -1426,13 +1634,10 @@ function renderProjectImage(combo,logoImg){
   g.fillStyle='#98a2b3'; g.font='600 15px Segoe UI, Arial'; g.textAlign='center';
   g.fillText('Điện Máy Tín Phát · AI hoàn thiện không gian sống',W/2,H-32);
 
-  /* ---- Tải về ---- */
+  /* ---- Xuất ảnh ---- */
   cv.toBlob(function(blob){
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download='TinPhat_PhuongAn_'+new Date().toISOString().slice(0,10)+'.png';
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    deliverImage(blob);
+    if(done)done();
   },'image/png');
 }
 

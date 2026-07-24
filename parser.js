@@ -24,6 +24,7 @@ const GROUPS = {
   ac:        {ic:'❄️', name:'Điều hoà',            room:'bed',    core:1},
   dishwasher:{ic:'🍽️', name:'Máy rửa bát',         room:'kit',    core:1},
   robot:     {ic:'🤖', name:'Robot hút bụi',       room:'living', core:1},
+  vacuum:    {ic:'🧹', name:'Máy hút bụi cầm tay', room:'living', core:0},
   purifier:  {ic:'🌬️', name:'Máy lọc không khí',   room:'bed',    core:1},
   water:     {ic:'💧', name:'Máy lọc nước',        room:'kit',    core:1},
   heater:    {ic:'🚿', name:'Bình nóng lạnh',      room:'bath',   core:1},
@@ -49,7 +50,11 @@ const TAG_MAP = {
   'may say':'dryer', 'maysay':'dryer',
   'dieu hoa':'ac', 'dieuhoa':'ac', 'may lanh':'ac', 'dieu hoa 2 chieu':'ac',
   'may rua bat':'dishwasher', 'ruabat':'dishwasher', 'may rua chen':'dishwasher',
-  'robot':'robot', 'robot hut bui':'robot', 'hut bui':'robot', 'may hut bui':'robot',
+  /* Robot: chỉ khi hashtag có chữ "robot" */
+  'robot':'robot', 'robot hut bui':'robot', 'robot lau nha':'robot',
+  /* Hút bụi KHÔNG có chữ robot = máy cầm tay */
+  'may hut bui':'vacuum', 'hut bui':'vacuum', 'hut bui cam tay':'vacuum',
+  'may hut bui cam tay':'vacuum', 'hut bui khong day':'vacuum',
   'loc khong khi':'purifier', 'may loc khong khi':'purifier', 'lockhongkhi':'purifier',
   'loc nuoc':'water', 'may loc nuoc':'water', 'locnuoc':'water',
   'nuoc nong lanh':'hotcold', 'cay nuoc':'hotcold', 'cay nuoc nong lanh':'hotcold',
@@ -244,13 +249,40 @@ function reasonOf(group, tier, spec, brand){
 function groupFromTag(tag){
   const t = noAccent(tag);
   if(!t) return null;
+  /* Ưu tiên tuyệt đối: hashtag chứa "robot" luôn là robot hút bụi,
+     KHÔNG bao giờ nhầm sang máy hút bụi cầm tay.                    */
+  if(t.indexOf('robot')>=0) return 'robot';
   if(TAG_MAP[t]) return TAG_MAP[t];
-  /* khớp mềm: hashtag chứa từ khoá */
   let best=null, bl=0;
   for(const k in TAG_MAP){
     if((t===k || t.indexOf(k)>=0) && k.length>bl){best=TAG_MAP[k]; bl=k.length;}
   }
   return best;
+}
+/* Tách tên hãng ra khỏi hashtag. VD "Tivi Samsung" → "Samsung" */
+/* Các từ mô tả ngành hàng — không phải tên hãng */
+const NOT_BRAND = new Set(['may','maylanh','tu','bep','loa','quat','binh','cay','robot','hut','bui',
+  'lanh','giat','say','loc','nuoc','khong','khi','am','mui','rua','bat','chen','nong','tu lanh',
+  'cam','tay','khong day','khong','day','inverter','2 chieu','1 chieu','mini','thong minh','smart',
+  'tivi','tv','dieu','hoa']);
+function brandFromTag(tag, group){
+  const raw = String(tag||'').trim();
+  if(!raw) return '';
+  const t = noAccent(raw);
+  /* Tìm từ khoá ngành hàng DÀI NHẤT xuất hiện trong hashtag */
+  let bestKw='';
+  for(const k in TAG_MAP){
+    if(t.indexOf(k)>=0 && k.length>bestKw.length) bestKw=k;
+  }
+  if(!bestKw) return '';
+  const i = t.indexOf(bestKw);
+  let rest = (raw.slice(0,i) + ' ' + raw.slice(i+bestKw.length)).trim()
+             .replace(/^[-–—:|/]+\s*/,'').replace(/\s{2,}/g,' ');
+  if(!rest) return '';
+  /* Loại bỏ các từ mô tả còn sót, chỉ giữ phần thực sự là tên hãng */
+  const words = rest.split(/\s+/).filter(w => !NOT_BRAND.has(noAccent(w)));
+  rest = words.join(' ').trim();
+  return isBrandName(rest) ? rest : '';
 }
 /* Tra phân khúc từ cột AL */
 function segFromCell(v){
@@ -313,9 +345,10 @@ function buildCatalog(rows, cfg){
     if(!group){ log.noGroup++; continue; }
     if(!GROUPS[group]){ log.noGroup++; continue; }
 
-    /* Chỉ gán hãng khi dòng tiêu đề gần nhất CÙNG NHÓM với sản phẩm.
-       Tránh việc một tiêu đề TV làm hỏng tên của toàn bộ máy giặt bên dưới. */
-    const brand = (curGroup===group) ? curBrand : '';
+    /* Hãng: ưu tiên tách từ hashtag cột AK (chính xác nhất).
+       Nếu hashtag chỉ có ngành hàng thì mới dùng dòng tiêu đề cùng nhóm. */
+    let brand = brandFromTag(tag, group);
+    if(!brand && curGroup===group) brand = curBrand;
 
     /* Phân khúc: ưu tiên cột AL, nếu trống sẽ tính theo phân vị giá sau */
     const pkSheet = segFromCell(seg);
@@ -383,5 +416,5 @@ async function load(cfg){
 
 return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, COL_HINTS, detectColumns,
         load, parseCSV, buildCatalog,
-        num, noAccent, detectHeader, isBrandName, specOf, groupFromTag, segFromCell};
+        num, noAccent, detectHeader, isBrandName, specOf, groupFromTag, brandFromTag, segFromCell};
 })();
