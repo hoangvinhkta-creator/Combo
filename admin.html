@@ -54,6 +54,8 @@ tr:hover td{background:#fafbfc}
 .pill.eco{background:#eef2f6;color:#5b6b7c}
 .pill.bal{background:var(--sky);color:var(--blue)}
 .pill.pre{background:#f3ecff;color:#7c3aed}
+.tagCell{font-size:11.5px;font-weight:700;background:var(--sky);color:var(--blue);padding:3px 9px;border-radius:99px;display:inline-block}
+.autoTag{font-size:9.5px;font-weight:800;color:var(--gold);background:var(--goldbg);padding:2px 6px;border-radius:99px;margin-left:5px}
 .gname{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12.5px}
 .cov{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:11px}
 .cv{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
@@ -120,6 +122,11 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
       <div class="sub">Hệ thống đọc các dòng tiêu đề như "Tivi Aqua", "Tủ lạnh Samsung" để phân loại toàn bộ sản phẩm bên dưới nó. Nếu một dòng tiêu đề không được nhận diện, các mã phía dưới sẽ bị bỏ qua.</div>
       <div class="hdrlist" id="hdrs"></div>
     </div>
+    <div class="card" id="tagIssueCard" style="display:none">
+      <h3>⚠️ Hashtag chưa nhận diện được</h3>
+      <div class="sub">Các giá trị ở cột AK dưới đây chưa có trong bảng ánh xạ — sản phẩm phải dựa vào dòng tiêu đề, dễ sai ngành hàng. Gửi danh sách này để bổ sung vào <code>TAG_MAP</code> trong <code>parser.js</code>.</div>
+      <div class="hdrlist" id="tagIssues"></div>
+    </div>
     <div class="card">
       <h3>🎯 Độ phủ hàng tồn theo nhóm</h3>
       <div class="sub">AI ưu tiên đề xuất hàng tồn kho. Nhóm nào không có mã tồn nào thì khách sẽ luôn nhận hàng phải đặt — nên bổ sung tồn cho các nhóm này.</div>
@@ -139,7 +146,7 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
     <div class="tw"><table>
       <thead><tr>
         <th style="width:45px">Dòng</th><th style="width:150px">Nhóm</th><th style="width:145px">Mã model</th>
-        <th style="width:120px">Hãng</th>
+        <th style="width:130px">Hashtag (AK)</th><th style="width:110px">Hãng</th>
         <th style="width:110px" class="num">Giá bán (Y)</th><th style="width:110px" class="num">Tồn (S)</th>
         <th style="width:95px">Trạng thái</th><th style="width:95px">Phân khúc</th>
         <th>Lý do hiển thị cho khách</th>
@@ -166,14 +173,16 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
         <tr><td><code>A</code></td><td>Mã model</td><td>Mã sản phẩm. Dòng nào là <b>tiêu đề nhóm</b> (VD "Tivi Aqua") thì tự nhận diện loại hàng + hãng cho toàn bộ dòng bên dưới.</td></tr>
         <tr><td><code>S</code></td><td>Tín Phát tồn</td><td><b>Có giá = còn tồn kho.</b> AI ưu tiên tuyệt đối các mã này. Ô trống hoặc 0 = phải đặt hàng.</td></tr>
         <tr><td><code>Y</code></td><td>Có lắp đặt</td><td><b>Giá bán cuối cùng</b> hiển thị cho khách. Ô trống hoặc ghi "hh" = không bán, bỏ qua dòng đó.</td></tr>
+        <tr><td><code>AK</code></td><td>Hashtag</td><td><b>Ngành hàng — nguồn phân loại chính.</b> VD: Tivi, Tủ lạnh, Máy giặt, Điều hoà, Bếp từ... Cột này quyết định thiết bị được xếp vào nhóm nào, tránh nhầm máy giặt thành TV.</td></tr>
+        <tr><td><code>AL</code></td><td>Phân khúc</td><td><b>Tiết kiệm / Cân bằng / Cao cấp.</b> Dùng để lọc khi khách bấm "Đổi mẫu". Ô trống thì hệ thống tự tính theo phân vị giá trong nhóm (hiện nhãn <code>auto</code>).</td></tr>
       </table>
 
       <div class="warn">⚠️ <b>Điều kiện bắt buộc:</b> Google Sheet phải được xuất bản công khai — vào <b>Tệp → Chia sẻ → Xuất bản lên web → chọn CSV → Xuất bản</b>. Nếu đổi link, sửa dòng <code>CSV_URL</code> ở đầu file <code>parser.js</code>.</div>
 
       <h3 style="margin-top:24px">Hệ thống tự suy luận những gì?</h3>
       <div class="sub">Sheet của bạn không có cột phân khúc hay lý do tư vấn — hệ thống tự sinh ra:</div>
-      <div class="step"><div class="no">1</div><div><b>Phân khúc (Tiết kiệm / Tốt / Cao cấp)</b>
-        <p>Tính theo phân vị giá <b>trong từng nhóm hàng</b>. Rẻ nhất 1/3 → Tiết kiệm · giữa → Tốt · đắt nhất 1/3 → Cao cấp. Tự cập nhật mỗi khi bạn đổi giá.</p></div></div>
+      <div class="step"><div class="no">1</div><div><b>Phân khúc — ưu tiên cột AL</b>
+        <p>Nếu cột AL đã điền (Tiết kiệm / Cân bằng / Cao cấp) thì dùng đúng giá trị đó. Chỉ khi ô trống mới tự tính theo phân vị giá trong nhóm — những mã này gắn nhãn <code>auto</code> ở tab Danh mục.</p></div></div>
       <div class="step"><div class="no">2</div><div><b>Câu "Vì sao chọn" cho khách</b>
         <p>Chỉ dùng thông tin chắc chắn: nhóm hàng, hãng và phân khúc giá. <b>Không suy đoán dung tích, kích thước hay công suất</b> từ mã model — vì mỗi hãng đặt mã một kiểu, suy đoán rất dễ sai và làm khách tính nhầm nhu cầu.</p></div></div>
 
@@ -247,7 +256,10 @@ function renderAll(){
     '<div class="stat"><div class="n">'+(LOG.ok-inS)+'</div><div class="l">Cần đặt hàng</div></div>'+
     '<div class="stat"><div class="n">'+gs.length+'</div><div class="l">Nhóm hàng</div></div>'+
     '<div class="stat '+(gaps?'r':'g')+'"><div class="n">'+gaps+'</div><div class="l">Nhóm chính thiếu hàng</div></div>'+
+    '<div class="stat '+(LOG.byTag===LOG.ok?'g':'w')+'"><div class="n">'+LOG.byTag+'</div><div class="l">Phân loại theo cột AK</div></div>'+
+    '<div class="stat '+(LOG.segFromSheet===LOG.ok?'g':'w')+'"><div class="n">'+LOG.segFromSheet+'</div><div class="l">Phân khúc từ cột AL</div></div>'+
     '<div class="stat w"><div class="n">'+LOG.noPrice+'</div><div class="l">Dòng bỏ qua</div></div>';
+  renderTagIssues();
   renderStockCoverage();
 
   document.getElementById('hdrs').innerHTML=LOG.headers.length
@@ -270,11 +282,13 @@ function renderTable(){
     '<td style="color:var(--mut);font-size:11.5px">'+p._row+'</td>'+
     '<td><span class="gname">'+G[p.nhom].ic+' '+G[p.nhom].name+'</span></td>'+
     '<td class="mono">'+p.model+'</td>'+
+    '<td><span class="tagCell">'+(p.tag||'—')+'</span></td>'+
     '<td style="font-size:12.5px">'+(p.hang||'—')+'</td>'+
     '<td class="num">'+fmt(p.gia)+'</td>'+
     '<td class="num" style="color:'+(p.giaTon?'var(--green)':'var(--mut)')+'">'+(p.giaTon?fmt(p.giaTon):'—')+'</td>'+
     '<td><span class="pill '+(p.ton?'in':'out')+'">'+(p.ton?'● Có sẵn':'○ Đặt')+'</span></td>'+
-    '<td><span class="pill '+p.pk+'">'+PK[p.pk]+'</span></td>'+
+    '<td><span class="pill '+p.pk+'">'+PK[p.pk]+'</span>'+
+      (p._pkSheet?'':'<span class="autoTag" title="Sheet chưa điền cột AL, hệ thống tự tính theo giá">auto</span>')+'</td>'+
     '<td style="font-size:12px;color:var(--ink2);line-height:1.5">'+p.ld+'</td>'+
   '</tr>').join('');
 }
@@ -295,6 +309,15 @@ function renderStockCoverage(){
     return '<div class="cv '+cls+'"><b>'+G[g].ic+' '+G[g].name+'</b>'+
       '<div class="d"><b style="font-size:15px">'+st.length+'</b>/'+all.length+' mã tồn kho ('+pct+'%)<br>'+msg+'</div></div>';
   }).join('');
+}
+function renderTagIssues(){
+  const t=LOG.tagsUnknown||{};
+  const keys=Object.keys(t);
+  const card=document.getElementById('tagIssueCard');
+  if(!keys.length){card.style.display='none';return;}
+  card.style.display='';
+  document.getElementById('tagIssues').innerHTML=keys.map(k=>
+    '<span class="hd miss">'+k+' <span style="opacity:.7">('+t[k]+' mã)</span></span>').join('');
 }
 function renderCov(){}
 

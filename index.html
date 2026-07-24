@@ -26,14 +26,16 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .bdg i{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pl 1.6s infinite;font-style:normal}
 @keyframes pl{0%,100%{opacity:1}50%{opacity:.3}}
 .hero h1{font-size:clamp(26px,4.4vw,40px);font-weight:800;line-height:1.18;letter-spacing:-.02em}
-.hero p{max-width:520px;margin:14px auto 0;color:var(--ink2);font-size:15.5px;line-height:1.6}
+.hero p{max-width:600px;margin:14px auto 0;color:var(--ink2);font-size:15.5px;line-height:1.75}
+.heroLine2{display:inline-block;margin-top:8px;color:var(--blue);font-weight:600}
 .goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:34px}
 .goal{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:24px 20px;text-align:left;transition:var(--tr)}
 .goal:hover{transform:translateY(-4px);border-color:var(--blue);box-shadow:var(--sh)}
 .goal .ic{font-size:30px;display:block;margin-bottom:10px}
 .goal b{font-size:15.5px;display:block;margin-bottom:5px}
 .goal span{font-size:12.5px;color:var(--mut);line-height:1.5;display:block}
-.trust{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:36px;color:var(--mut);font-size:12.5px;font-weight:600}
+.trust{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;margin-top:36px;color:var(--mut);font-size:12.5px;font-weight:600;max-width:900px;margin-left:auto;margin-right:auto}
+.trust span{display:inline-flex;align-items:center;gap:6px}
 .qh{margin-bottom:24px}
 .bk{font-size:13px;font-weight:700;color:var(--mut);display:inline-flex;gap:6px;margin-bottom:16px;transition:var(--tr)}
 .bk:hover{color:var(--blue)}
@@ -96,8 +98,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .sl{margin-top:7px;font-size:12.5px;font-weight:700;color:var(--green);background:var(--greenbg);padding:7px 11px;border-radius:9px}
 .ben{margin-top:22px;background:linear-gradient(120deg,#0f1b3d,#1a2f66);border-radius:var(--r);padding:24px;color:#fff}
 .ben h3{font-size:15px;margin-bottom:12px}
-.bl{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;font-size:13px}
-.bl span{display:flex;gap:8px;opacity:.94}
+.bl{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:11px;font-size:13px}
+.bl span{display:flex;gap:9px;opacity:.94;line-height:1.5;align-items:flex-start}
+.bl i{flex-shrink:0}
 .bl i{color:#7ef0b0;font-weight:800;font-style:normal}
 .fc{margin-top:22px;display:flex;gap:11px;flex-wrap:wrap}
 .fc .cta{flex:1;min-width:210px}
@@ -115,6 +118,44 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .errbox p{color:var(--ink2);font-size:13.5px;line-height:1.6}
 .errbox code{background:#f2f4f7;padding:2px 7px;border-radius:5px;font-size:12px;font-family:ui-monospace,monospace}
 
+
+
+/* ===== MÔ TẢ NGẮN + NÚT BỎ QUA ===== */
+.desc{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.5}
+.roomTag{font-size:11px;font-weight:700;color:var(--blue);background:var(--sky);padding:2px 8px;border-radius:99px;font-family:inherit}
+.pAct{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.skip{font-size:11.5px;font-weight:700;color:var(--mut);transition:var(--tr)}
+.skip:hover{color:var(--red);text-decoration:underline}
+.chip.pend{background:#f2f4f7;color:var(--mut)}
+.skBox{margin-top:16px;background:#fff;border:1.5px dashed var(--line);border-radius:var(--r);padding:16px 18px}
+.skBox b{font-size:13px;color:var(--ink2);display:block;margin-bottom:10px}
+.skList{display:flex;gap:8px;flex-wrap:wrap}
+.skChip{font-size:12.5px;font-weight:700;padding:8px 14px;border-radius:99px;background:#f2f4f7;
+  color:var(--ink2);transition:var(--tr);display:inline-flex;align-items:center;gap:7px}
+.skChip:hover{background:var(--sky);color:var(--blue)}
+.skChip span{font-size:11px;font-weight:800;color:var(--blue)}
+/* ===== CHỌN THIẾT BỊ THEO PHÒNG ===== */
+.pickAll{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:18px;
+  background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:13px 18px}
+.pickCount{font-size:12.5px;font-weight:700;color:var(--blue);background:var(--sky);padding:7px 14px;border-radius:99px}
+.roomBlock{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px;margin-bottom:14px}
+.roomTitle{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.roomTitle b{font-size:15px;font-weight:800}
+.roomTitle .rc{font-size:11.5px;font-weight:700;color:var(--mut);background:#f2f4f7;padding:4px 10px;border-radius:99px}
+.roomTitle .rall{font-size:11.5px;font-weight:700;color:var(--blue);margin-left:auto}
+.roomTitle .rall:hover{text-decoration:underline}
+.devGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.dev{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--line);
+  border-radius:12px;background:#fff;transition:var(--tr);text-align:left;position:relative}
+.dev:hover{border-color:var(--blue);background:var(--sky)}
+.dev.on{border-color:var(--blue);background:var(--sky);box-shadow:0 0 0 3px rgba(20,80,224,.1)}
+.dev .di{font-size:22px;flex-shrink:0}
+.dev b{font-size:13.5px;font-weight:700;line-height:1.3}
+.dev .dn{font-size:11px;color:var(--mut);font-weight:600;margin-top:2px}
+.dev .dck{position:absolute;top:7px;right:8px;width:18px;height:18px;border-radius:50%;
+  background:var(--blue);color:#fff;display:none;place-items:center;font-size:10px}
+.dev.on .dck{display:grid}
+.dev.off{opacity:.5}
 /* ===== TRÌNH CHỌN KHOẢNG GIÁ ===== */
 .rangeBox{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:26px 28px}
 .rangeHead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:6px}
@@ -139,23 +180,53 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .histo{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:14px}
 .histo i{flex:1;background:#e6e9ef;border-radius:2px 2px 0 0;min-height:3px;transition:background .25s}
 .histo i.on{background:#9dbcf7}
+
+.feasWarn{margin-top:16px;background:var(--goldbg,#fff8e8);border:1.5px solid #ffd58a;border-radius:11px;
+  padding:13px 16px;font-size:12.5px;color:#7a5a12;line-height:1.6}
+.feasOk{margin-top:16px;background:var(--greenbg);border:1.5px solid #9ae0bb;border-radius:11px;
+  padding:11px 16px;font-size:12.5px;color:#0a6e3d;line-height:1.5;font-weight:600}
 /* ===== ĐỔI MẪU ===== */
-.swapPanel{grid-column:1/-1;margin-top:14px;padding-top:16px;border-top:1.5px dashed var(--line);animation:fu .3s ease both}
-.swapHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.swapHead b{font-size:13.5px}
-.swapClose{font-size:12.5px;font-weight:700;color:var(--mut)}
-.swapClose:hover{color:var(--red)}
-.swapList{display:flex;flex-direction:column;gap:7px;max-height:290px;overflow-y:auto;padding-right:4px}
-.swapItem{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 14px;border:1.5px solid var(--line);border-radius:11px;text-align:left;transition:var(--tr);background:#fff;width:100%}
-.swapItem:hover{border-color:var(--blue);background:var(--sky)}
+.swapPanel{grid-column:1/-1;margin-top:16px;padding:18px;background:#fafbfd;border:1.5px solid var(--line);
+  border-radius:14px;animation:fu .3s ease both}
+.swapHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1.5px solid var(--line)}
+.swapHead b{font-size:14.5px;font-weight:800}
+.swapClose{font-size:12.5px;font-weight:700;color:var(--mut);padding:6px 12px;border-radius:8px}
+.swapClose:hover{color:var(--red);background:var(--redbg)}
+.swapRow{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;margin-bottom:16px}
+@media(max-width:640px){.swapRow{grid-template-columns:1fr;gap:8px}}
+.swLbl{font-size:11.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;padding-top:9px}
+.segBtns{display:flex;gap:7px;flex-wrap:wrap}
+.segB{font-size:12.5px;font-weight:700;padding:9px 15px;border-radius:10px;background:#fff;
+  border:1.5px solid var(--line);color:var(--ink2);transition:var(--tr);display:inline-flex;align-items:center;gap:7px}
+.segB:hover:not(.dis){border-color:var(--blue);color:var(--blue)}
+.segB.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.segB i{font-style:normal;font-size:11px;font-weight:800;background:rgba(0,0,0,.08);padding:1px 7px;border-radius:99px}
+.segB.on i{background:rgba(255,255,255,.25)}
+.segB.dis{opacity:.35;cursor:not-allowed}
+.swRangeWrap{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 18px 10px}
+.swRangeTop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.swRangeTop b{font-size:16px;font-weight:800;color:var(--blue);letter-spacing:-.01em}
+.dual.swDual{height:34px;margin:8px 0 0}
+.dual.swDual .track,.dual.swDual .fill{top:14px}
+.swapList{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding:2px 4px 2px 2px}
+.swapItem{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:13px 16px;
+  border:1.5px solid var(--line);border-radius:11px;text-align:left;transition:var(--tr);background:#fff;width:100%}
+.swapItem:hover{border-color:var(--blue);box-shadow:0 3px 12px rgba(20,80,224,.1);transform:translateY(-1px)}
 .swapItem.cur{border-color:var(--blue);background:var(--sky)}
-.swapItem b{font-size:13.5px;display:block;font-weight:700}
-.swapItem .mm{font-size:11.5px;color:var(--mut);font-family:ui-monospace,monospace;margin-top:2px}
-.swapItem .pz{font-size:14px;font-weight:800;white-space:nowrap}
-.swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px;margin-left:6px;white-space:nowrap}
-.swapDiv{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;padding:10px 2px 4px;border-top:1px dashed var(--line);margin-top:4px}
-.swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:2px 7px;border-radius:99px;margin-left:6px}
-.swapEmpty{text-align:center;padding:22px;color:var(--mut);font-size:13px}
+.siMain b{font-size:13.5px;display:block;font-weight:700;line-height:1.35}
+.siMeta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px}
+.siMeta .mm{font-size:11.5px;color:var(--mut);font-family:ui-monospace,monospace;font-weight:600}
+.segTag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px}
+.segTag.eco{background:#eef2f6;color:#5b6b7c}
+.segTag.bal{background:var(--sky);color:var(--blue)}
+.segTag.pre{background:#f3ecff;color:#7c3aed}
+.swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px}
+.swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:1px 7px;border-radius:99px}
+.swapItem .pz{font-size:15px;font-weight:800;white-space:nowrap}
+.swapDiv{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;
+  padding:12px 2px 6px;border-top:1px dashed var(--line);margin-top:4px}
+.swapEmpty{text-align:center;padding:26px 18px;color:var(--mut);font-size:13px;line-height:1.6}
 footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var(--mut);font-size:12px}
 </style></head><body>
 <header>
@@ -163,7 +234,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
   <div class="hw">
     <div class="logo"><div class="mk">⚡</div><div>Tín Phát AI<small>Hoàn thiện không gian sống</small></div></div>
     <div class="sp"></div>
-    <button class="hb" onclick="home()">↺ Bắt đầu lại</button>
+    <button class="hb" onclick="home()">✦ Thiết kế lại từ đầu</button>
   </div>
 </header>
 
@@ -185,9 +256,11 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <section class="sc" id="s0">
   <div class="hero">
-    <div class="bdg"><i></i> AI tư vấn miễn phí · 3 phút</div>
+    <div class="bdg"><i></i> AI hoàn thiện không gian sống · chỉ 3 phút</div>
     <h1>Hôm nay bạn muốn làm gì?</h1>
-    <p>AI sẽ chọn thiết bị phù hợp nhất với ngôi nhà và ngân sách của bạn — ưu tiên hàng có sẵn trong kho, giao lắp ngay.</p>
+    <p>AI của Điện máy Tín Phát sẽ giúp bạn chọn thiết bị phù hợp nhất<br>
+    với ngôi nhà và tối ưu ngân sách.<br>
+    <span class="heroLine2">Ưu tiên đến bảo vệ sức khoẻ và trải nghiệm sử dụng sản phẩm.</span></p>
   </div>
   <div class="goals">
     <button class="goal" onclick="go('full')"><span class="ic">🏡</span><b>Hoàn thiện toàn bộ ngôi nhà</b><span>Chung cư, nhà phố hoặc phòng trọ — AI lên trọn bộ thiết bị.</span></button>
@@ -195,7 +268,11 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     <button class="goal" onclick="go('upgrade')"><span class="ic">🔄</span><b>Nâng cấp thiết bị đang dùng</b><span>Cho AI biết bạn muốn thay gì và cần tính năng nào.</span></button>
     <button class="goal" onclick="go('budget')"><span class="ic">💰</span><b>Tham khảo combo theo ngân sách</b><span>Có sẵn một khoản — AI chia ngân sách theo ưu tiên của bạn.</span></button>
   </div>
-  <div class="trust"><span id="tStock">✅ Ưu tiên hàng có sẵn kho</span><span>🚚 Giao lắp đồng bộ 1 chuyến</span><span>🔁 Tự đề xuất mẫu tương đương khi hết hàng</span></div>
+  <div class="trust">
+    <span id="tStock">✅ Hơn 10.000++ sản phẩm được cập nhật liên tục</span>
+    <span>🚚 Miễn phí giao lắp ngay khi bạn tạo xong kế hoạch phù hợp với nhu cầu</span>
+    <span>💬 Tư vấn với chuyên viên 24/7</span>
+  </div>
 </section>
 
 <section class="sc" id="s1">
@@ -238,9 +315,15 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <section class="sc" id="s3">
   <div class="qh"><button class="bk" onclick="ownBack()">← Quay lại</button>
-  <div class="eb">Bước 3</div><h2>Bạn đã có sẵn thiết bị nào?</h2>
-  <p>AI sẽ loại các thiết bị này khỏi combo. Chọn nhiều mục được nhé.</p></div>
-  <div class="opts" id="ownO"></div>
+  <div class="eb">Bước 3</div><h2>Bạn cần hoàn thiện những thiết bị nào?</h2>
+  <p>Chọn thiết bị cho từng khu vực. Bỏ chọn những món bạn đã có hoặc chưa cần.</p></div>
+  <div class="pickAll">
+    <button class="preset" onclick="selectAllDev(true)">✓ Chọn tất cả</button>
+    <button class="preset" onclick="selectAllDev(false)">✕ Bỏ chọn tất cả</button>
+    <div class="sp"></div>
+    <span class="pickCount" id="pickCount">—</span>
+  </div>
+  <div id="roomPick"></div>
   <div class="nx"><button class="cta" onclick="ownNext()">Tiếp tục →</button></div>
 </section>
 
@@ -261,6 +344,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     </div>
     <div class="rangeMarks" id="bgMarks"></div>
     <div class="presets" id="bgPresets"></div>
+    <div id="bgWarn" style="display:none"></div>
   </div>
   <div class="nx"><button class="cta" onclick="runAI()">✨ Để AI thiết kế combo</button></div>
 </section>
@@ -340,7 +424,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 </section>
 
 <section class="sc" id="sR">
-  <div class="qh"><button class="bk" onclick="home()">← Làm lại từ đầu</button>
+  <div class="qh"><button class="bk" onclick="home()">← Thiết kế lại từ đầu</button>
   <div class="eb">Kết quả gợi ý</div><h2>Combo của bạn đã sẵn sàng 🎉</h2><p id="rSub"></p></div>
   <div class="rangeBox" style="margin-bottom:18px;padding:20px 24px">
     <div class="rangeHead" style="margin-bottom:2px">
@@ -357,8 +441,14 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
   <div class="rg">
     <div>
       <div class="plist" id="pl"></div>
-      <div class="ben"><h3>🎁 Khi mua combo tại Tín Phát</h3>
-        <div class="bl"><span><i>✓</i> Miễn phí vận chuyển</span><span><i>✓</i> Lắp đặt đồng bộ 1 ngày</span><span><i>✓</i> Treo TV + đi dây gọn</span><span><i>✓</i> Bảo hành chính hãng tại nhà</span><span><i>✓</i> Quà tặng cư dân dự án</span><span><i>✓</i> Giữ giá 7 ngày</span></div>
+      <div id="skippedBox"></div>
+      <div class="ben"><h3>🎁 Quyền lợi khi mua tại Điện máy Tín Phát</h3>
+        <div class="bl">
+          <span><i>✓</i> Đội ngũ tư vấn và kỹ thuật chuyên nghiệp, hỗ trợ đầy đủ sau bán hàng</span>
+          <span><i>✓</i> Miễn phí lắp đặt vận chuyển nội thành Hà Nội</span>
+          <span><i>✓</i> Lắp đặt đồng bộ một lần duy nhất</span>
+          <span><i>✓</i> Bảo hành điện tử chính hãng tại nhà</span>
+        </div>
       </div>
       <div class="fc"><button class="cta" onclick="openLead()">🔒 Tôi muốn giữ giá này</button><button class="cta gh" onclick="openLead()">📞 Đặt lịch tư vấn</button></div>
     </div>
@@ -392,7 +482,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 <script>
 const S={flow:null,house:null,sub:null,fam:null,space:null,up:null,
   lo:0,hi:0,           /* khoảng ngân sách khách chọn (nghìn đồng) */
-  owned:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
+  picked:new Set(),skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
 const PROG={sLoad:0,sErr:0,s0:0,s1:18,s2:36,s3:54,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
 const G=TP.GROUPS, ROOMS=TP.ROOMS;
 let DB=[], AVAIL=[];
@@ -419,7 +509,7 @@ document.addEventListener('DOMContentLoaded',boot);
 
 /* ===== ĐIỀU HƯỚNG ===== */
 function show(id){
-  if(id==='s3')buildOwned();
+  if(id==='s3')buildRoomPick();
   if(id==='s4')initBudget();
   if(id==='s8')initBudget3();
   if(id==='s9')initBudget2();
@@ -431,7 +521,7 @@ function show(id){
 }
 function home(){
   Object.assign(S,{flow:null,house:null,sub:null,fam:null,space:null,up:null,lo:0,hi:0});
-  S.owned=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
+  S.picked=new Set();S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
   document.getElementById('subApt').style.display='none';
   document.getElementById('subTown').style.display='none';
@@ -502,32 +592,35 @@ function syncRange(ids,onChange){
 
 /* --- Bước ngân sách luồng 1 & 2 (tổng combo) --- */
 function comboPriceBounds(){
-  const gs=neededGroups();
   let min=0,max=0;
-  gs.forEach(g=>{
-    const pool=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((a,b)=>a-b);
+  neededSlots().forEach(sl=>{
+    const pool=DB.filter(p=>p.nhom===sl.g).map(p=>p.gia).sort((a,b)=>a-b);
     if(!pool.length)return;
     min+=pool[0]; max+=pool[pool.length-1];
   });
   return {min:Math.max(0,min),max:Math.max(min+1000,max)};
 }
+/* Thanh ngân sách tổng: cố định 5 – 150 triệu (mục 7) */
+const BUD_MIN=5000, BUD_MAX=150000, BUD_STEP=1000;
 function initBudget(){
-  const b=comboPriceBounds();
-  const step=niceStep(b.max-b.min);
-  const lo=Math.floor(b.min/step)*step, hi=Math.ceil(b.max/step)*step;
-  if(!S.lo||S.lo<lo||S.hi>hi){S.lo=lo; S.hi=Math.min(hi,Math.round((lo+(hi-lo)*0.55)/step)*step);}
+  if(!S.lo||!S.hi){
+    const b=comboPriceBounds();
+    S.lo=Math.max(BUD_MIN,Math.floor(b.min/BUD_STEP)*BUD_STEP);
+    S.hi=Math.min(BUD_MAX,Math.max(S.lo+10000,Math.ceil((b.min+(b.max-b.min)*0.5)/BUD_STEP)*BUD_STEP));
+  }
+  S.lo=Math.max(BUD_MIN,Math.min(BUD_MAX,S.lo));
+  S.hi=Math.max(BUD_MIN,Math.min(BUD_MAX,S.hi));
   mountRange({lo:'bgLo',hi:'bgHi',fill:'bgFill',marks:'bgMarks',histo:'bgHisto'},
-    {min:lo,max:hi,step:step,initLo:S.lo,initHi:S.hi,prices:comboSamplePrices()});
-  /* nút gợi ý nhanh */
-  const P=[['Tiết kiệm',lo,lo+(hi-lo)*0.35],['Cân bằng',lo+(hi-lo)*0.25,lo+(hi-lo)*0.65],
-           ['Cao cấp',lo+(hi-lo)*0.6,hi],['Không giới hạn',lo,hi]];
-  document.getElementById('bgPresets').innerHTML=P.map((p,i)=>
-    '<button class="preset" onclick="setBudget('+Math.round(p[1])+','+Math.round(p[2])+')">'+p[0]+'</button>').join('');
+    {min:BUD_MIN,max:BUD_MAX,step:BUD_STEP,initLo:S.lo,initHi:S.hi,prices:comboSamplePrices()});
+  const P=[['Dưới 30 triệu',BUD_MIN,30000],['30 – 60 triệu',30000,60000],
+           ['60 – 100 triệu',60000,100000],['Trên 100 triệu',100000,BUD_MAX]];
+  document.getElementById('bgPresets').innerHTML=P.map(p=>
+    '<button class="preset" onclick="setBudget('+p[1]+','+p[2]+')">'+p[0]+'</button>').join('');
   onBudget();
 }
 function comboSamplePrices(){
-  const gs=neededGroups(); const out=[];
-  gs.forEach(g=>DB.filter(p=>p.nhom===g).forEach(p=>out.push(p.gia)));
+  const out=[];
+  neededSlots().forEach(sl=>DB.filter(p=>p.nhom===sl.g).forEach(p=>out.push(p.gia)));
   return out;
 }
 function setBudget(a,b){
@@ -543,17 +636,38 @@ function onBudget(){
     el.textContent=c.length+' thiết bị · dự kiến '+fmt(tot);
     el.classList.toggle('none',!c.length);
     document.getElementById('bgSub').textContent=
-      'Tổng ngân sách cho '+neededGroups().length+' nhóm thiết bị';
+      'Tổng ngân sách cho '+neededSlots().length+' thiết bị bạn đã chọn';
+    showFeasibility('bgWarn',b);
   });
+}
+/* Cảnh báo khi ngân sách không đủ cho số thiết bị đã chọn */
+function showFeasibility(id,ceiling){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const b=comboPriceBounds();
+  const n=neededSlots().length;
+  if(!n){el.style.display='none';return;}
+  if(b.min>ceiling){
+    el.style.display='block';
+    el.className='feasWarn';
+    el.innerHTML='⚠️ <b>'+n+' thiết bị bạn chọn có giá thấp nhất là '+fmt(b.min)+'</b> — '+
+      'cao hơn mức trần bạn đặt. Bạn có thể kéo tăng ngân sách, hoặc bấm "Bỏ qua thiết bị này" '+
+      'ở màn kết quả để loại bớt thiết bị chưa cần ngay.';
+  } else {
+    el.style.display='block';
+    el.className='feasOk';
+    el.innerHTML='✓ Ngân sách đủ cho '+n+' thiết bị bạn đã chọn (thấp nhất '+fmt(b.min)+').';
+  }
 }
 /* --- Luồng 4 --- */
 function initBudget2(){
-  const all=DB.map(p=>p.gia); const mn=Math.min(...all), mx=all.reduce((a,b)=>a+b,0);
-  const lo=0, hi=Math.ceil(Math.min(mx,300000)/10000)*10000, step=5000;
-  if(!S.lo){S.lo=20000;S.hi=80000;}
+  if(!S.lo||!S.hi){S.lo=20000;S.hi=80000;}
+  S.lo=Math.max(BUD_MIN,Math.min(BUD_MAX,S.lo));
+  S.hi=Math.max(BUD_MIN,Math.min(BUD_MAX,S.hi));
   mountRange({lo:'b2Lo',hi:'b2Hi',fill:'b2Fill',marks:'b2Marks',histo:'b2Histo'},
-    {min:lo,max:hi,step:step,initLo:S.lo,initHi:S.hi,prices:all});
-  const P=[['Dưới 30tr',0,30000],['30–60tr',30000,60000],['60–100tr',60000,100000],['Trên 100tr',100000,hi]];
+    {min:BUD_MIN,max:BUD_MAX,step:BUD_STEP,initLo:S.lo,initHi:S.hi,prices:DB.map(p=>p.gia)});
+  const P=[['Dưới 30 triệu',BUD_MIN,30000],['30 – 60 triệu',30000,60000],
+           ['60 – 100 triệu',60000,100000],['Trên 100 triệu',100000,BUD_MAX]];
   document.getElementById('b2Presets').innerHTML=P.map(p=>
     '<button class="preset" onclick="setB2('+p[1]+','+p[2]+')">'+p[0]+'</button>').join('');
   onBudget2();
@@ -573,14 +687,13 @@ function initBudget3(){
   const gs=upGroups();
   const ps=DB.filter(p=>gs.includes(p.nhom)).map(p=>p.gia).sort((a,b)=>a-b);
   if(!ps.length){document.getElementById('u2Count').textContent='Không có sản phẩm';return}
-  const step=niceStep(ps[ps.length-1]-ps[0]);
-  const lo=Math.floor(ps[0]/step)*step, hi=Math.ceil(ps[ps.length-1]/step)*step;
-  S.lo=lo;S.hi=hi;
+  const lo=SWAP_MIN, hi=SWAP_MAX;
+  S.lo=Math.max(lo,Math.floor(ps[0]/1000)*1000);
+  S.hi=Math.min(hi,Math.ceil(ps[ps.length-1]/1000)*1000);
   mountRange({lo:'u2Lo',hi:'u2Hi',fill:'u2Fill',marks:'u2Marks',histo:'u2Histo'},
-    {min:lo,max:hi,step:step,initLo:lo,initHi:hi,prices:ps});
-  const md=ps[Math.floor(ps.length/2)];
-  const P=[['Phổ thông',lo,md],['Tầm trung',Math.round(lo+(hi-lo)*0.3),Math.round(lo+(hi-lo)*0.7)],
-           ['Cao cấp',md,hi],['Xem tất cả',lo,hi]];
+    {min:lo,max:hi,step:1000,initLo:S.lo,initHi:S.hi,prices:ps});
+  const P=[['Dưới 20 triệu',lo,20000],['20 – 40 triệu',20000,40000],
+           ['40 – 70 triệu',40000,70000],['Xem tất cả',lo,hi]];
   document.getElementById('u2Presets').innerHTML=P.map(p=>
     '<button class="preset" onclick="setU2('+Math.round(p[1])+','+Math.round(p[2])+')">'+p[0]+'</button>').join('');
   onBudget3();
@@ -601,18 +714,82 @@ function onBudget3(){
 /* ===== DANH SÁCH ĐỘNG ===== */
 const nAll=g=>DB.filter(p=>p.nhom===g).length;
 function buildSpace(){
-  const M={living:['🛋️','Phòng khách'],bed:['🛏️','Phòng ngủ'],kit:['🍳','Bếp'],bath:['🚿','Phòng tắm / Giặt']};
-  document.getElementById('spaceO').innerHTML=Object.entries(M).filter(([r])=>
-    AVAIL.some(g=>G[g].room===r)).map(([r,v])=>{
-    const c=AVAIL.filter(g=>G[g].room===r).reduce((s,g)=>s+nAll(g),0);
-    return '<button class="opt" onclick="pick(\'space\',\''+r+'\',this);show(\'s3\')"><span class="ic">'+v[0]+
-      '</span><b>'+v[1]+'</b><span class="cnt">'+c+' mã</span><span class="ck">✓</span></button>';}).join('');
+  document.getElementById('spaceO').innerHTML=ROOM_LAYOUT.map(r=>{
+    const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g));
+    if(!devs.length)return '';
+    const c=devs.reduce((s,g)=>s+nAll(g),0);
+    return '<button class="opt" onclick="pickSpace(\''+r.id+'\',this)"><span class="ic">'+r.ic+
+      '</span><b>'+r.name+'</b><small>'+devs.map(g=>G[g].name).join(' · ')+'</small>'+
+      '<span class="cnt">'+c+' mã</span><span class="ck">✓</span></button>';}).join('');
 }
-function buildOwned(){
-  document.getElementById('ownO').innerHTML=neededGroups(true).map(g=>
-    '<button class="opt" data-k="'+g+'" onclick="tgl(this,\'owned\')"><span class="ic">'+G[g].ic+
-    '</span><b>'+G[g].name+'</b><span class="ck">✓</span></button>').join('')+
-    '<button class="opt" data-k="none" onclick="pickNone(this)"><span class="ic">🆕</span><b>Chưa có gì</b><span class="ck">✓</span></button>';
+function pickSpace(rid,el){ pick('space',rid,el); S.picked=new Set(); show('s3'); }
+/* ===== BỐ CỤC THIẾT BỊ THEO TỪNG PHÒNG (mục 13) ===== */
+const ROOM_LAYOUT=[
+  {id:'living', ic:'🛋️', name:'Phòng khách', devs:['tv','soundbar','robot']},
+  {id:'kit',    ic:'🍳', name:'Bếp',         devs:['fridge','cooktop','hood','dishwasher','water','hotcold']},
+  {id:'bed',    ic:'🛏️', name:'Phòng ngủ',   devs:['ac','fan','purifier','tv']},
+  {id:'bath',   ic:'🚿', name:'Phòng tắm / Giặt', devs:['washer','dryer','heater']}
+];
+/* Khoá duy nhất cho mỗi ô chọn: phòng + nhóm (TV xuất hiện ở 2 phòng) */
+const dk=(r,g)=>r+':'+g;
+
+function roomsInScope(){
+  if(S.flow==='space') return ROOM_LAYOUT.filter(r=>r.id===S.space);
+  return ROOM_LAYOUT;
+}
+function availableSlots(){
+  const out=[];
+  roomsInScope().forEach(r=>r.devs.forEach(g=>{
+    if(G[g]&&AVAIL.includes(g)) out.push({room:r.id,g:g,key:dk(r.id,g)});
+  }));
+  return out;
+}
+function buildRoomPick(){
+  /* Lần đầu vào: mặc định chọn sẵn các thiết bị chính */
+  if(!S.picked || !S.picked.size){
+    S.picked=new Set();
+    availableSlots().forEach(sl=>{ if(G[sl.g].core) S.picked.add(sl.key); });
+  }
+  const host=document.getElementById('roomPick');
+  host.innerHTML=roomsInScope().map(r=>{
+    const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g));
+    if(!devs.length)return '';
+    const on=devs.filter(g=>S.picked.has(dk(r.id,g))).length;
+    return '<div class="roomBlock">'+
+      '<div class="roomTitle"><b>'+r.ic+' '+r.name+'</b>'+
+      '<span class="rc" id="rc-'+r.id+'">'+on+'/'+devs.length+' thiết bị</span>'+
+      '<button class="rall" onclick="toggleRoom(\''+r.id+'\')">Chọn / bỏ cả phòng</button></div>'+
+      '<div class="devGrid">'+devs.map(g=>{
+        const k=dk(r.id,g), sel=S.picked.has(k);
+        const n=DB.filter(p=>p.nhom===g).length;
+        return '<button class="dev'+(sel?' on':' off')+'" data-k="'+k+'" onclick="toggleDev(\''+k+'\')">'+
+          '<span class="di">'+G[g].ic+'</span>'+
+          '<span><b>'+G[g].name+'</b><span class="dn">'+n+' mã</span></span>'+
+          '<span class="dck">✓</span></button>';
+      }).join('')+'</div></div>';
+  }).join('');
+  updPickCount();
+}
+function toggleDev(k){
+  if(S.picked.has(k))S.picked.delete(k); else S.picked.add(k);
+  buildRoomPick();
+}
+function toggleRoom(rid){
+  const r=ROOM_LAYOUT.find(x=>x.id===rid);
+  const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g));
+  const allOn=devs.every(g=>S.picked.has(dk(rid,g)));
+  devs.forEach(g=>{ if(allOn)S.picked.delete(dk(rid,g)); else S.picked.add(dk(rid,g)); });
+  buildRoomPick();
+}
+function selectAllDev(on){
+  S.picked=new Set();
+  if(on)availableSlots().forEach(sl=>S.picked.add(sl.key));
+  buildRoomPick();
+}
+function updPickCount(){
+  const n=S.picked.size, t=availableSlots().length;
+  const el=document.getElementById('pickCount');
+  if(el)el.textContent='Đã chọn '+n+' / '+t+' thiết bị';
 }
 function buildUp(){
   const M=[['tv',['tv']],['fridge',['fridge','freezer']],['washer',['washer','dryer']],
@@ -640,31 +817,28 @@ function buildPrio(){
     '</span><b>'+G[g].name+'</b><span class="ck">✓</span></button>').join('');
 }
 function tgl(el,set){const k=el.dataset.k;
-  if(set==='owned'){const n=document.querySelector('#ownO [data-k=none]');if(n)n.classList.remove('sel');S.owned.delete('none');}
   if(S[set].has(k)){S[set].delete(k);el.classList.remove('sel')}else{S[set].add(k);el.classList.add('sel')}}
-function pickNone(el){document.querySelectorAll('#ownO .opt').forEach(o=>o.classList.remove('sel'));
-  S.owned=new Set(['none']);el.classList.add('sel');}
 
 /* ===== XÁC ĐỊNH NHÓM CẦN MUA ===== */
 function upGroups(){
   return S.up==='washer'?['washer','dryer']:S.up==='fridge'?['fridge','freezer']:
     S.up==='home'?['robot','purifier','water','heater','dehum','hood','cooktop','smallapp']:[S.up];
 }
-function neededGroups(forOwned){
-  let g;
-  if(S.flow==='space')      g=AVAIL.filter(x=>G[x].room===S.space);
-  else if(S.flow==='upgrade')g=upGroups();
-  else if(S.flow==='budget'){
-    g=S.prio.size?[...S.prio]:['tv','fridge','washer','ac'];
-    ['water','robot','purifier'].forEach(x=>{if(!g.includes(x))g.push(x)});
-  } else {
-    g=['tv','fridge','washer','ac','water'];
-    if(S.house!=='stay')g.push('robot','purifier','heater');
-    if(['kids','multi'].includes(S.fam))g.push('dishwasher','dryer');
+/* Danh sách "khe" thiết bị cần mua: mỗi khe = 1 phòng + 1 nhóm hàng.
+   TV có thể xuất hiện ở cả phòng khách lẫn phòng ngủ nên dùng khoá riêng. */
+function neededSlots(){
+  if(S.flow==='upgrade')
+    return upGroups().filter(g=>AVAIL.includes(g)).map(g=>({room:G[g].room,g:g,key:dk(G[g].room,g)}));
+  if(S.flow==='budget'){
+    let gs=S.prio.size?[...S.prio]:['tv','fridge','washer','ac'];
+    ['water','robot','purifier'].forEach(x=>{if(!gs.includes(x))gs.push(x)});
+    return gs.filter(g=>G[g]&&AVAIL.includes(g)).map(g=>({room:G[g].room,g:g,key:dk(G[g].room,g)}));
   }
-  g=[...new Set(g)].filter(x=>G[x]&&AVAIL.includes(x));
-  if(!forOwned&&S.flow!=='upgrade')g=g.filter(x=>!S.owned.has(x));
-  return g.length?g:AVAIL.slice(0,1);
+  return availableSlots().filter(sl=>S.picked.has(sl.key)&&!S.skipped.has(sl.key));
+}
+/* Giữ tương thích: trả về danh sách nhóm (có thể lặp nếu TV ở 2 phòng) */
+function neededGroups(){
+  return [...new Set(neededSlots().map(s=>s.g))];
 }
 
 /* ===== CHỌN SẢN PHẨM THEO KHOẢNG GIÁ =====
@@ -705,7 +879,7 @@ function pickNearest(pool,alloc){
 }
 function buildCombo(){
   const gs=neededGroups();
-  if(!gs.length)return [];
+  if(!gs.length&&S.flow!=='upgrade')return [];
 
   /* Luồng nâng cấp: lọc thẳng theo khoảng giá, lấy tối đa 3 mã tiêu biểu */
   if(S.flow==='upgrade'){
@@ -723,25 +897,58 @@ function buildCombo(){
     return out.sort((a,b)=>a.gia-b.gia);
   }
 
-  /* Tổng trung vị để tính tỉ trọng */
+  /* Phân bổ ngân sách theo tỉ trọng giá trung vị của từng khe */
+  const slots=neededSlots();
   const med={}; let sumMed=0;
-  gs.forEach(g=>{med[g]=medianOf(g); sumMed+=med[g];});
+  slots.forEach(sl=>{med[sl.key]=medianOf(sl.g); sumMed+=med[sl.key];});
   const target=(S.lo+S.hi)/2 || sumMed;
 
-  const out=[];
-  gs.forEach(g=>{
-    const pool=DB.filter(p=>p.nhom===g).sort((a,b)=>a.gia-b.gia);
+  /* Khe đã ghim thì giữ nguyên, phần ngân sách còn lại chia cho các khe khác */
+  const pinnedItems=[], freeSlots=[];
+  let pinnedCost=0, freeMed=0;
+  slots.forEach(sl=>{
+    const pool=DB.filter(p=>p.nhom===sl.g).sort((a,b)=>a.gia-b.gia);
     if(!pool.length)return;
-    /* khách đã ghim mã cụ thể ở bước đổi mẫu */
-    if(S.pinned[g]){
-      const f=pool.find(p=>p.model===S.pinned[g]);
-      if(f){out.push({...f,_pin:true});return;}
+    if(S.pinned[sl.key]){
+      const f=pool.find(p=>p.model===S.pinned[sl.key]);
+      if(f){pinnedItems.push({...f,_slot:sl.key,_room:sl.room,_pin:true});pinnedCost+=f.gia;return;}
     }
-    const share=sumMed?med[g]/sumMed:1/gs.length;
-    const alloc=target*share;
-    out.push({...pickNearest(pool,alloc)});
+    freeSlots.push({sl:sl,pool:pool});
+    freeMed+=med[sl.key];
   });
-  return out;
+
+  /* Hàm dựng combo với một mức ngân sách cho trước */
+  function buildAt(budget){
+    const res=[];
+    freeSlots.forEach(fs=>{
+      const share=freeMed?med[fs.sl.key]/freeMed:1/Math.max(1,freeSlots.length);
+      res.push({...pickNearest(fs.pool,budget*share),_slot:fs.sl.key,_room:fs.sl.room});
+    });
+    return res;
+  }
+
+  /* Hiệu chỉnh: dò hệ số để tổng thực tế bám sát ngân sách khách chọn.
+     Cần thiết vì nhiều nhóm không có mã đủ rẻ/đủ đắt, khiến tổng lệch xa. */
+  const remain=Math.max(0,target-pinnedCost);
+  let best=buildAt(remain), bestErr=Infinity, kBest=1;
+  for(let k=0.25;k<=3.01;k+=0.05){
+    const r=buildAt(remain*k);
+    const t=r.reduce((a,x)=>a+x.gia,0);
+    const err=Math.abs(t-remain);
+    if(err<bestErr-1e-6){bestErr=err;best=r;kBest=k;}
+  }
+  /* Nếu vẫn vượt trần ngân sách, thử hạ dần cho tới khi lọt hoặc chạm đáy */
+  const ceiling=Math.max(0,S.hi-pinnedCost);
+  let cur=best, curTot=cur.reduce((a,x)=>a+x.gia,0);
+  if(curTot>ceiling){
+    for(let k=kBest;k>=0.2;k-=0.05){
+      const r=buildAt(remain*k);
+      const t=r.reduce((a,x)=>a+x.gia,0);
+      if(t<=ceiling){cur=r;break;}
+      cur=r;
+    }
+  }
+  return pinnedItems.concat(cur);
 }
 
 /* ===== CHẠY ===== */
@@ -765,28 +972,53 @@ function render(){
     (p.length?'Thiết kế cho '+p.join(' · ')+'. ':'')+
     'Ngân sách '+fmt(S.lo)+' – '+fmt(S.hi)+'. Bấm "Đổi mẫu" ở từng dòng để chọn mã khác.';
 
-  document.getElementById('pl').innerHTML=combo.length?combo.map((x,i)=>
-   '<div class="pc" style="animation-delay:'+(i*.06)+'s" id="pc-'+x.nhom+'">'+
+  const RN={living:'Phòng khách',kit:'Bếp',bed:'Phòng ngủ',bath:'Phòng tắm / Giặt'};
+  document.getElementById('pl').innerHTML=combo.length?combo.map((x,i)=>{
+    const k=x._slot||dk(G[x.nhom].room,x.nhom);
+    const esc=x.model.replace(/'/g,"\\'");
+    return '<div class="pc" style="animation-delay:'+(i*.06)+'s" id="pc-'+k.replace(':','-')+'">'+
     '<div class="pic">'+G[x.nhom].ic+'</div>'+
     '<div><b>'+G[x.nhom].name+': '+x.ten+(x._pin?' <span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
-     '<div class="md">Mã: '+x.model+'</div>'+
+     '<div class="md">Mã: '+x.model+
+       (x._room?' · <span class="roomTag">'+RN[x._room]+'</span>':'')+'</div>'+
+     (x.mota?'<div class="desc">'+x.mota+'</div>':'')+
      (x.ld?'<div class="why"><b>Vì sao chọn:</b> '+x.ld+'</div>':'')+
     '</div>'+
-    '<div><div class="pp">'+fmt(x.gia)+'</div>'+
-     '<button class="sw" onclick="toggleSwap(\''+x.nhom+'\',\''+x.model.replace(/'/g,"\\'")+'\')">↔ Đổi mẫu</button></div>'+
-    '<div id="sp-'+x.nhom+'"></div>'+
-   '</div>').join('')
-   :'<div class="pc"><div class="pic">⚠️</div><div><b>Chưa có mã nào phù hợp</b>'+
-    '<div class="md">Thử mở rộng khoảng ngân sách ở bước trước.</div></div><div></div></div>';
+    '<div class="pAct"><div class="pp">'+fmt(x.gia)+'</div>'+
+     '<button class="sw" onclick="toggleSwap(\''+k+'\',\''+esc+'\')">↔ Đổi mẫu</button>'+
+     '<button class="skip" onclick="skipSlot(\''+k+'\')">✕ Bỏ qua thiết bị này</button></div>'+
+    '<div id="sp-'+k.replace(':','-')+'"></div>'+
+   '</div>';}).join('')
+   :'<div class="pc"><div class="pic">⚠️</div><div><b>Chưa có thiết bị nào được chọn</b>'+
+    '<div class="md">Quay lại bước chọn thiết bị hoặc mở rộng khoảng ngân sách.</div></div><div></div></div>';
 
-  const rm={};combo.forEach(x=>{(rm[G[x.nhom].room]??=[]).push(G[x.nhom].name)});
-  document.getElementById('rms').innerHTML=Object.entries(ROOMS).filter(k=>rm[k[0]]).map(k=>
-   '<div class="rm"><div class="rn">'+k[1]+'</div><div class="ri">'+
-   rm[k[0]].map((n,i)=>'<span class="chip" style="animation-delay:'+(.25+i*.1)+'s">✓ '+n+'</span>').join('')+
-   '</div></div>').join('');
+  /* Danh sách thiết bị đã bỏ qua — cho phép thêm lại */
+  const skHost=document.getElementById('skippedBox');
+  if(skHost){
+    const sk=[...S.skipped].filter(k=>availableSlots().some(sl=>sl.key===k&&S.picked.has(k)));
+    skHost.innerHTML=sk.length?
+      '<div class="skBox"><b>Đã bỏ qua '+sk.length+' thiết bị</b><div class="skList">'+
+      sk.map(k=>{const g=k.split(':')[1];
+        return '<button class="skChip" onclick="unskipSlot(\''+k+'\')">'+G[g].ic+' '+G[g].name+
+          ' <span>+ Thêm lại</span></button>';}).join('')+'</div></div>':'';
+  }
+
+  /* Tiến độ theo từng phòng — hiện cả thiết bị đã chọn lẫn chưa có */
+  const got={}; combo.forEach(x=>{ got[x._slot||dk(G[x.nhom].room,x.nhom)]=1; });
+  document.getElementById('rms').innerHTML=roomsInScope().map(r=>{
+    const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g)&&S.picked.has(dk(r.id,g)));
+    if(!devs.length)return '';
+    return '<div class="rm"><div class="rn">'+r.ic+' '+r.name+'</div><div class="ri">'+
+      devs.map((g,i)=>{
+        const k=dk(r.id,g), on=got[k];
+        return '<span class="chip'+(on?'':' pend')+'" style="animation-delay:'+(.2+i*.08)+'s">'+
+          (on?'✓ ':'○ ')+G[g].name+'</span>';
+      }).join('')+'</div></div>';
+  }).join('');
 
   const tot=combo.reduce((s,x)=>s+x.gia,0);
-  const pct=Math.round(combo.length/Math.max(1,neededGroups().length)*100);
+  const totalSlots=availableSlots().filter(sl=>S.picked.has(sl.key)).length;
+  const pct=Math.round(combo.length/Math.max(1,totalSlots)*100);
   setTimeout(()=>document.getElementById('cf').style.width=pct+'%',120);
   anim('cp',0,pct,700,v=>Math.round(v));
   anim('tn',0,tot,900,v=>fmt(Math.round(v)));
@@ -795,10 +1027,16 @@ function render(){
   /* cảnh báo vượt / dưới ngân sách */
   const w=document.getElementById('budNote');
   if(w){
-    if(tot>S.hi){w.style.display='block';w.className='sl';w.style.background='var(--redbg)';w.style.color='var(--red)';
-      w.innerHTML='⚠️ Vượt '+fmt(tot-S.hi)+' so với ngân sách bạn chọn';}
-    else{w.style.display='block';w.className='sl';w.style.background='';w.style.color='';
-      w.innerHTML='💚 Trong tầm ngân sách bạn chọn';}
+    if(tot>S.hi){
+      w.style.display='block';w.className='sl';
+      w.style.background='var(--redbg)';w.style.color='var(--red)';
+      w.innerHTML='⚠️ Vượt '+fmt(tot-S.hi)+' so với ngân sách.<br>'+
+        '<span style="font-weight:600;opacity:.9">Bấm "Bỏ qua thiết bị này" ở món chưa cần ngay để giảm tổng.</span>';
+    } else {
+      w.style.display='block';w.className='sl';
+      w.style.background='';w.style.color='';
+      w.innerHTML='💚 Trong tầm ngân sách bạn chọn';
+    }
   }
   if(openSwap)renderSwap(openSwap.g,openSwap.cur);
 }
@@ -811,14 +1049,12 @@ function initResultRange(){
     if(b&&b.parentElement)b.parentElement.style.display='none';
     return;
   }
-  const b=comboPriceBounds();
-  const step=niceStep(b.max-b.min);
-  const lo=Math.floor(b.min/step)*step, hi=Math.ceil(b.max/step)*step;
   const box=document.getElementById('rsDual');
   if(box&&box.parentElement)box.parentElement.style.display='';
   mountRange({lo:'rsLo',hi:'rsHi',fill:'rsFill',marks:'rsMarks',histo:'rsHisto'},
-    {min:lo,max:hi,step:step,
-     initLo:Math.max(lo,Math.min(S.lo,hi)),initHi:Math.min(hi,Math.max(S.hi,lo)),
+    {min:BUD_MIN,max:BUD_MAX,step:BUD_STEP,
+     initLo:Math.max(BUD_MIN,Math.min(S.lo,BUD_MAX)),
+     initHi:Math.min(BUD_MAX,Math.max(S.hi,BUD_MIN)),
      prices:comboSamplePrices()});
   onResultRange();
 }
@@ -835,73 +1071,123 @@ function onResultRange(){
   });
 }
 
-/* ===== ĐỔI MẪU: chọn theo khoảng giá ===== */
-function toggleSwap(g,cur){
-  if(openSwap&&openSwap.g===g){closeSwap();return;}
-  openSwap={g:g,cur:cur};
-  const pool=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((a,b)=>a-b);
-  const step=niceStep(pool[pool.length-1]-pool[0]);
-  openSwap.min=Math.floor(pool[0]/step)*step;
-  openSwap.max=Math.ceil(pool[pool.length-1]/step)*step;
-  openSwap.step=step;
+/* ===== ĐỔI MẪU: chọn theo phân khúc + khoảng giá (mục 9, 10) ===== */
+const SWAP_MIN=10000, SWAP_MAX=100000;   /* 10 triệu – 100 triệu */
+const SEG_LABEL={eco:'Tiết kiệm',bal:'Cân bằng',pre:'Cao cấp'};
+
+function toggleSwap(k,cur){
+  if(openSwap&&openSwap.k===k){closeSwap();return;}
+  const g=k.split(':')[1];
   const curP=DB.find(p=>p.nhom===g&&p.model===cur);
+  const pool=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((a,b)=>a-b);
   const c=curP?curP.gia:pool[Math.floor(pool.length/2)];
-  openSwap.lo=Math.max(openSwap.min,Math.floor((c*0.7)/step)*step);
-  openSwap.hi=Math.min(openSwap.max,Math.ceil((c*1.4)/step)*step);
-  renderSwap(g,cur);
+  openSwap={
+    k:k, g:g, cur:cur,
+    seg: curP?curP.pk:'bal',          /* phân khúc đang lọc */
+    lo: Math.max(SWAP_MIN,Math.floor(c*0.6/1000)*1000),
+    hi: Math.min(SWAP_MAX,Math.ceil(c*1.6/1000)*1000)
+  };
+  renderSwap();
 }
 function closeSwap(){openSwap=null;document.querySelectorAll('[id^=sp-]').forEach(e=>e.innerHTML='');}
-function renderSwap(g,cur){
-  const host=document.getElementById('sp-'+g);
+
+function renderSwap(){
+  if(!openSwap)return;
+  const host=document.getElementById('sp-'+openSwap.k.replace(':','-'));
   if(!host)return;
   document.querySelectorAll('[id^=sp-]').forEach(e=>{if(e!==host)e.innerHTML=''});
+  const g=openSwap.g;
+  /* Đếm số mã theo từng phân khúc để hiện trên nút */
+  const cnt={};['eco','bal','pre'].forEach(t=>{
+    cnt[t]=DB.filter(p=>p.nhom===g&&p.pk===t).length;});
+  const cntAll=DB.filter(p=>p.nhom===g).length;
+
   host.innerHTML=
    '<div class="swapPanel">'+
-    '<div class="swapHead"><b>Chọn '+G[g].name.toLowerCase()+' trong khoảng giá</b>'+
-     '<button class="swapClose" onclick="closeSwap()">✕ Đóng</button></div>'+
-    '<div class="rangeHead" style="margin-bottom:2px">'+
-     '<div class="rangeVal" style="font-size:19px" id="swVal">—</div>'+
-     '<span class="rangeCount" id="swCount">—</span></div>'+
-    '<div class="histo" id="swHisto"></div>'+
-    '<div class="dual" id="swDual"><div class="track"></div><div class="fill" id="swFill"></div>'+
-     '<input type="range" id="swLo" oninput="onSwap()"><input type="range" id="swHi" oninput="onSwap()"></div>'+
-    '<div class="rangeMarks" id="swMarks"></div>'+
+    '<div class="swapHead">'+
+      '<b>'+G[g].ic+' Chọn '+G[g].name.toLowerCase()+' khác</b>'+
+      '<button class="swapClose" onclick="closeSwap()">✕ Đóng</button></div>'+
+
+    '<div class="swapRow"><span class="swLbl">Phân khúc</span>'+
+     '<div class="segBtns">'+
+      ['eco','bal','pre'].map(t=>
+        '<button class="segB'+(openSwap.seg===t?' on':'')+(cnt[t]?'':' dis')+'" '+
+        (cnt[t]?'onclick="setSwapSeg(\''+t+'\')"':'disabled')+'>'+
+        SEG_LABEL[t]+' <i>'+cnt[t]+'</i></button>').join('')+
+      '<button class="segB'+(openSwap.seg==='all'?' on':'')+'" onclick="setSwapSeg(\'all\')">Tất cả <i>'+cntAll+'</i></button>'+
+     '</div></div>'+
+
+    '<div class="swapRow"><span class="swLbl">Khoảng giá</span>'+
+     '<div class="swRangeWrap">'+
+      '<div class="swRangeTop"><b id="swVal">—</b><span class="rangeCount" id="swCount">—</span></div>'+
+      '<div class="dual swDual"><div class="track"></div><div class="fill" id="swFill"></div>'+
+       '<input type="range" id="swLo" oninput="onSwap()"><input type="range" id="swHi" oninput="onSwap()"></div>'+
+      '<div class="rangeMarks" id="swMarks"></div>'+
+     '</div></div>'+
+
     '<div class="swapList" id="swList"></div>'+
    '</div>';
-  mountRange({lo:'swLo',hi:'swHi',fill:'swFill',marks:'swMarks',histo:'swHisto'},
-    {min:openSwap.min,max:openSwap.max,step:openSwap.step,
-     initLo:openSwap.lo,initHi:openSwap.hi,
-     prices:DB.filter(p=>p.nhom===g).map(p=>p.gia)});
+
+  mountRange({lo:'swLo',hi:'swHi',fill:'swFill',marks:'swMarks'},
+    {min:SWAP_MIN,max:SWAP_MAX,step:1000,
+     initLo:Math.max(SWAP_MIN,openSwap.lo),initHi:Math.min(SWAP_MAX,openSwap.hi)});
   onSwap();
 }
+function setSwapSeg(t){ if(!openSwap)return; openSwap.seg=t; renderSwap(); }
+
 function onSwap(){
   if(!openSwap)return;
-  syncRange({lo:'swLo',hi:'swHi',fill:'swFill',histo:'swHisto'},(a,b)=>{
+  syncRange({lo:'swLo',hi:'swHi',fill:'swFill'},(a,b)=>{
     openSwap.lo=a;openSwap.hi=b;
-    document.getElementById('swVal').textContent=fmt(a)+' – '+fmt(b);
-    const g=openSwap.g;
-    /* Hàng có sẵn kho xếp lên trước, trong mỗi nhóm sắp theo giá tăng dần */
-    const list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b)
-      .sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
+    const v=document.getElementById('swVal');
+    if(v)v.textContent=fmt(a)+'  –  '+fmt(b);
+    const g=openSwap.g, seg=openSwap.seg;
+    let list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b);
+    if(seg!=='all')list=list.filter(p=>p.pk===seg);
+    /* hàng tồn kho lên trước, sau đó theo giá tăng dần */
+    list.sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
     const nStock=list.filter(p=>p.ton===1).length;
+
     const el=document.getElementById('swCount');
-    el.textContent=list.length?list.length+' mã phù hợp':'Không có mã nào';
-    el.classList.toggle('none',!list.length);
+    if(el){
+      el.textContent=list.length?list.length+' mã phù hợp':'Không có mã nào';
+      el.classList.toggle('none',!list.length);
+    }
     let html='',divided=false;
     list.forEach((p,i)=>{
       if(nStock&&i===nStock&&!divided){divided=true;
-        html+='<div class="swapDiv">Các mã khác trong khoảng giá</div>';}
-      html+='<button class="swapItem'+(p.model===openSwap.cur?' cur':'')+'" onclick="chooseModel(\''+g+'\',\''+
-        p.model.replace(/'/g,"\\'")+'\')">'+
-        '<div><b>'+p.ten+(p.ton===1?'<span class="tagFast">⚡ Giao nhanh</span>':'')+
-        (p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</b>'+
-        '<div class="mm">'+p.model+'</div></div>'+
+        html+='<div class="swapDiv">Các mã khác cùng khoảng giá</div>';}
+      const esc=p.model.replace(/'/g,"\\'");
+      html+='<button class="swapItem'+(p.model===openSwap.cur?' cur':'')+'" '+
+        'onclick="chooseModel(\''+openSwap.k+'\',\''+esc+'\')">'+
+        '<div class="siMain"><b>'+p.ten+'</b>'+
+        '<div class="siMeta"><span class="mm">'+p.model+'</span>'+
+        '<span class="segTag '+p.pk+'">'+SEG_LABEL[p.pk]+'</span>'+
+        (p.ton===1?'<span class="tagFast">⚡ Giao nhanh</span>':'')+
+        (p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</div></div>'+
         '<div class="pz">'+fmt(p.gia)+'</div></button>';
     });
-    document.getElementById('swList').innerHTML=list.length?html
-      :'<div class="swapEmpty">Kéo rộng khoảng giá để thấy thêm mã khác</div>';
+    const lh=document.getElementById('swList');
+    if(lh)lh.innerHTML=list.length?html:
+      '<div class="swapEmpty">Không có mã nào trong phân khúc và khoảng giá này.<br>'+
+      'Thử chọn phân khúc khác hoặc kéo rộng khoảng giá.</div>';
   });
 }
+function chooseModel(k,model){
+  S.pinned[k]=model;
+  openSwap=null;
+  render();
+  setTimeout(()=>{const e=document.getElementById('pc-'+k.replace(':','-'));
+    if(e)e.scrollIntoView({behavior:'smooth',block:'center'})},60);
+}
+
+function skipSlot(k){
+  S.skipped.add(k);
+  delete S.pinned[k];
+  if(openSwap&&openSwap.k===k)openSwap=null;
+  render();
+}
+function unskipSlot(k){ S.skipped.delete(k); render(); }
 function chooseModel(g,model){
   S.pinned[g]=model;
   openSwap=null;

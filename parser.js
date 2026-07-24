@@ -10,7 +10,9 @@ const CONFIG = {
   COL_MODEL: 0,   // Cột A  — Mã model / dòng tiêu đề nhóm hàng
   COL_STOCK: 18,  // Cột S  — "Tín Phát tồn": có giá = còn tồn kho
   COL_PRICE: 24,  // Cột Y  — "Có lắp đặt": giá bán cuối cùng cho khách
-  SKIP_ROWS: 1    // Bỏ qua số dòng tiêu đề ở đầu file
+  COL_TAG:   36,  // Cột AK — "Hashtag": ngành hàng (Tivi, Tủ lạnh, Máy giặt...)
+  COL_SEG:   37,  // Cột AL — "Phân khúc": Tiết kiệm / Cân bằng / Cao cấp
+  SKIP_ROWS: 2    // Bỏ qua 2 dòng tiêu đề ở đầu file
 };
 
 /* ---------- NHÓM THIẾT BỊ ---------- */
@@ -25,15 +27,46 @@ const GROUPS = {
   purifier:  {ic:'🌬️', name:'Máy lọc không khí',   room:'bed',    core:1},
   water:     {ic:'💧', name:'Máy lọc nước',        room:'kit',    core:1},
   heater:    {ic:'🚿', name:'Bình nóng lạnh',      room:'bath',   core:1},
+  hood:      {ic:'🌪️', name:'Máy hút mùi',         room:'kit',    core:1},
+  cooktop:   {ic:'🔥', name:'Bếp từ',              room:'kit',    core:1},
+  soundbar:  {ic:'🔊', name:'Loa',                 room:'living', core:1},
+  fan:       {ic:'💨', name:'Quạt',                room:'bed',    core:1},
+  hotcold:   {ic:'🚰', name:'Cây nước nóng lạnh',  room:'kit',    core:1},
   dehum:     {ic:'🌫️', name:'Máy hút ẩm',          room:'bath',   core:0},
   freezer:   {ic:'🧊', name:'Tủ đông / Tủ mát',    room:'kit',    core:0},
-  hood:      {ic:'🌪️', name:'Máy hút mùi',         room:'kit',    core:0},
-  cooktop:   {ic:'🔥', name:'Bếp từ / Bếp gas',    room:'kit',    core:0},
-  soundbar:  {ic:'🔊', name:'Loa / Soundbar',      room:'living', core:0},
-  fan:       {ic:'💨', name:'Quạt',                room:'living', core:0},
   smallapp:  {ic:'🍳', name:'Gia dụng nhỏ',        room:'kit',    core:0}
 };
 const ROOMS = {living:'🛋️ Phòng khách', kit:'🍳 Bếp', bed:'🛏️ Phòng ngủ', bath:'🚿 Phòng tắm / Giặt'};
+
+/* ÁNH XẠ HASHTAG (cột AK) → nhóm thiết bị.
+   Đây là nguồn phân loại CHÍNH XÁC NHẤT — ưu tiên hơn dòng tiêu đề.
+   Khớp không phân biệt hoa thường và dấu tiếng Việt.                    */
+const TAG_MAP = {
+  'tivi':'tv', 'ti vi':'tv', 'tv':'tv', 'smart tv':'tv',
+  'tu lanh':'fridge', 'tulanh':'fridge',
+  'tu dong':'freezer', 'tu mat':'freezer',
+  'may giat':'washer', 'maygiat':'washer', 'may giat say':'washer',
+  'may say':'dryer', 'maysay':'dryer',
+  'dieu hoa':'ac', 'dieuhoa':'ac', 'may lanh':'ac', 'dieu hoa 2 chieu':'ac',
+  'may rua bat':'dishwasher', 'ruabat':'dishwasher', 'may rua chen':'dishwasher',
+  'robot':'robot', 'robot hut bui':'robot', 'hut bui':'robot', 'may hut bui':'robot',
+  'loc khong khi':'purifier', 'may loc khong khi':'purifier', 'lockhongkhi':'purifier',
+  'loc nuoc':'water', 'may loc nuoc':'water', 'locnuoc':'water',
+  'nuoc nong lanh':'hotcold', 'cay nuoc':'hotcold', 'cay nuoc nong lanh':'hotcold',
+  'nong lanh':'heater', 'binh nong lanh':'heater', 'binhnonglanh':'heater', 'binh nuoc nong':'heater',
+  'hut mui':'hood', 'may hut mui':'hood', 'hutmui':'hood',
+  'bep tu':'cooktop', 'bep':'cooktop', 'beptu':'cooktop', 'bep dien':'cooktop', 'bep gas':'cooktop',
+  'loa':'soundbar', 'soundbar':'soundbar', 'loa thanh':'soundbar', 'am thanh':'soundbar',
+  'quat':'fan', 'quat dieu hoa':'fan',
+  'hut am':'dehum', 'may hut am':'dehum',
+  'gia dung':'smallapp', 'noi chien':'smallapp', 'lo vi song':'smallapp', 'lo nuong':'smallapp'
+};
+/* ÁNH XẠ PHÂN KHÚC (cột AL) */
+const SEG_MAP = {
+  'tiet kiem':'eco', 'tietkiem':'eco', 'gia re':'eco', 'pho thong':'eco',
+  'can bang':'bal', 'canbang':'bal', 'trung cap':'bal', 'tam trung':'bal', 'tot':'bal',
+  'cao cap':'pre', 'caocap':'pre', 'premium':'pre', 'flagship':'pre'
+};
 
 /* Từ khoá nhận diện nhóm — thứ tự quan trọng, cụ thể trước, chung sau */
 const KEYWORDS = [
@@ -152,10 +185,32 @@ function reasonOf(group, tier, spec, brand){
 }
 
 /* ---------- XÂY DANH MỤC TỪ CÁC DÒNG CSV ---------- */
+/* Tra nhóm từ Hashtag (cột AK) — nguồn chính xác nhất */
+function groupFromTag(tag){
+  const t = noAccent(tag);
+  if(!t) return null;
+  if(TAG_MAP[t]) return TAG_MAP[t];
+  /* khớp mềm: hashtag chứa từ khoá */
+  let best=null, bl=0;
+  for(const k in TAG_MAP){
+    if((t===k || t.indexOf(k)>=0) && k.length>bl){best=TAG_MAP[k]; bl=k.length;}
+  }
+  return best;
+}
+/* Tra phân khúc từ cột AL */
+function segFromCell(v){
+  const t = noAccent(v);
+  if(!t) return null;
+  if(SEG_MAP[t]) return SEG_MAP[t];
+  for(const k in SEG_MAP){ if(t.indexOf(k)>=0) return SEG_MAP[k]; }
+  return null;
+}
+
 function buildCatalog(rows, cfg){
   cfg = Object.assign({}, CONFIG, cfg||{});
   const products=[];
-  const log={total:0, header:0, noPrice:0, noGroup:0, ok:0, inStock:0, headers:[]};
+  const log={total:0, header:0, noPrice:0, noGroup:0, ok:0, inStock:0,
+             headers:[], byTag:0, byHeader:0, tagsUnknown:{}, segFromSheet:0};
   let curGroup=null, curBrand='';
 
   for(let i=cfg.SKIP_ROWS;i<rows.length;i++){
@@ -165,8 +220,10 @@ function buildCatalog(rows, cfg){
     if(!rawModel)continue;
     log.total++;
 
-    const price=num(r[cfg.COL_PRICE]);
-    const stock=num(r[cfg.COL_STOCK]);
+    const price = num(r[cfg.COL_PRICE]);
+    const stock = num(r[cfg.COL_STOCK]);
+    const tag   = String(r[cfg.COL_TAG]||'').trim();
+    const seg   = String(r[cfg.COL_SEG]||'').trim();
 
     /* Dòng tiêu đề nhóm: có chữ ở cột A nhưng không có giá */
     if(!price){
@@ -180,26 +237,41 @@ function buildCatalog(rows, cfg){
       continue;
     }
 
-    /* Dòng sản phẩm nhưng chưa xác định được nhóm */
-    if(!curGroup){ log.noGroup++; continue; }
+    /* ƯU TIÊN 1: Hashtag cột AK — chính xác nhất, tránh nhầm ngành hàng */
+    let group = groupFromTag(tag);
+    if(group){ log.byTag++; }
+    else {
+      /* ƯU TIÊN 2: dòng tiêu đề gần nhất phía trên */
+      group = curGroup;
+      if(group){ log.byHeader++; }
+      if(tag) log.tagsUnknown[tag]=(log.tagsUnknown[tag]||0)+1;
+    }
+    if(!group){ log.noGroup++; continue; }
+    if(!GROUPS[group]){ log.noGroup++; continue; }
 
-    const spec=specOf(curGroup, rawModel);
+    /* Phân khúc: ưu tiên cột AL, nếu trống sẽ tính theo phân vị giá sau */
+    const pkSheet = segFromCell(seg);
+    if(pkSheet) log.segFromSheet++;
+
     products.push({
-      nhom: curGroup,
+      nhom: group,
       model: rawModel,
       hang: curBrand,
       ten: (curBrand? curBrand+' ' : '') + rawModel,
       gia: price,
       ton: stock>0 ? 1 : 0,
       giaTon: stock,
-      ts: spec.text,
-      _spec: spec,
+      tag: tag,
+      pk: pkSheet,          /* null nếu Sheet chưa điền */
+      _pkSheet: !!pkSheet,
+      ts: '',
+      mota: '',             /* mô tả ngắn — bổ sung sau theo hashtag */
       _row: i+1
     });
     log.ok++; if(stock>0)log.inStock++;
   }
 
-  /* Tự phân khúc theo phân vị giá trong từng nhóm */
+  /* Bổ sung phân khúc cho các mã Sheet chưa điền — tính theo phân vị giá trong nhóm */
   const byGroup={};
   products.forEach(p=>(byGroup[p.nhom]??=[]).push(p));
   Object.values(byGroup).forEach(list=>{
@@ -207,13 +279,26 @@ function buildCatalog(rows, cfg){
     const q=(t)=>prices[Math.floor((prices.length-1)*t)];
     const p33=q(0.34), p66=q(0.67);
     list.forEach(p=>{
-      p.pk = prices.length<3 ? 'bal' : (p.gia<=p33 ? 'eco' : p.gia>p66 ? 'pre' : 'bal');
-      p.ld = reasonOf(p.nhom, p.pk, p._spec, p.hang);
-      delete p._spec;
+      if(!p.pk){
+        p.pk = prices.length<3 ? 'bal' : (p.gia<=p33 ? 'eco' : p.gia>p66 ? 'pre' : 'bal');
+      }
+      p.mota = p.mota || descOf(p);
+      p.ld = reasonOf(p.nhom, p.pk, {}, p.hang);
     });
   });
 
   return {products, log, groups:Object.keys(byGroup)};
+}
+
+/* Mô tả ngắn hiển thị dưới tên sản phẩm.
+   Hiện sinh từ hashtag + phân khúc; sẽ thay bằng cột mô tả riêng khi Sheet bổ sung. */
+function descOf(p){
+  const SEG={eco:'Phổ thông', bal:'Cân bằng', pre:'Cao cấp'};
+  const parts=[];
+  if(p.tag) parts.push(p.tag);
+  if(p.pk && SEG[p.pk]) parts.push(SEG[p.pk]);
+  if(p.hang) parts.push(p.hang);
+  return parts.join(' · ');
 }
 
 /* ---------- TẢI DỮ LIỆU ---------- */
@@ -228,5 +313,6 @@ async function load(cfg){
   return buildCatalog(rows, cfg);
 }
 
-return {CONFIG, GROUPS, ROOMS, KEYWORDS, load, parseCSV, buildCatalog, num, noAccent, detectHeader, specOf};
+return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, load, parseCSV, buildCatalog,
+        num, noAccent, detectHeader, specOf, groupFromTag, segFromCell};
 })();
