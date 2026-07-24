@@ -71,7 +71,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .bp:hover{background:var(--sky);color:var(--blue)}
 .bp.on{background:var(--blue);color:#fff}
 .plist{display:flex;flex-direction:column;gap:12px}
-.pc{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;grid-template-columns:50px 1fr auto;gap:14px;align-items:center;animation:fu .45s ease both}
+.pc{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:16px 18px;
+  display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:14px;align-items:center;animation:fu .45s ease both}
+@media(max-width:600px){.pc{grid-template-columns:42px minmax(0,1fr);gap:11px}
+  .pc .pAct{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;
+    padding-top:10px;border-top:1px dashed var(--line)}}
 .pc .pic{width:50px;height:50px;border-radius:13px;background:var(--sky);display:grid;place-items:center;font-size:24px}
 .pc b{font-size:14.5px;display:block;line-height:1.4}
 .pc .md{font-size:12px;color:var(--mut);font-weight:600;font-family:ui-monospace,monospace;margin-top:2px}
@@ -155,7 +159,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .dev .dck{position:absolute;top:7px;right:8px;width:18px;height:18px;border-radius:50%;
   background:var(--blue);color:#fff;display:none;place-items:center;font-size:10px}
 .dev.on .dck{display:grid}
-.dev.off{opacity:.5}
+.dev.off{opacity:.55}
+.dev.na{opacity:.35;cursor:not-allowed;background:#f7f8fa;border-style:dashed}
+.dev.na .dn{color:var(--red)}
 /* ===== TRÌNH CHỌN KHOẢNG GIÁ ===== */
 .rangeBox{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:26px 28px}
 .rangeHead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:6px}
@@ -185,36 +191,49 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   padding:13px 16px;font-size:12.5px;color:#7a5a12;line-height:1.6}
 .feasOk{margin-top:16px;background:var(--greenbg);border:1.5px solid #9ae0bb;border-radius:11px;
   padding:11px 16px;font-size:12.5px;color:#0a6e3d;line-height:1.5;font-weight:600}
+
+.contactNote{margin-top:20px;background:linear-gradient(120deg,#eef3ff,#f7f9ff);
+  border:1.5px solid #c5d8ff;border-radius:var(--r);padding:16px 20px;font-size:13.5px;line-height:1.6}
+.contactNote b{display:block;color:var(--blue);font-size:14px;margin-bottom:4px}
+.contactNote span{color:var(--ink2);font-size:12.5px}
 /* ===== ĐỔI MẪU ===== */
-.swapPanel{grid-column:1/-1;margin-top:16px;padding:18px;background:#fafbfd;border:1.5px solid var(--line);
+.pc > [id^="sp-"]{grid-column:1 / -1}
+.pc > [id^="sp-"]:empty{display:none}
+.swapPanel{margin-top:16px;padding:18px;background:#fafbfd;border:1.5px solid var(--line);
   border-radius:14px;animation:fu .3s ease both}
 .swapHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;
   padding-bottom:12px;border-bottom:1.5px solid var(--line)}
 .swapHead b{font-size:14.5px;font-weight:800}
 .swapClose{font-size:12.5px;font-weight:700;color:var(--mut);padding:6px 12px;border-radius:8px}
 .swapClose:hover{color:var(--red);background:var(--redbg)}
-.swapRow{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;margin-bottom:16px}
-@media(max-width:640px){.swapRow{grid-template-columns:1fr;gap:8px}}
+.swapRow{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:start;margin-bottom:16px}
+@media(max-width:640px){.swapRow{grid-template-columns:1fr;gap:8px}
+  .swLbl{padding-top:0}}
 .swLbl{font-size:11.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;padding-top:9px}
-.segBtns{display:flex;gap:7px;flex-wrap:wrap}
-.segB{font-size:12.5px;font-weight:700;padding:9px 15px;border-radius:10px;background:#fff;
-  border:1.5px solid var(--line);color:var(--ink2);transition:var(--tr);display:inline-flex;align-items:center;gap:7px}
+.segBtns{display:flex;gap:7px;flex-wrap:wrap;min-width:0}
+.segB{font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:10px;background:#fff;
+  border:1.5px solid var(--line);color:var(--ink2);transition:var(--tr);
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
 .segB:hover:not(.dis){border-color:var(--blue);color:var(--blue)}
 .segB.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .segB i{font-style:normal;font-size:11px;font-weight:800;background:rgba(0,0,0,.08);padding:1px 7px;border-radius:99px}
 .segB.on i{background:rgba(255,255,255,.25)}
 .segB.dis{opacity:.35;cursor:not-allowed}
-.swRangeWrap{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 18px 10px}
-.swRangeTop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px}
-.swRangeTop b{font-size:16px;font-weight:800;color:var(--blue);letter-spacing:-.01em}
-.dual.swDual{height:34px;margin:8px 0 0}
-.dual.swDual .track,.dual.swDual .fill{top:14px}
+.swRangeWrap{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 20px 12px;min-width:0}
+.swRangeTop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:2px}
+.swRangeTop b{font-size:16px;font-weight:800;color:var(--blue);letter-spacing:-.01em;white-space:nowrap}
+.dual.swDual{height:36px;margin:10px 0 0}
+.dual.swDual .track,.dual.swDual .fill{top:15px}
+.swRangeWrap .rangeMarks{margin-top:2px}
+.swRangeWrap .rangeMarks span{font-size:11px;white-space:nowrap}
 .swapList{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding:2px 4px 2px 2px}
 .swapItem{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:13px 16px;
   border:1.5px solid var(--line);border-radius:11px;text-align:left;transition:var(--tr);background:#fff;width:100%}
 .swapItem:hover{border-color:var(--blue);box-shadow:0 3px 12px rgba(20,80,224,.1);transform:translateY(-1px)}
 .swapItem.cur{border-color:var(--blue);background:var(--sky)}
-.siMain b{font-size:13.5px;display:block;font-weight:700;line-height:1.35}
+.swapItem{min-width:0}
+.siMain{min-width:0}
+.siMain b{font-size:13.5px;display:block;font-weight:700;line-height:1.35;word-break:break-word}
 .siMeta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px}
 .siMeta .mm{font-size:11.5px;color:var(--mut);font-family:ui-monospace,monospace;font-weight:600}
 .segTag{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px}
@@ -450,7 +469,15 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
           <span><i>✓</i> Bảo hành điện tử chính hãng tại nhà</span>
         </div>
       </div>
-      <div class="fc"><button class="cta" onclick="openLead()">🔒 Tôi muốn giữ giá này</button><button class="cta gh" onclick="openLead()">📞 Đặt lịch tư vấn</button></div>
+      <div class="contactNote">
+        💬 <b>Liên hệ chuyên viên để được tư vấn và nhận thêm ưu đãi</b>
+        <span>Phương án trên là gợi ý tự động. Chuyên viên sẽ giúp bạn chọn đúng dung tích, công suất và cập nhật chương trình khuyến mại đang chạy.</span>
+      </div>
+      <div class="fc">
+        <button class="cta" onclick="openLead()">🔒 Tôi muốn giữ giá này</button>
+        <button class="cta gh" onclick="openLead()">📞 Đặt lịch tư vấn</button>
+        <button class="cta gh" onclick="saveProject()">📸 Lưu dự án</button>
+      </div>
     </div>
     <div class="side">
       <h3>🏠 Ngôi nhà của bạn</h3>
@@ -482,7 +509,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 <script>
 const S={flow:null,house:null,sub:null,fam:null,space:null,up:null,
   lo:0,hi:0,           /* khoảng ngân sách khách chọn (nghìn đồng) */
-  picked:new Set(),skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
+  picked:new Set(),pickInit:false,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
 const PROG={sLoad:0,sErr:0,s0:0,s1:18,s2:36,s3:54,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
 const G=TP.GROUPS, ROOMS=TP.ROOMS;
 let DB=[], AVAIL=[];
@@ -521,7 +548,7 @@ function show(id){
 }
 function home(){
   Object.assign(S,{flow:null,house:null,sub:null,fam:null,space:null,up:null,lo:0,hi:0});
-  S.picked=new Set();S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
+  S.picked=new Set();S.pickInit=false;S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
   document.getElementById('subApt').style.display='none';
   document.getElementById('subTown').style.display='none';
@@ -715,14 +742,14 @@ function onBudget3(){
 const nAll=g=>DB.filter(p=>p.nhom===g).length;
 function buildSpace(){
   document.getElementById('spaceO').innerHTML=ROOM_LAYOUT.map(r=>{
-    const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g));
+    const devs=r.devs.filter(g=>G[g]&&hasStock(g));
     if(!devs.length)return '';
     const c=devs.reduce((s,g)=>s+nAll(g),0);
     return '<button class="opt" onclick="pickSpace(\''+r.id+'\',this)"><span class="ic">'+r.ic+
       '</span><b>'+r.name+'</b><small>'+devs.map(g=>G[g].name).join(' · ')+'</small>'+
       '<span class="cnt">'+c+' mã</span><span class="ck">✓</span></button>';}).join('');
 }
-function pickSpace(rid,el){ pick('space',rid,el); S.picked=new Set(); show('s3'); }
+function pickSpace(rid,el){ pick('space',rid,el); S.picked=new Set(); S.pickInit=false; show('s3'); }
 /* ===== BỐ CỤC THIẾT BỊ THEO TỪNG PHÒNG (mục 13) ===== */
 const ROOM_LAYOUT=[
   {id:'living', ic:'🛋️', name:'Phòng khách', devs:['tv','soundbar','robot']},
@@ -731,37 +758,46 @@ const ROOM_LAYOUT=[
   {id:'bath',   ic:'🚿', name:'Phòng tắm / Giặt', devs:['washer','dryer','heater']}
 ];
 /* Khoá duy nhất cho mỗi ô chọn: phòng + nhóm (TV xuất hiện ở 2 phòng) */
-const dk=(r,g)=>r+':'+g;
+function dk(r,g){ return r+':'+g; }
+/* Nhóm hàng này có mã nào để bán không */
+function hasStock(g){ return DB.some(p=>p.nhom===g); }
 
 function roomsInScope(){
   if(S.flow==='space') return ROOM_LAYOUT.filter(r=>r.id===S.space);
   return ROOM_LAYOUT;
 }
+/* Chỉ những khe CÓ HÀNG mới được đưa vào combo */
 function availableSlots(){
   const out=[];
   roomsInScope().forEach(r=>r.devs.forEach(g=>{
-    if(G[g]&&AVAIL.includes(g)) out.push({room:r.id,g:g,key:dk(r.id,g)});
+    if(G[g]&&hasStock(g)) out.push({room:r.id,g:g,key:dk(r.id,g)});
   }));
   return out;
 }
 function buildRoomPick(){
-  /* Lần đầu vào: mặc định chọn sẵn các thiết bị chính */
-  if(!S.picked || !S.picked.size){
+  /* Chỉ set mặc định ĐÚNG MỘT LẦN — sau đó khách bỏ hết cũng được */
+  if(!S.pickInit){
+    S.pickInit=true;
     S.picked=new Set();
     availableSlots().forEach(sl=>{ if(G[sl.g].core) S.picked.add(sl.key); });
   }
   const host=document.getElementById('roomPick');
+  /* Luôn hiện ĐỦ 4 phòng và ĐỦ thiết bị theo bố cục — món chưa có hàng thì mờ đi */
   host.innerHTML=roomsInScope().map(r=>{
-    const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g));
-    if(!devs.length)return '';
-    const on=devs.filter(g=>S.picked.has(dk(r.id,g))).length;
+    const devs=r.devs.filter(g=>G[g]);
+    const usable=devs.filter(g=>hasStock(g));
+    const on=usable.filter(g=>S.picked.has(dk(r.id,g))).length;
     return '<div class="roomBlock">'+
       '<div class="roomTitle"><b>'+r.ic+' '+r.name+'</b>'+
-      '<span class="rc" id="rc-'+r.id+'">'+on+'/'+devs.length+' thiết bị</span>'+
-      '<button class="rall" onclick="toggleRoom(\''+r.id+'\')">Chọn / bỏ cả phòng</button></div>'+
+      '<span class="rc">'+on+'/'+usable.length+' thiết bị</span>'+
+      (usable.length?'<button class="rall" onclick="toggleRoom(\''+r.id+'\')">'+
+        (on===usable.length?'Bỏ chọn cả phòng':'Chọn cả phòng')+'</button>':'')+
+      '</div>'+
       '<div class="devGrid">'+devs.map(g=>{
-        const k=dk(r.id,g), sel=S.picked.has(k);
-        const n=DB.filter(p=>p.nhom===g).length;
+        const k=dk(r.id,g), n=DB.filter(p=>p.nhom===g).length;
+        if(!n) return '<div class="dev na"><span class="di">'+G[g].ic+'</span>'+
+          '<span><b>'+G[g].name+'</b><span class="dn">chưa có hàng</span></span></div>';
+        const sel=S.picked.has(k);
         return '<button class="dev'+(sel?' on':' off')+'" data-k="'+k+'" onclick="toggleDev(\''+k+'\')">'+
           '<span class="di">'+G[g].ic+'</span>'+
           '<span><b>'+G[g].name+'</b><span class="dn">'+n+' mã</span></span>'+
@@ -776,7 +812,7 @@ function toggleDev(k){
 }
 function toggleRoom(rid){
   const r=ROOM_LAYOUT.find(x=>x.id===rid);
-  const devs=r.devs.filter(g=>G[g]&&AVAIL.includes(g));
+  const devs=r.devs.filter(g=>G[g]&&hasStock(g));
   const allOn=devs.every(g=>S.picked.has(dk(rid,g)));
   devs.forEach(g=>{ if(allOn)S.picked.delete(dk(rid,g)); else S.picked.add(dk(rid,g)); });
   buildRoomPick();
@@ -1199,6 +1235,201 @@ function chooseModel(g,model){
 function anim(id,a,b,d,f){const el=document.getElementById(id);if(!el)return;const t0=performance.now();
   (function s(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=f(a+(b-a)*e);
    if(p<1)requestAnimationFrame(s)})(performance.now())}
+
+/* ==================================================================
+   LƯU DỰ ÁN — xuất ảnh PNG tổng quan (mục 6)
+   Chỉ hiện MÃ sản phẩm + tổng quát combo. KHÔNG hiện giá từng món.
+   Watermark logo in chìm lớn phủ toàn ảnh để tránh sao chép.
+   ================================================================== */
+/* Dán logo dạng base64 vào đây để in chìm. Để trống thì dùng watermark chữ. */
+const LOGO_BASE64 = '';
+
+function saveProject(){
+  const combo=buildCombo();
+  if(!combo.length){alert('Chưa có thiết bị nào trong phương án.');return;}
+  const btn=event&&event.target; if(btn)btn.textContent='⏳ Đang tạo ảnh…';
+  const draw=(logoImg)=>{
+    try{ renderProjectImage(combo,logoImg); }
+    catch(e){ alert('Không tạo được ảnh: '+e.message); }
+    if(btn)btn.textContent='📸 Lưu dự án';
+  };
+  if(LOGO_BASE64){
+    const im=new Image();
+    im.onload=()=>draw(im);
+    im.onerror=()=>draw(null);
+    im.src=LOGO_BASE64;
+  } else draw(null);
+}
+
+function renderProjectImage(combo,logoImg){
+  const W=1080, PAD=64;
+  const RN={living:'PHÒNG KHÁCH',kit:'BẾP',bed:'PHÒNG NGỦ',bath:'PHÒNG TẮM / GIẶT'};
+
+  /* Gom theo phòng */
+  const byRoom={};
+  combo.forEach(x=>{(byRoom[x._room||G[x.nhom].room]??=[]).push(x);});
+  const roomsOrder=['living','kit','bed','bath'].filter(r=>byRoom[r]);
+
+  /* Ngành hàng chưa chọn */
+  const allSlots=availableSlots();
+  const chosen={}; combo.forEach(x=>{chosen[x._slot||dk(G[x.nhom].room,x.nhom)]=1;});
+  const missNames=[...new Set(allSlots.filter(sl=>!chosen[sl.key]).map(sl=>G[sl.g].name))];
+
+  /* Tính chiều cao động */
+  let H = 300;                                   /* header */
+  H += 150;                                      /* thanh tiến độ */
+  roomsOrder.forEach(r=>{ H += 58 + byRoom[r].length*46 + 18; });
+  if(missNames.length) H += 110;
+  H += 190;                                      /* tổng tiền + ghi chú */
+  H += 90;                                       /* footer */
+  H = Math.max(H, 900);
+
+  const cv=document.createElement('canvas');
+  cv.width=W; cv.height=H;
+  const g=cv.getContext('2d');
+
+  /* ---- Nền ---- */
+  g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
+  const grad=g.createLinearGradient(0,0,W,260);
+  grad.addColorStop(0,'#0f1b3d'); grad.addColorStop(1,'#1a3f8f');
+  g.fillStyle=grad; g.fillRect(0,0,W,260);
+
+  /* ---- WATERMARK in chìm phủ toàn ảnh ---- */
+  g.save();
+  g.globalAlpha=0.06;
+  g.translate(W/2,H/2); g.rotate(-Math.PI/9);
+  if(logoImg){
+    const lw=W*1.05, lh=lw*(logoImg.height/logoImg.width);
+    g.drawImage(logoImg,-lw/2,-lh/2,lw,lh);
+  } else {
+    g.fillStyle='#0f1b3d';
+    g.textAlign='center'; g.textBaseline='middle';
+    g.font='800 118px Segoe UI, Arial';
+    g.fillText('ĐIỆN MÁY',0,-150);
+    g.fillText('TÍN PHÁT',0,-20);
+    g.font='700 46px Segoe UI, Arial';
+    g.fillText('AI HOÀN THIỆN KHÔNG GIAN SỐNG',0,80);
+    g.font='800 96px Segoe UI, Arial';
+    g.globalAlpha=0.04;
+    g.fillText('TÍN PHÁT',0,300);
+    g.fillText('TÍN PHÁT',0,-420);
+  }
+  g.restore();
+
+  /* ---- Header ---- */
+  g.fillStyle='#ffffff'; g.textAlign='left'; g.textBaseline='alphabetic';
+  g.font='800 20px Segoe UI, Arial';
+  g.globalAlpha=.75; g.fillText('ĐIỆN MÁY TÍN PHÁT',PAD,74); g.globalAlpha=1;
+  g.font='800 44px Segoe UI, Arial';
+  g.fillText('PHƯƠNG ÁN HOÀN THIỆN',PAD,132);
+  g.fillText('KHÔNG GIAN SỐNG',PAD,182);
+
+  const meta=[];
+  if(S.sub)meta.push(S.sub);
+  if(S.fam&&FAM[S.fam])meta.push(FAM[S.fam]);
+  meta.push(new Date().toLocaleDateString('vi-VN'));
+  g.font='600 19px Segoe UI, Arial'; g.globalAlpha=.8;
+  g.fillText(meta.join('  ·  '),PAD,224); g.globalAlpha=1;
+
+  /* ---- Thanh tiến độ ---- */
+  let y=300;
+  const totalSlots=allSlots.filter(sl=>S.picked.has(sl.key)).length || combo.length;
+  const pct=Math.min(100,Math.round(combo.length/Math.max(1,totalSlots)*100));
+  g.fillStyle='#101828'; g.font='800 26px Segoe UI, Arial';
+  g.fillText('Mức độ hoàn thiện',PAD,y);
+  g.textAlign='right';
+  g.fillStyle='#1450e0'; g.font='800 40px Segoe UI, Arial';
+  g.fillText(pct+'%',W-PAD,y+6);
+  g.textAlign='left';
+  y+=28;
+  g.fillStyle='#e6e9ef'; roundRect(g,PAD,y,W-PAD*2,20,10); g.fill();
+  const fg=g.createLinearGradient(PAD,0,W-PAD,0);
+  fg.addColorStop(0,'#1450e0'); fg.addColorStop(1,'#6ea0ff');
+  g.fillStyle=fg; roundRect(g,PAD,y,(W-PAD*2)*pct/100,20,10); g.fill();
+  y+=44;
+  g.fillStyle='#475467'; g.font='600 19px Segoe UI, Arial';
+  g.fillText(combo.length+' / '+totalSlots+' hạng mục thiết bị đã có phương án',PAD,y);
+  y+=48;
+
+  /* ---- Danh sách theo phòng: CHỈ MÃ, KHÔNG GIÁ ---- */
+  roomsOrder.forEach(r=>{
+    g.fillStyle='#1450e0'; g.font='800 17px Segoe UI, Arial';
+    g.fillText(RN[r],PAD,y);
+    g.strokeStyle='#e6e9ef'; g.lineWidth=2;
+    g.beginPath(); g.moveTo(PAD,y+12); g.lineTo(W-PAD,y+12); g.stroke();
+    y+=40;
+    byRoom[r].forEach(x=>{
+      g.fillStyle='#f7f8fa'; roundRect(g,PAD,y-20,W-PAD*2,38,9); g.fill();
+      g.fillStyle='#101828'; g.font='700 19px Segoe UI, Arial';
+      g.fillText(G[x.nhom].name,PAD+16,y+6);
+      g.textAlign='right';
+      g.fillStyle='#1450e0'; g.font='700 19px Segoe UI, Arial';
+      g.fillText(x.model,W-PAD-16,y+6);
+      g.textAlign='left';
+      y+=46;
+    });
+    y+=18;
+  });
+
+  /* ---- Ngành hàng chưa chọn ---- */
+  if(missNames.length){
+    g.fillStyle='#98a2b3'; g.font='800 15px Segoe UI, Arial';
+    g.fillText('CHƯA ĐƯA VÀO PHƯƠNG ÁN',PAD,y);
+    y+=30;
+    g.fillStyle='#667085'; g.font='600 17px Segoe UI, Arial';
+    wrapText(g,missNames.join('  ·  '),PAD,y,W-PAD*2,26);
+    y+=70;
+  }
+
+  /* ---- Tổng giá trị ---- */
+  const tot=combo.reduce((a,x)=>a+x.gia,0);
+  g.fillStyle='#0f1b3d'; roundRect(g,PAD,y,W-PAD*2,104,14); g.fill();
+  g.fillStyle='#ffffff'; g.globalAlpha=.7; g.font='600 17px Segoe UI, Arial';
+  g.fillText('TỔNG GIÁ TRỊ PHƯƠNG ÁN',PAD+26,y+38); g.globalAlpha=1;
+  g.font='800 40px Segoe UI, Arial';
+  g.fillText(fmt(tot),PAD+26,y+82);
+  y+=134;
+
+  /* ---- Ghi chú ---- */
+  g.fillStyle='#fff8e8'; roundRect(g,PAD,y,W-PAD*2,72,12); g.fill();
+  g.strokeStyle='#ffd58a'; g.lineWidth=2; roundRect(g,PAD,y,W-PAD*2,72,12); g.stroke();
+  g.fillStyle='#7a5a12'; g.font='700 18px Segoe UI, Arial';
+  g.fillText('Liên hệ chuyên viên để được tư vấn và nhận thêm ưu đãi',PAD+22,y+30);
+  g.font='600 15px Segoe UI, Arial';
+  g.fillText('Giá chi tiết từng sản phẩm sẽ được chuyên viên báo trực tiếp.',PAD+22,y+55);
+  y+=100;
+
+  /* ---- Footer ---- */
+  g.fillStyle='#98a2b3'; g.font='600 15px Segoe UI, Arial'; g.textAlign='center';
+  g.fillText('Điện Máy Tín Phát · AI hoàn thiện không gian sống',W/2,H-32);
+
+  /* ---- Tải về ---- */
+  cv.toBlob(function(blob){
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='TinPhat_PhuongAn_'+new Date().toISOString().slice(0,10)+'.png';
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  },'image/png');
+}
+
+function roundRect(g,x,y,w,h,r){
+  g.beginPath();
+  g.moveTo(x+r,y); g.lineTo(x+w-r,y); g.quadraticCurveTo(x+w,y,x+w,y+r);
+  g.lineTo(x+w,y+h-r); g.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  g.lineTo(x+r,y+h); g.quadraticCurveTo(x,y+h,x,y+h-r);
+  g.lineTo(x,y+r); g.quadraticCurveTo(x,y,x+r,y); g.closePath();
+}
+function wrapText(g,text,x,y,maxW,lh){
+  const words=text.split(' '); let line='', yy=y;
+  words.forEach(w=>{
+    const t=line?line+' '+w:w;
+    if(g.measureText(t).width>maxW&&line){ g.fillText(line,x,yy); line=w; yy+=lh; }
+    else line=t;
+  });
+  if(line)g.fillText(line,x,yy);
+}
+
 function openLead(){document.getElementById('md').classList.add('on');
   document.getElementById('lf').style.display='block';document.getElementById('ls').style.display='none'}
 function closeLead(){document.getElementById('md').classList.remove('on')}

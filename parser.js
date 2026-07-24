@@ -129,6 +129,49 @@ function parseCSV(text){
   return rows;
 }
 
+/* ---------- TỰ DÒ VỊ TRÍ CỘT THEO TÊN TIÊU ĐỀ ----------
+   An toàn hơn cố định A/S/Y/AK/AL: nếu Sheet chèn hoặc xoá cột,
+   hệ thống vẫn tìm đúng nhờ khớp tên ở dòng tiêu đề.            */
+const COL_HINTS = {
+  COL_PRICE: ['co lap dat','gia lap dat','gia ban','gia co lap dat'],
+  COL_STOCK: ['tin phat ton','ton tin phat','ton kho','tp ton'],
+  COL_TAG:   ['hashtag','hash tag','nganh hang','loai hang'],
+  COL_SEG:   ['phan khuc','phankhuc','segment']
+};
+function detectColumns(rows, cfg){
+  const found = {};
+  const scan = Math.min(6, rows.length);
+  for(let r=0; r<scan; r++){
+    const row = rows[r] || [];
+    for(let c=0; c<row.length; c++){
+      const cell = noAccent(row[c]);
+      if(!cell) continue;
+      for(const key in COL_HINTS){
+        if(found[key]!==undefined) continue;
+        if(COL_HINTS[key].some(h => cell===h || cell.indexOf(h)>=0)){
+          found[key] = c;
+        }
+      }
+    }
+    if(Object.keys(found).length === Object.keys(COL_HINTS).length) break;
+  }
+  /* Dòng dữ liệu bắt đầu ngay sau dòng tiêu đề tìm thấy */
+  let headerRow = -1;
+  for(let r=0; r<scan; r++){
+    const row = rows[r] || [];
+    if(row.some(c => {
+      const x = noAccent(c);
+      return x === 'co lap dat' || x === 'hashtag' || x.indexOf('tin phat ton')>=0;
+    })){ headerRow = r; break; }
+  }
+  const out = Object.assign({}, cfg);
+  for(const k in found) out[k] = found[k];
+  if(headerRow >= 0) out.SKIP_ROWS = headerRow + 1;
+  out._detected = found;
+  out._headerRow = headerRow;
+  return out;
+}
+
 /* ---------- NHẬN DIỆN DÒNG TIÊU ĐỀ NHÓM ---------- */
 /* VD: "Tivi Aqua" → {group:'tv', brand:'Aqua'} */
 function detectHeader(text){
@@ -207,10 +250,15 @@ function segFromCell(v){
 }
 
 function buildCatalog(rows, cfg){
-  cfg = Object.assign({}, CONFIG, cfg||{});
+  cfg = detectColumns(rows, Object.assign({}, CONFIG, cfg||{}));
   const products=[];
   const log={total:0, header:0, noPrice:0, noGroup:0, ok:0, inStock:0,
-             headers:[], byTag:0, byHeader:0, tagsUnknown:{}, segFromSheet:0};
+             headers:[], byTag:0, byHeader:0, tagsUnknown:{}, segFromSheet:0,
+             cols:{model:cfg.COL_MODEL, stock:cfg.COL_STOCK, price:cfg.COL_PRICE,
+                   tag:cfg.COL_TAG, seg:cfg.COL_SEG, skip:cfg.SKIP_ROWS},
+             detected:cfg._detected||{}, headerRow:cfg._headerRow,
+             rowsTotal:rows.length, colsTotal:(rows[0]||[]).length,
+             skipSample:[], priceEmpty:0};
   let curGroup=null, curBrand='';
 
   for(let i=cfg.SKIP_ROWS;i<rows.length;i++){
@@ -233,6 +281,9 @@ function buildCatalog(rows, cfg){
         log.header++; log.headers.push({text:rawModel, group:h.group, brand:h.brand});
       } else {
         log.noPrice++;
+        if(log.skipSample.length<25)
+          log.skipSample.push({row:i+1, a:rawModel,
+            y:String(r[cfg.COL_PRICE]||''), ak:String(r[cfg.COL_TAG]||'')});
       }
       continue;
     }
@@ -313,6 +364,7 @@ async function load(cfg){
   return buildCatalog(rows, cfg);
 }
 
-return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, load, parseCSV, buildCatalog,
+return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, COL_HINTS, detectColumns,
+        load, parseCSV, buildCatalog,
         num, noAccent, detectHeader, specOf, groupFromTag, segFromCell};
 })();

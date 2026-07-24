@@ -122,6 +122,18 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
       <div class="sub">Hệ thống đọc các dòng tiêu đề như "Tivi Aqua", "Tủ lạnh Samsung" để phân loại toàn bộ sản phẩm bên dưới nó. Nếu một dòng tiêu đề không được nhận diện, các mã phía dưới sẽ bị bỏ qua.</div>
       <div class="hdrlist" id="hdrs"></div>
     </div>
+    <div class="card">
+      <h3>🔍 Chẩn đoán đọc file</h3>
+      <div class="sub">Kiểm tra hệ thống có tìm đúng cột trong Google Sheet không. Nếu số sản phẩm ít bất thường, xem phần này trước.</div>
+      <div id="diag"></div>
+    </div>
+    <div class="card" id="skipCard" style="display:none">
+      <h3>📋 Mẫu dòng bị bỏ qua</h3>
+      <div class="sub">Các dòng có nội dung ở cột A nhưng không đọc được giá ở cột giá bán. Nếu thấy mã sản phẩm thật ở đây nghĩa là hệ thống đang dò sai cột.</div>
+      <div class="tw" style="max-height:280px;margin-top:12px"><table>
+        <thead><tr><th style="width:60px">Dòng</th><th style="width:200px">Cột A</th><th style="width:140px">Cột giá</th><th>Cột Hashtag</th></tr></thead>
+        <tbody id="skipTb"></tbody></table></div>
+    </div>
     <div class="card" id="tagIssueCard" style="display:none">
       <h3>⚠️ Hashtag chưa nhận diện được</h3>
       <div class="sub">Các giá trị ở cột AK dưới đây chưa có trong bảng ánh xạ — sản phẩm phải dựa vào dòng tiêu đề, dễ sai ngành hàng. Gửi danh sách này để bổ sung vào <code>TAG_MAP</code> trong <code>parser.js</code>.</div>
@@ -259,7 +271,7 @@ function renderAll(){
     '<div class="stat '+(LOG.byTag===LOG.ok?'g':'w')+'"><div class="n">'+LOG.byTag+'</div><div class="l">Phân loại theo cột AK</div></div>'+
     '<div class="stat '+(LOG.segFromSheet===LOG.ok?'g':'w')+'"><div class="n">'+LOG.segFromSheet+'</div><div class="l">Phân khúc từ cột AL</div></div>'+
     '<div class="stat w"><div class="n">'+LOG.noPrice+'</div><div class="l">Dòng bỏ qua</div></div>';
-  renderTagIssues();
+  renderDiag();renderTagIssues();
   renderStockCoverage();
 
   document.getElementById('hdrs').innerHTML=LOG.headers.length
@@ -309,6 +321,51 @@ function renderStockCoverage(){
     return '<div class="cv '+cls+'"><b>'+G[g].ic+' '+G[g].name+'</b>'+
       '<div class="d"><b style="font-size:15px">'+st.length+'</b>/'+all.length+' mã tồn kho ('+pct+'%)<br>'+msg+'</div></div>';
   }).join('');
+}
+function colName(i){
+  if(i===undefined||i===null||i<0)return '—';
+  let s='',n=i;
+  while(n>=0){ s=String.fromCharCode(65+(n%26))+s; n=Math.floor(n/26)-1; }
+  return s;
+}
+function renderDiag(){
+  const c=LOG.cols, d=LOG.detected||{};
+  const row=(lbl,key,idx,need)=>{
+    const auto=d[key]!==undefined;
+    return '<tr><td><b>'+lbl+'</b></td>'+
+      '<td><code>'+colName(idx)+'</code> (vị trí '+idx+')</td>'+
+      '<td>'+(auto?'<span class="pill in">● Tự dò được</span>'
+                  :'<span class="pill out">○ Dùng mặc định</span>')+'</td>'+
+      '<td style="font-size:12px;color:var(--ink2)">'+need+'</td></tr>';
+  };
+  document.getElementById('diag').innerHTML=
+    '<table class="ref" style="margin-top:14px">'+
+    '<tr><th style="width:150px">Dữ liệu</th><th style="width:150px">Cột dùng</th><th style="width:150px">Cách xác định</th><th>Ghi chú</th></tr>'+
+    row('Mã model','COL_MODEL',c.model,'Luôn là cột A')+
+    row('Tồn kho','COL_STOCK',c.stock,'Tìm theo tiêu đề "Tín Phát tồn"')+
+    row('Giá bán','COL_PRICE',c.price,'Tìm theo tiêu đề "Có lắp đặt"')+
+    row('Hashtag','COL_TAG',c.tag,'Tìm theo tiêu đề "Hashtag"')+
+    row('Phân khúc','COL_SEG',c.seg,'Tìm theo tiêu đề "Phân khúc"')+
+    '</table>'+
+    '<div style="margin-top:14px;display:flex;gap:22px;flex-wrap:wrap;font-size:13px;font-weight:700">'+
+    '<span>File: <b>'+LOG.rowsTotal+'</b> dòng × <b>'+LOG.colsTotal+'</b> cột</span>'+
+    '<span>Dòng tiêu đề: <b>'+(LOG.headerRow>=0?(LOG.headerRow+1):'không thấy')+'</b></span>'+
+    '<span>Bắt đầu đọc từ dòng: <b>'+(c.skip+1)+'</b></span>'+
+    '<span>Dòng có dữ liệu cột A: <b>'+LOG.total+'</b></span>'+
+    '</div>'+
+    (LOG.ok<20?'<div class="warn">⚠️ Chỉ đọc được <b>'+LOG.ok+'</b> sản phẩm — có vẻ ít bất thường. Kiểm tra bảng "Mẫu dòng bị bỏ qua" bên dưới: nếu thấy mã sản phẩm thật nằm trong đó, nghĩa là cột giá bán đang dò sai.</div>':'');
+
+  const sk=LOG.skipSample||[];
+  const card=document.getElementById('skipCard');
+  if(!sk.length){card.style.display='none';}
+  else{
+    card.style.display='';
+    document.getElementById('skipTb').innerHTML=sk.map(x=>'<tr>'+
+      '<td style="color:var(--mut);font-size:11.5px">'+x.row+'</td>'+
+      '<td class="mono">'+x.a+'</td>'+
+      '<td style="font-size:12px">'+(x.y||'<i style="color:var(--mut)">trống</i>')+'</td>'+
+      '<td style="font-size:12px">'+(x.ak||'<i style="color:var(--mut)">trống</i>')+'</td></tr>').join('');
+  }
 }
 function renderTagIssues(){
   const t=LOG.tagsUnknown||{};
