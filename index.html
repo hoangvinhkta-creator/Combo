@@ -294,11 +294,22 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 
 /* ===== MÔ TẢ NGẮN + NÚT BỎ QUA ===== */
 .desc{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.5}
+.feat{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;
+  font-weight:600;color:var(--green);background:var(--greenbg);
+  padding:4px 10px;border-radius:99px}
+.feat .ico{color:var(--green)}
 .roomTag{font-size:11px;font-weight:700;color:var(--blue);background:var(--sky);padding:2px 8px;border-radius:99px;font-family:inherit}
 .pAct{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .skip{font-size:11.5px;font-weight:700;color:var(--mut);transition:var(--tr)}
 .skip:hover{color:var(--red);text-decoration:underline}
 .chip.pend{background:#f2f4f7;color:var(--mut)}
+.chip{cursor:pointer;border:1px solid transparent;transition:var(--tr)}
+.chip:hover{border-color:var(--green);filter:brightness(.97)}
+.chip.off{background:#f2f4f7;color:var(--mut);text-decoration:line-through;opacity:.65}
+.chip.off:hover{border-color:var(--blue);color:var(--blue);opacity:1;text-decoration:none}
+.chip.off .ico{color:var(--blue)}
+.rmHint{margin-top:12px;font-size:11.5px;color:var(--mut);line-height:1.5}
+.rmHint b{color:var(--ink2)}
 .skBox{margin-top:16px;background:#fff;border:1.5px dashed var(--line);border-radius:var(--r);padding:16px 18px}
 .skBox b{font-size:13px;color:var(--ink2);display:block;margin-bottom:10px}
 .skList{display:flex;gap:8px;flex-wrap:wrap}
@@ -500,6 +511,12 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .siMain b{font-size:13.5px;display:block;font-weight:700;line-height:1.35;word-break:break-word}
 .siMeta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:5px}
 .siMeta .mm{font-size:11.5px;color:var(--mut);font-family:ui-monospace,monospace;font-weight:600}
+.aChip{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;
+  background:var(--line2);color:var(--ink2)}
+.aChip.hi{background:var(--sky);color:var(--blue)}
+.vChip{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;
+  background:var(--greenbg);color:var(--green);display:inline-flex;align-items:center;gap:4px}
+.vChip .ico{color:var(--green)}
 .swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px}
 .swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:1px 7px;border-radius:99px}
 .swapItem .pz{font-size:15px;font-weight:800;white-space:nowrap}
@@ -726,6 +743,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <div class="cb"><div class="cf" id="cf"></div></div>
       <div class="cl"><span id="cp">0</span>% hoàn thiện</div>
       <div id="rms"></div>
+      <div class="rmHint" id="rmHint"></div>
       <div class="tb"><div class="tl">Tổng giá trị combo</div><div class="tn" id="tn">0₫</div>
       <div class="saveBox">
         <div class="saveTop">
@@ -843,6 +861,7 @@ var ICON={
   shield:'M12 2.8 20 6v6c0 5-3.5 8-8 9.2C7.5 20 4 17 4 12V6Zm-2.5 9.5 2 2 4.5-4.5',
   clock:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5.2l3.2 1.8',
   sparkle:'M12 3.2 13.8 9 19.6 10.8 13.8 12.6 12 18.4 10.2 12.6 4.4 10.8 10.2 9ZM18.5 3v3M20 4.5h-3',
+  mic:'M12 14.5a3 3 0 0 0 3-3v-5a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3ZM5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6',
   star:'M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.4 9.9l6-.9Z',
   trend:'M3.5 16.5 9 11l4 4 7.5-7.5M15 7.5h5.5V13'
 };
@@ -1794,6 +1813,7 @@ function render(){
      '<div class="md">Mã: '+x.model+
        (x._room&&roomName(x._room)?' · <span class="roomTag">'+roomName(x._room)+'</span>':'')+'</div>'+
      (x.mota?'<div class="desc">'+x.mota+'</div>':'')+
+     (x.voice?'<div class="feat">'+ic('mic',13)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
      (x.ld?'<div class="why"><b>Vì sao chọn:</b> '+x.ld+'</div>':'')+
     '</div>'+
     '<div class="pAct"><div class="pp">'+fmt(x.gia)+'</div>'+
@@ -1827,11 +1847,22 @@ function render(){
       if(!devs.length)return '';
       return '<div class="rm"><div class="rn">'+ri(zoneOf(r.id),15)+r.name+'</div><div class="ri">'+
         devs.map((g,i)=>{
-          const k=dk(r.id,g), on=got[k];
-          return '<span class="chip'+(on?'':' pend')+'" style="animation-delay:'+(.2+i*.08)+'s">'+
-            (on?ic('check',12):'')+G[g].name+'</span>';
+          const k=dk(r.id,g), off=S.skipped.has(k), on=got[k];
+          return '<button class="chip'+(off?' off':(on?'':' pend'))+'" '+
+            'onclick="toggleSlot(\''+k+'\')" '+
+            'title="'+(off?'Bấm để thêm lại':'Bấm để tạm bỏ khỏi phương án')+'" '+
+            'style="animation-delay:'+(.2+i*.08)+'s">'+
+            (off?ic('plus',12):(on?ic('check',12):''))+G[g].name+'</button>';
         }).join('')+'</div></div>';
     }).join('');
+    /* Nhắc khách có thể bấm để cân đối ngân sách */
+    const hint=document.getElementById('rmHint');
+    if(hint){
+      const nOff=[...S.skipped].filter(k=>S.picked.has(k)).length;
+      hint.innerHTML = nOff
+        ? 'Đang tạm bỏ <b>'+nOff+'</b> thiết bị. Bấm lại để đưa vào phương án.'
+        : 'Bấm vào tên thiết bị để tạm bỏ khỏi phương án và cân đối ngân sách.';
+    }
   }
 
   const tot=combo.reduce((s,x)=>s+x.gia,0);
@@ -1917,7 +1948,7 @@ function toggleSwap(k,cur){
   const c=curP?curP.gia:pool[Math.floor(pool.length/2)];
   openSwap={
     k:k, g:g, cur:cur,
-    brand:'all',
+    brand:'all', inch:'all', panel:'all', res:'all', voice:0,
     lo: Math.max(SWAP_MIN,Math.floor(c*0.55/500)*500),
     hi: Math.min(SWAP_MAX,Math.ceil(c*1.7/500)*500)
   };
@@ -1932,13 +1963,20 @@ function renderSwap(){
   document.querySelectorAll('[id^=sp-]').forEach(e=>{if(e!==host)e.innerHTML=''});
   const g=openSwap.g;
 
-  /* Danh sách hãng có trong nhóm, kèm số mã */
+  const pool0=DB.filter(p=>p.nhom===g);
+
+  /* Danh sách hãng có trong nhóm */
   const brands={};
-  DB.filter(p=>p.nhom===g).forEach(p=>{
-    const b=p.hang||'Khác';
-    brands[b]=(brands[b]||0)+1;
-  });
+  pool0.forEach(p=>{ const b=p.hang||'Khác'; brands[b]=(brands[b]||0)+1; });
   const brandList=Object.keys(brands).sort((a,b)=>brands[b]-brands[a]);
+
+  /* Các thuộc tính có thật trong nhóm — chỉ hiện bộ lọc khi có từ 2 giá trị */
+  const inchList=[...new Set(pool0.map(p=>p.inch).filter(Boolean))].sort((a,b)=>a-b);
+  const panelList=[...new Set(pool0.map(p=>p.panel).filter(Boolean))];
+  const resOrder=['8K','4K','FHD','HD'];
+  const resList=[...new Set(pool0.map(p=>p.res).filter(Boolean))]
+    .sort((a,b)=>resOrder.indexOf(a)-resOrder.indexOf(b));
+  const hasVoice=pool0.some(p=>p.voice);
 
   host.innerHTML=
    '<div class="swapPanel">'+
@@ -1955,6 +1993,37 @@ function renderSwap(){
          '<button class="fchip'+(openSwap.brand===b?' on':'')+'" onclick="setSwapBrand(\''+
          b.replace(/'/g,"\\'")+'\')">'+b+'</button>').join('')+
      '</div></div>':'')+
+
+    /* --- Lọc theo kích thước màn hình --- */
+    (inchList.length>1?
+    '<div class="fltBlock"><div class="fltLbl">Kích thước</div><div class="chipRow">'+
+      '<button class="fchip'+(openSwap.inch==='all'?' on':'')+'" onclick="setSwapAttr(\'inch\',\'all\')">Tất cả</button>'+
+      inchList.map(v=>'<button class="fchip'+(openSwap.inch===v?' on':'')+'" '+
+        'onclick="setSwapAttr(\'inch\','+v+')">'+v+' inch</button>').join('')+
+    '</div></div>':'')+
+
+    /* --- Lọc theo công nghệ tấm nền --- */
+    (panelList.length?
+    '<div class="fltBlock"><div class="fltLbl">Công nghệ màn hình</div><div class="chipRow">'+
+      '<button class="fchip'+(openSwap.panel==='all'?' on':'')+'" onclick="setSwapAttr(\'panel\',\'all\')">Tất cả</button>'+
+      panelList.map(v=>'<button class="fchip'+(openSwap.panel===v?' on':'')+'" '+
+        'onclick="setSwapAttr(\'panel\',\''+v+'\')">'+v+'</button>').join('')+
+    '</div></div>':'')+
+
+    /* --- Lọc theo độ phân giải --- */
+    (resList.length>1?
+    '<div class="fltBlock"><div class="fltLbl">Độ phân giải</div><div class="chipRow">'+
+      '<button class="fchip'+(openSwap.res==='all'?' on':'')+'" onclick="setSwapAttr(\'res\',\'all\')">Tất cả</button>'+
+      resList.map(v=>'<button class="fchip'+(openSwap.res===v?' on':'')+'" '+
+        'onclick="setSwapAttr(\'res\',\''+v+'\')">'+v+'</button>').join('')+
+    '</div></div>':'')+
+
+    /* --- Lọc theo tính năng --- */
+    (hasVoice?
+    '<div class="fltBlock"><div class="fltLbl">Tính năng</div><div class="chipRow">'+
+      '<button class="fchip'+(openSwap.voice?' on':'')+'" onclick="setSwapAttr(\'voice\','+(openSwap.voice?'0':'1')+')">'+
+      ic('mic',14)+'Điều khiển giọng nói</button>'+
+    '</div></div>':'')+
 
     /* --- Lọc theo mức giá nhanh --- */
     '<div class="fltBlock"><div class="fltLbl">Mức giá</div>'+
@@ -1987,10 +2056,44 @@ function renderSwap(){
   mountRange({lo:'swLo',hi:'swHi',fill:'swFill',marks:'swMarks'},
     {min:SWAP_MIN,max:SWAP_MAX,step:500,
      initLo:Math.max(SWAP_MIN,openSwap.lo),initHi:Math.min(SWAP_MAX,openSwap.hi),
-     prices:ps});
+     prices:swapMatches().map(function(p){return p.gia;})});
   onSwap();
 }
-function setSwapBrand(b){ if(!openSwap)return; openSwap.brand=b; renderSwap(); }
+function setSwapBrand(b){ setSwapAttr('brand',b); }
+function setSwapAttr(k,v){
+  if(!openSwap)return;
+  openSwap[k]=v;
+  /* Nới khoảng giá để bao hết các mã khớp bộ lọc mới — tránh ra 0 kết quả */
+  const m=swapMatches();
+  if(m.length){
+    const ps=m.map(p=>p.gia).sort((a,b)=>a-b);
+    const lo=Math.max(SWAP_MIN,Math.floor(ps[0]/500)*500);
+    const hi=Math.min(SWAP_MAX,Math.ceil(ps[ps.length-1]/500)*500);
+    if(openSwap.lo>lo) openSwap.lo=lo;
+    if(openSwap.hi<hi) openSwap.hi=hi;
+  }
+  renderSwap();
+}
+/* Các mã khớp bộ lọc thuộc tính, CHƯA xét khoảng giá */
+function swapMatches(){
+  if(!openSwap)return [];
+  var g=openSwap.g;
+  var list=DB.filter(function(p){ return p.nhom===g; });
+  if(openSwap.brand!=='all') list=list.filter(function(p){ return (p.hang||'Khác')===openSwap.brand; });
+  if(openSwap.inch!=='all')  list=list.filter(function(p){ return p.inch===openSwap.inch; });
+  if(openSwap.panel!=='all') list=list.filter(function(p){ return p.panel===openSwap.panel; });
+  if(openSwap.res!=='all')   list=list.filter(function(p){ return p.res===openSwap.res; });
+  if(openSwap.voice)         list=list.filter(function(p){ return p.voice; });
+  return list;
+}
+/* Chip thuộc tính hiển thị trong danh sách đổi mẫu */
+function attrChip(p){
+  var out='';
+  if(p.inch)  out+='<span class="aChip">'+p.inch+'"</span>';
+  if(p.panel) out+='<span class="aChip hi">'+p.panel+'</span>';
+  if(p.res)   out+='<span class="aChip">'+p.res+'</span>';
+  return out;
+}
 function setSwapQuick(lo,hi){
   const a=document.getElementById('swLo'), b=document.getElementById('swHi');
   if(a&&b){ a.value=lo; b.value=hi; onSwap(); }
@@ -2004,7 +2107,11 @@ function onSwap(){
     if(v)v.textContent=fmt(a)+'  –  '+fmt(b);
     const g=openSwap.g, br=openSwap.brand||'all';
     let list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b);
-    if(br!=='all') list=list.filter(p=>(p.hang||'Khác')===br);
+    if(br!=='all')              list=list.filter(p=>(p.hang||'Khác')===br);
+    if(openSwap.inch!=='all')   list=list.filter(p=>p.inch===openSwap.inch);
+    if(openSwap.panel!=='all')  list=list.filter(p=>p.panel===openSwap.panel);
+    if(openSwap.res!=='all')    list=list.filter(p=>p.res===openSwap.res);
+    if(openSwap.voice)          list=list.filter(p=>p.voice);
     list.sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
     const nStock=list.filter(p=>p.ton===1).length;
 
@@ -2022,6 +2129,8 @@ function onSwap(){
         'onclick="chooseModel(\''+openSwap.k+'\',\''+esc+'\')">'+
         '<div class="siMain"><b>'+p.ten+'</b>'+
         '<div class="siMeta"><span class="mm">'+p.model+'</span>'+
+        (attrChip(p)||'')+
+        (p.voice?'<span class="vChip">'+ic('mic',11)+'Giọng nói</span>':'')+
         (p.ton===1?'<span class="tagFast">Giao nhanh</span>':'')+
         (p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</div></div>'+
         '<div class="pz">'+fmt(p.gia)+'</div></button>';
@@ -2040,6 +2149,12 @@ function chooseModel(k,model){
     if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'center'})},60);
 }
 
+/* Bật / tắt một thiết bị từ hộp tiến độ */
+function toggleSlot(k){
+  if(S.skipped.has(k)) S.skipped.delete(k);
+  else { S.skipped.add(k); delete S.pinned[k]; if(openSwap&&openSwap.k===k) openSwap=null; }
+  render();
+}
 function skipSlot(k){
   S.skipped.add(k);
   delete S.pinned[k];
@@ -2492,7 +2607,7 @@ function imgClip(g,text,maxW){
    Hướng dẫn từng bước: file HUONG_DAN_EMAIL.md
    Kiểm tra trước: mở trang này với ?kiemtra ở cuối URL
    ============================================================ */
-const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwAuoF--cvUcq5EBpf4D2PV1Zl_-dxWquzhHqtEvcWk7GlZDjT5ZW4x0PWAVtSoekGEFQ/exec';   /* VD: https://script.google.com/macros/s/AKfy..../exec */
+const LEAD_ENDPOINT = '';   /* VD: https://script.google.com/macros/s/AKfy..../exec */
 
 /* URL hợp lệ chưa? Dùng để cảnh báo sớm thay vì mất khách âm thầm */
 function leadConfigured(){

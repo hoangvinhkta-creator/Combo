@@ -259,31 +259,97 @@ function groupFromTag(tag){
   }
   return best;
 }
-/* Tách tên hãng ra khỏi hashtag. VD "Tivi Samsung" → "Samsung" */
-/* Các từ mô tả ngành hàng — không phải tên hãng */
-const NOT_BRAND = new Set(['may','maylanh','tu','bep','loa','quat','binh','cay','robot','hut','bui',
-  'lanh','giat','say','loc','nuoc','khong','khi','am','mui','rua','bat','chen','nong','tu lanh',
-  'cam','tay','khong day','khong','day','inverter','2 chieu','1 chieu','mini','thong minh','smart',
-  'tivi','tv','dieu','hoa']);
+/* ==================================================================
+   ĐỌC HASHTAG CỘT AK
+   Định dạng: "Ngành hàng Hãng, thuộc tính 1, thuộc tính 2, ..."
+   VD: "Tivi Xiaomi, 32 inch, Điều khiển tìm kiếm giọng nói, 4K, QLED"
+   Đoạn đầu cho ngành hàng + hãng, các đoạn sau là thuộc tính.
+   ================================================================== */
+
+/* Từ mô tả ngành hàng — không phải tên hãng */
+const NOT_BRAND = new Set(['may','tu','bep','loa','quat','binh','cay','robot','hut','bui',
+  'lanh','giat','say','loc','nuoc','khong','khi','am','mui','rua','bat','chen','nong',
+  'cam','tay','day','inverter','chieu','mini','thong','minh','smart','tivi','tv','ti',
+  'dieu','hoa','android','google','frame','the','nong-lanh','hut-bui']);
+
+/* Tách hashtag thành các đoạn */
+function tagParts(tag){
+  return String(tag||'').split(/[,;|]+/).map(function(x){ return x.trim(); })
+    .filter(function(x){ return x.length; });
+}
+
+/* Tên hãng lấy từ ĐOẠN ĐẦU của hashtag, sau khi bỏ từ khoá ngành hàng */
 function brandFromTag(tag, group){
-  const raw = String(tag||'').trim();
-  if(!raw) return '';
-  const t = noAccent(raw);
-  /* Tìm từ khoá ngành hàng DÀI NHẤT xuất hiện trong hashtag */
-  let bestKw='';
+  const parts = tagParts(tag);
+  if(!parts.length) return '';
+  const head = parts[0];
+  const t = noAccent(head);
+
+  /* Tìm từ khoá ngành hàng dài nhất trong đoạn đầu */
+  let bestKw = '';
   for(const k in TAG_MAP){
-    if(t.indexOf(k)>=0 && k.length>bestKw.length) bestKw=k;
+    if(t.indexOf(k) >= 0 && k.length > bestKw.length) bestKw = k;
   }
-  if(!bestKw) return '';
-  const i = t.indexOf(bestKw);
-  let rest = (raw.slice(0,i) + ' ' + raw.slice(i+bestKw.length)).trim()
-             .replace(/^[-–—:|/]+\s*/,'').replace(/\s{2,}/g,' ');
+  let rest;
+  if(bestKw){
+    const i = t.indexOf(bestKw);
+    rest = (head.slice(0, i) + ' ' + head.slice(i + bestKw.length)).trim();
+  } else {
+    rest = head;
+  }
+  rest = rest.replace(/^[-–—:|/]+\s*/, '').replace(/\s{2,}/g, ' ').trim();
   if(!rest) return '';
-  /* Loại bỏ các từ mô tả còn sót, chỉ giữ phần thực sự là tên hãng */
-  const words = rest.split(/\s+/).filter(w => !NOT_BRAND.has(noAccent(w)));
+
+  /* Bỏ các từ mô tả còn sót, giữ lại phần là tên hãng */
+  const words = rest.split(/\s+/).filter(function(w){
+    return !NOT_BRAND.has(noAccent(w));
+  });
   rest = words.join(' ').trim();
   return isBrandName(rest) ? rest : '';
 }
+
+/* Trích thuộc tính từ hashtag — chỉ đọc điều đã ghi, KHÔNG suy đoán từ mã máy */
+function attrsFromTag(tag){
+  const raw = String(tag || '');
+  const t = noAccent(raw);
+  const a = {};
+
+  /* --- Kích thước màn hình --- */
+  let m = raw.match(/(\d{2,3})\s*(?:inch|inh|"|”|''|in\b)/i);
+  if(!m) m = t.match(/(\d{2,3})\s*inch/);
+  if(m){
+    const v = +m[1];
+    if(v >= 19 && v <= 120) a.inch = v;
+  }
+
+  /* --- Công nghệ tấm nền. Không ghi gì = LED thường, bỏ qua vì kém hấp dẫn --- */
+  if(/qd[\s-]*mini[\s-]*led/.test(t))       a.panel = 'QD-MiniLED';
+  else if(/neo[\s-]*qled/.test(t))          a.panel = 'Neo QLED';
+  else if(/mini[\s-]*led/.test(t))          a.panel = 'MiniLED';
+  else if(/\boled\b/.test(t))               a.panel = 'OLED';
+  else if(/\bqled\b/.test(t))               a.panel = 'QLED';
+
+  /* --- Độ phân giải. Xét từ cao xuống thấp để FHD không bị bắt thành HD --- */
+  if(/\b8k\b/.test(t))                      a.res = '8K';
+  else if(/\b4k\b|\buhd\b/.test(t))         a.res = '4K';
+  else if(/\bfhd\b|full\s*hd/.test(t))      a.res = 'FHD';
+  else if(/\bhd\b/.test(t))                 a.res = 'HD';
+
+  /* --- Điều khiển / tìm kiếm bằng giọng nói --- */
+  if(/giong noi|voice|dieu khien giong|tim kiem giong/.test(t)) a.voice = true;
+
+  return a;
+}
+
+/* Chuỗi thuộc tính hiển thị cho khách */
+function attrLine(p){
+  const out = [];
+  if(p.inch)  out.push(p.inch + ' inch');
+  if(p.panel) out.push(p.panel);
+  if(p.res)   out.push(p.res);
+  return out.join(' · ');
+}
+
 /* Tra phân khúc từ cột AL */
 function segFromCell(v){
   const t = noAccent(v);
@@ -354,11 +420,16 @@ function buildCatalog(rows, cfg){
     const pkSheet = segFromCell(seg);
     if(pkSheet) log.segFromSheet++;
 
+    const at = attrsFromTag(tag);
     products.push({
       nhom: group,
       model: rawModel,
       hang: brand,
       ten: (brand? brand+' ' : '') + rawModel,
+      inch:  at.inch  || null,
+      panel: at.panel || '',
+      res:   at.res   || '',
+      voice: at.voice ? 1 : 0,
       gia: price,
       ton: stock>0 ? 1 : 0,
       giaTon: stock,
@@ -394,11 +465,11 @@ function buildCatalog(rows, cfg){
 /* Mô tả ngắn hiển thị dưới tên sản phẩm.
    Hiện sinh từ hashtag + phân khúc; sẽ thay bằng cột mô tả riêng khi Sheet bổ sung. */
 function descOf(p){
-  const SEG={eco:'Phổ thông', bal:'Cân bằng', pre:'Cao cấp'};
   const parts=[];
-  if(p.tag) parts.push(p.tag);
+  const a = attrLine(p);          /* 55 inch · QLED · 4K */
+  if(a) parts.push(a);
+  const SEG={eco:'Phổ thông', bal:'Cân bằng', pre:'Cao cấp'};
   if(p.pk && SEG[p.pk]) parts.push(SEG[p.pk]);
-  if(p.hang) parts.push(p.hang);
   return parts.join(' · ');
 }
 
@@ -416,5 +487,6 @@ async function load(cfg){
 
 return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, COL_HINTS, detectColumns,
         load, parseCSV, buildCatalog,
-        num, noAccent, detectHeader, isBrandName, specOf, groupFromTag, brandFromTag, segFromCell};
+        num, noAccent, detectHeader, isBrandName, specOf, groupFromTag, brandFromTag,
+        attrsFromTag, attrLine, tagParts, segFromCell};
 })();
