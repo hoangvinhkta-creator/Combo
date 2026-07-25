@@ -21,7 +21,8 @@
   --red:#c4361f;   --redbg:#fcefec;
   --r:12px; --r2:14px;
   --sh:0 1px 2px rgba(17,24,39,.04),0 8px 24px rgba(17,24,39,.06);
-  --tr:.22s cubic-bezier(.2,.8,.3,1)}
+  --tr:.22s cubic-bezier(.2,.8,.3,1);
+  --hdr:134px}   /* chiều cao header + thanh tóm tắt, dùng cho phần tử dính */
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -75,6 +76,39 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 #diagOut{margin-top:11px;font-size:12.5px;line-height:1.55}
 #diagOut .ok{background:var(--greenbg);color:#0a6e3d;padding:10px 12px;border-radius:8px}
 #diagOut .no{background:var(--goldbg);color:var(--gold);padding:10px 12px;border-radius:8px}
+
+/* ===== THANH TÓM TẮT GHIM Ở ĐẦU TRANG ===== */
+.sumBar{display:none;align-items:stretch;gap:0;border-top:1px solid var(--line);
+  background:var(--card);padding:0 18px;max-width:1080px;margin:0 auto}
+.sumBar.on{display:flex}
+.sumCell{flex:1;min-width:0;text-align:left;padding:9px 0;background:none;cursor:pointer;
+  display:flex;flex-direction:column;gap:1px;transition:var(--tr)}
+.sumCell:hover{opacity:.72}
+.sumLbl{font-size:11px;font-weight:600;color:var(--mut);letter-spacing:.02em}
+.sumVal{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.02em;
+  line-height:1.15;white-space:nowrap;transition:color .3s}
+.sumCell.save .sumVal{color:var(--green)}
+.sumVal.bump{animation:bump .45s cubic-bezier(.3,1.4,.5,1)}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.09)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion: reduce){.sumVal.bump{animation:none}}
+.sumSep{width:1px;background:var(--line);margin:10px 18px}
+.sumEnd{display:flex;align-items:center;padding-left:14px;font-size:11.5px;
+  font-weight:600;white-space:nowrap}
+.sumEnd .ok{color:var(--green)}
+.sumEnd .over{color:var(--red)}
+@media(max-width:600px){
+  :root{--hdr:114px}
+  .sumBar{padding:0 14px}
+  .sumCell{padding:7px 0}
+  .sumVal{font-size:17px}
+  .sumLbl{font-size:10px}
+  .sumSep{margin:9px 12px}
+  .sumEnd{padding-left:10px;font-size:10.5px;max-width:74px;white-space:normal;line-height:1.25}
+}
+@media(max-width:360px){
+  .sumVal{font-size:15.5px}
+  .sumEnd{display:none}
+}
 /* ================= HỆ ICON ================= */
 .ico{display:inline-block;vertical-align:-.18em;flex-shrink:0}
 .opt .ic,.goal .gIco{line-height:0}
@@ -254,7 +288,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .pp{font-size:15.5px;font-weight:800;text-align:right;white-space:nowrap}
 .sw{display:block;margin-top:5px;font-size:11.5px;font-weight:700;color:var(--blue)}
 .sw:hover{text-decoration:underline}
-.side{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:22px;position:sticky;top:82px}
+.side{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:22px;
+  position:sticky;top:calc(var(--hdr) + 14px)}
 .side h3{font-size:15px;font-weight:800}
 .cb{height:9px;background:var(--sky);border-radius:99px;margin:13px 0 5px;overflow:hidden}
 .cf{height:100%;background:linear-gradient(90deg,var(--blue),#6ea0ff);border-radius:99px;width:0;transition:width .8s}
@@ -538,6 +573,19 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     <div class="sp"></div>
     <a class="hb ghost" id="hSupport" href="tel:0327339229">Cần hỗ trợ?</a>
     <button class="hb" id="hReset" onclick="home()" style="display:none">Thiết kế lại</button>
+  </div>
+  <!-- Thanh tóm tắt ghim theo header, chỉ hiện ở màn kết quả -->
+  <div class="sumBar" id="sumBar">
+    <button class="sumCell" onclick="scrollToList()">
+      <span class="sumLbl">Tổng phương án</span>
+      <b class="sumVal" id="sbTotal">0₫</b>
+    </button>
+    <div class="sumSep"></div>
+    <button class="sumCell save" onclick="scrollToList()">
+      <span class="sumLbl">Tiết kiệm</span>
+      <b class="sumVal" id="sbSave">0₫</b>
+    </button>
+    <div class="sumEnd" id="sbNote"></div>
   </div>
 </header>
 
@@ -920,6 +968,38 @@ function syncHeader(){
   const sup=document.getElementById('hSupport'), rs=document.getElementById('hReset');
   if(sup) sup.style.display = onHome ? '' : 'none';
   if(rs)  rs.style.display  = onHome ? 'none' : '';
+  /* Thanh tóm tắt chỉ có ý nghĩa ở màn kết quả */
+  const bar=document.getElementById('sumBar');
+  if(bar){
+    const onResult=document.getElementById('sR').classList.contains('on');
+    bar.classList.toggle('on', onResult);
+  }
+}
+
+/* Cập nhật số liệu trên thanh ghim — gọi mỗi lần combo đổi */
+var _sbLast={t:null,s:null};
+function syncSumBar(total, save, overBy){
+  const t=document.getElementById('sbTotal');
+  const v=document.getElementById('sbSave');
+  const n=document.getElementById('sbNote');
+  if(!t)return;
+  const ft=fmt(total), fs=fmt(save);
+  /* Nhấp nháy nhẹ khi giá trị thay đổi để khách nhận ra */
+  if(_sbLast.t!==null && _sbLast.t!==ft){ t.classList.remove('bump'); void t.offsetWidth; t.classList.add('bump'); }
+  if(_sbLast.s!==null && _sbLast.s!==fs){ v.classList.remove('bump'); void v.offsetWidth; v.classList.add('bump'); }
+  t.textContent=ft; v.textContent=fs;
+  _sbLast={t:ft,s:fs};
+  if(n){
+    n.innerHTML = overBy>0
+      ? '<span class="over">Vượt '+fmt(overBy)+'</span>'
+      : '<span class="ok">Trong ngân sách</span>';
+  }
+}
+
+/* Bấm vào thanh ghim thì cuộn tới danh sách thiết bị */
+function scrollToList(){
+  const el=document.getElementById('pl');
+  if(el&&el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function buildHome(){
   const g=document.getElementById('goalGrid');
@@ -1891,6 +1971,9 @@ function render(){
   }
   const swEl=document.querySelector('.saveBox');
   if(swEl)swEl.style.display=combo.length?'':'none';
+
+  /* Đồng bộ thanh tóm tắt ghim ở đầu trang */
+  syncSumBar(tot, saveAmt, (S.flow!=='upgrade' && tot>S.hi) ? tot-S.hi : 0);
 
   /* cảnh báo vượt / dưới ngân sách */
   const w=document.getElementById('budNote');
