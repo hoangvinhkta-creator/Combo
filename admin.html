@@ -185,14 +185,14 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
         <tr><td><code>A</code></td><td>Mã model</td><td>Mã sản phẩm. Dòng nào là <b>tiêu đề nhóm</b> (VD "Tivi Aqua") thì tự nhận diện loại hàng + hãng cho toàn bộ dòng bên dưới.</td></tr>
         <tr><td><code>S</code></td><td>Tín Phát tồn</td><td><b>Có giá = còn tồn kho.</b> AI ưu tiên tuyệt đối các mã này. Ô trống hoặc 0 = phải đặt hàng.</td></tr>
         <tr><td><code>Y</code></td><td>Có lắp đặt</td><td><b>Giá bán cuối cùng</b> hiển thị cho khách. Ô trống hoặc ghi "hh" = không bán, bỏ qua dòng đó.</td></tr>
-        <tr><td><code>AK</code></td><td>Hashtag</td><td><b>Ngành hàng — nguồn phân loại chính.</b> VD: Tivi, Tủ lạnh, Máy giặt, Điều hoà, Bếp từ... Cột này quyết định thiết bị được xếp vào nhóm nào, tránh nhầm máy giặt thành TV.</td></tr>
+        <tr><td><code>AK</code></td><td>Hashtag</td><td><b>Ngành hàng + hãng — nguồn phân loại chính.</b> VD: "Tivi Samsung", "Máy giặt LG", "Robot hút bụi Ecovacs". Hệ thống tách ngành hàng để xếp nhóm và tách tên hãng để hiển thị.<br><b>Phân biệt robot:</b> hashtag có chữ "robot" → Robot hút bụi; không có chữ "robot" (VD "Máy hút bụi cầm tay") → Máy hút bụi cầm tay.</td></tr>
         <tr><td><code>AL</code></td><td>Phân khúc</td><td><b>Tiết kiệm / Cân bằng / Cao cấp.</b> Dùng để lọc khi khách bấm "Đổi mẫu". Ô trống thì hệ thống tự tính theo phân vị giá trong nhóm (hiện nhãn <code>auto</code>).</td></tr>
       </table>
 
       <div class="warn">⚠️ <b>Điều kiện bắt buộc:</b> Google Sheet phải được xuất bản công khai — vào <b>Tệp → Chia sẻ → Xuất bản lên web → chọn CSV → Xuất bản</b>. Nếu đổi link, sửa dòng <code>CSV_URL</code> ở đầu file <code>parser.js</code>.</div>
 
       <h3 style="margin-top:24px">Hệ thống tự suy luận những gì?</h3>
-      <div class="sub">Sheet của bạn không có cột phân khúc hay lý do tư vấn — hệ thống tự sinh ra:</div>
+      <div class="sub">Ngành hàng và hãng lấy trực tiếp từ cột AK, không suy đoán. Những mục sau vẫn tự sinh:</div>
       <div class="step"><div class="no">1</div><div><b>Phân khúc — ưu tiên cột AL</b>
         <p>Nếu cột AL đã điền (Tiết kiệm / Cân bằng / Cao cấp) thì dùng đúng giá trị đó. Chỉ khi ô trống mới tự tính theo phân vị giá trong nhóm — những mã này gắn nhãn <code>auto</code> ở tab Danh mục.</p></div></div>
       <div class="step"><div class="no">2</div><div><b>Câu "Vì sao chọn" cho khách</b>
