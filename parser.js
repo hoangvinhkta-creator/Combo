@@ -322,12 +322,20 @@ function attrsFromTag(tag){
     if(v >= 19 && v <= 120) a.inch = v;
   }
 
-  /* --- Công nghệ tấm nền. Không ghi gì = LED thường, bỏ qua vì kém hấp dẫn --- */
-  if(/qd[\s-]*mini[\s-]*led/.test(t))       a.panel = 'QD-MiniLED';
+  /* --- Công nghệ tấm nền ---
+     Xét từ cụ thể tới chung: MicroRGB / MiniRGB đứng trước, LED xét cuối cùng
+     vì các tên khác đều chứa chữ "led" (QLED, MiniLED, OLED...).
+     Không ghi gì trong hashtag cũng coi là LED thường.                      */
+  if(/micro[\s-]*rgb/.test(t))              a.panel = 'MicroRGB';
+  else if(/mini[\s-]*rgb/.test(t))          a.panel = 'MiniRGB';
+  else if(/qd[\s-]*mini[\s-]*led/.test(t)) a.panel = 'QD-MiniLED';
   else if(/neo[\s-]*qled/.test(t))          a.panel = 'Neo QLED';
   else if(/mini[\s-]*led/.test(t))          a.panel = 'MiniLED';
+  else if(/micro[\s-]*led/.test(t))         a.panel = 'MicroLED';
   else if(/\boled\b/.test(t))               a.panel = 'OLED';
   else if(/\bqled\b/.test(t))               a.panel = 'QLED';
+  else if(/\bled\b/.test(t))                a.panel = 'LED';
+  else if(a.inch)                           a.panel = 'LED';   /* mặc định cho TV */
 
   /* --- Độ phân giải. Xét từ cao xuống thấp để FHD không bị bắt thành HD --- */
   if(/\b8k\b/.test(t))                      a.res = '8K';
@@ -345,7 +353,8 @@ function attrsFromTag(tag){
 function attrLine(p){
   const out = [];
   if(p.inch)  out.push(p.inch + ' inch');
-  if(p.panel) out.push(p.panel);
+  /* LED thường không đưa vào mô tả — chỉ dùng để lọc */
+  if(p.panel && p.panel !== 'LED') out.push(p.panel);
   if(p.res)   out.push(p.res);
   return out.join(' · ');
 }

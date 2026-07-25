@@ -482,6 +482,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .fchip i{font-style:normal;font-size:10.5px;font-weight:800;background:rgba(0,0,0,.07);
   padding:1px 7px;border-radius:99px}
 .fchip.on i{background:rgba(255,255,255,.25)}
+.fchip.dim{opacity:.38;cursor:not-allowed;background:#fafaf8;color:var(--mut);
+  border-color:var(--line2);text-decoration:line-through}
+.fchip.dim:hover{border-color:var(--line2);color:var(--mut)}
 .fchip.qchip{background:#f2f4f7;border-color:transparent}
 .fchip.qchip:hover{background:var(--sky);border-color:var(--blue)}
 /* ===== ĐỔI MẪU ===== */
@@ -1972,7 +1975,12 @@ function renderSwap(){
 
   /* Các thuộc tính có thật trong nhóm — chỉ hiện bộ lọc khi có từ 2 giá trị */
   const inchList=[...new Set(pool0.map(p=>p.inch).filter(Boolean))].sort((a,b)=>a-b);
-  const panelList=[...new Set(pool0.map(p=>p.panel).filter(Boolean))];
+  const panelOrder=['MicroRGB','MiniRGB','MicroLED','QD-MiniLED','Neo QLED','MiniLED','OLED','QLED','LED'];
+  const panelList=[...new Set(pool0.map(p=>p.panel).filter(Boolean))]
+    .sort((a,b)=>{
+      const ia=panelOrder.indexOf(a), ib=panelOrder.indexOf(b);
+      return (ia<0?99:ia)-(ib<0?99:ib);
+    });
   const resOrder=['8K','4K','FHD','HD'];
   const resList=[...new Set(pool0.map(p=>p.res).filter(Boolean))]
     .sort((a,b)=>resOrder.indexOf(a)-resOrder.indexOf(b));
@@ -1984,46 +1992,20 @@ function renderSwap(){
       '<b>'+gi(g,20)+' Chọn '+G[g].name.toLowerCase()+' khác</b>'+
       '<button class="swapClose" onclick="closeSwap()">'+ic('close',15)+'Đóng</button></div>'+
 
-    /* --- Lọc theo hãng --- */
-    (brandList.length>1?
-    '<div class="fltBlock"><div class="fltLbl">Hãng</div>'+
-     '<div class="chipRow">'+
-       '<button class="fchip'+(openSwap.brand==='all'?' on':'')+'" onclick="setSwapBrand(\'all\')">Tất cả</button>'+
-       brandList.map(b=>
-         '<button class="fchip'+(openSwap.brand===b?' on':'')+'" onclick="setSwapBrand(\''+
-         b.replace(/'/g,"\\'")+'\')">'+b+'</button>').join('')+
-     '</div></div>':'')+
-
-    /* --- Lọc theo kích thước màn hình --- */
-    (inchList.length>1?
-    '<div class="fltBlock"><div class="fltLbl">Kích thước</div><div class="chipRow">'+
-      '<button class="fchip'+(openSwap.inch==='all'?' on':'')+'" onclick="setSwapAttr(\'inch\',\'all\')">Tất cả</button>'+
-      inchList.map(v=>'<button class="fchip'+(openSwap.inch===v?' on':'')+'" '+
-        'onclick="setSwapAttr(\'inch\','+v+')">'+v+' inch</button>').join('')+
-    '</div></div>':'')+
-
-    /* --- Lọc theo công nghệ tấm nền --- */
-    (panelList.length?
-    '<div class="fltBlock"><div class="fltLbl">Công nghệ màn hình</div><div class="chipRow">'+
-      '<button class="fchip'+(openSwap.panel==='all'?' on':'')+'" onclick="setSwapAttr(\'panel\',\'all\')">Tất cả</button>'+
-      panelList.map(v=>'<button class="fchip'+(openSwap.panel===v?' on':'')+'" '+
-        'onclick="setSwapAttr(\'panel\',\''+v+'\')">'+v+'</button>').join('')+
-    '</div></div>':'')+
-
-    /* --- Lọc theo độ phân giải --- */
-    (resList.length>1?
-    '<div class="fltBlock"><div class="fltLbl">Độ phân giải</div><div class="chipRow">'+
-      '<button class="fchip'+(openSwap.res==='all'?' on':'')+'" onclick="setSwapAttr(\'res\',\'all\')">Tất cả</button>'+
-      resList.map(v=>'<button class="fchip'+(openSwap.res===v?' on':'')+'" '+
-        'onclick="setSwapAttr(\'res\',\''+v+'\')">'+v+'</button>').join('')+
-    '</div></div>':'')+
-
-    /* --- Lọc theo tính năng --- */
-    (hasVoice?
-    '<div class="fltBlock"><div class="fltLbl">Tính năng</div><div class="chipRow">'+
-      '<button class="fchip'+(openSwap.voice?' on':'')+'" onclick="setSwapAttr(\'voice\','+(openSwap.voice?'0':'1')+')">'+
-      ic('mic',14)+'Điều khiển giọng nói</button>'+
-    '</div></div>':'')+
+    /* --- Các bộ lọc liên động: giá trị không có hàng sẽ bị làm mờ --- */
+    (brandList.length>1 ? fRow('Hãng','brand',brandList) : '')+
+    (inchList.length>1  ? fRow('Kích thước','inch',inchList,function(v){return v+' inch';}) : '')+
+    (panelList.length>1 ? fRow('Công nghệ màn hình','panel',panelList) : '')+
+    (resList.length>1   ? fRow('Độ phân giải','res',resList) : '')+
+    (hasVoice ?
+      '<div class="fltBlock"><div class="fltLbl">Tính năng</div><div class="chipRow">'+
+        (function(){
+          var n=swapCount('voice',1);
+          return '<button class="fchip'+(openSwap.voice?' on':'')+(n?'':' dim')+'" '+
+            (n?'onclick="setSwapAttr(\'voice\','+(openSwap.voice?0:1)+')"':'disabled')+'>'+
+            ic('mic',14)+'Điều khiển giọng nói</button>';
+        })()+
+      '</div></div>' : '')+
 
     /* --- Lọc theo mức giá nhanh --- */
     '<div class="fltBlock"><div class="fltLbl">Mức giá</div>'+
@@ -2063,7 +2045,14 @@ function setSwapBrand(b){ setSwapAttr('brand',b); }
 function setSwapAttr(k,v){
   if(!openSwap)return;
   openSwap[k]=v;
-  /* Nới khoảng giá để bao hết các mã khớp bộ lọc mới — tránh ra 0 kết quả */
+  /* Tiêu chí nào giờ không còn hàng thì tự bỏ, tránh khách bị kẹt ở 0 kết quả */
+  ['brand','inch','panel','res'].forEach(function(key){
+    if(key!==k && openSwap[key]!=='all' && !swapFilter(swapState()).length){
+      openSwap[key]='all';
+    }
+  });
+  if(openSwap.voice && !swapFilter(swapState()).length) openSwap.voice=0;
+  /* Nới khoảng giá để bao hết các mã khớp bộ lọc mới */
   const m=swapMatches();
   if(m.length){
     const ps=m.map(p=>p.gia).sort((a,b)=>a-b);
@@ -2074,17 +2063,47 @@ function setSwapAttr(k,v){
   }
   renderSwap();
 }
-/* Các mã khớp bộ lọc thuộc tính, CHƯA xét khoảng giá */
-function swapMatches(){
-  if(!openSwap)return [];
-  var g=openSwap.g;
-  var list=DB.filter(function(p){ return p.nhom===g; });
-  if(openSwap.brand!=='all') list=list.filter(function(p){ return (p.hang||'Khác')===openSwap.brand; });
-  if(openSwap.inch!=='all')  list=list.filter(function(p){ return p.inch===openSwap.inch; });
-  if(openSwap.panel!=='all') list=list.filter(function(p){ return p.panel===openSwap.panel; });
-  if(openSwap.res!=='all')   list=list.filter(function(p){ return p.res===openSwap.res; });
-  if(openSwap.voice)         list=list.filter(function(p){ return p.voice; });
-  return list;
+/* Lọc theo một bộ tiêu chí bất kỳ, CHƯA xét khoảng giá */
+function swapFilter(f){
+  return DB.filter(function(p){
+    if(p.nhom !== openSwap.g) return false;
+    if(f.brand !== 'all' && (p.hang || 'Khác') !== f.brand) return false;
+    if(f.inch  !== 'all' && p.inch  !== f.inch)  return false;
+    if(f.panel !== 'all' && p.panel !== f.panel) return false;
+    if(f.res   !== 'all' && p.res   !== f.res)   return false;
+    if(f.voice && !p.voice) return false;
+    return true;
+  });
+}
+/* Bộ tiêu chí đang chọn */
+function swapState(){
+  return {brand:openSwap.brand, inch:openSwap.inch, panel:openSwap.panel,
+          res:openSwap.res, voice:openSwap.voice};
+}
+function swapMatches(){ return openSwap ? swapFilter(swapState()) : []; }
+
+/* Nếu đổi một tiêu chí thành giá trị v thì còn bao nhiêu mã?
+   Dùng để làm mờ những lựa chọn không có hàng.                    */
+function swapCount(key, v){
+  var f = swapState();
+  f[key] = v;
+  return swapFilter(f).length;
+}
+/* Sinh một hàng chip lọc, tự làm mờ giá trị không có hàng */
+function fRow(label, key, values, fmtLabel){
+  var cur = openSwap[key];
+  var html = '<button class="fchip' + (cur === 'all' ? ' on' : '') + '" ' +
+             'onclick="setSwapAttr(\'' + key + '\',\'all\')">Tất cả</button>';
+  values.forEach(function(v){
+    var n  = swapCount(key, v);
+    var on = (cur === v);
+    var q  = (typeof v === 'number') ? v : "'" + String(v).replace(/'/g, "\\'") + "'";
+    html += '<button class="fchip' + (on ? ' on' : '') + (n ? '' : ' dim') + '" ' +
+            (n ? 'onclick="setSwapAttr(\'' + key + '\',' + q + ')"' : 'disabled') + '>' +
+            (fmtLabel ? fmtLabel(v) : v) + '</button>';
+  });
+  return '<div class="fltBlock"><div class="fltLbl">' + label + '</div>' +
+         '<div class="chipRow">' + html + '</div></div>';
 }
 /* Chip thuộc tính hiển thị trong danh sách đổi mẫu */
 function attrChip(p){
