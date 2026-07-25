@@ -109,7 +109,8 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
     <button class="tab on" onclick="tab(0,this)">📊 Tổng quan</button>
     <button class="tab" onclick="tab(1,this)">📦 Danh mục đã đọc</button>
     <button class="tab" onclick="tab(2,this)">🧪 Mô phỏng combo</button>
-    <button class="tab" onclick="tab(3,this)">📖 Hướng dẫn</button>
+    <button class="tab" onclick="tab(3,this)">✉ Kiểm tra email</button>
+    <button class="tab" onclick="tab(4,this)">📖 Hướng dẫn</button>
   </div>
 
   <div id="loading" class="loading"><div class="spin"></div>Đang đọc bảng giá từ Google Sheet…</div>
@@ -177,6 +178,35 @@ table.ref th{background:#f8fafc;font-weight:800;text-transform:none;letter-spaci
 
   <div class="pane" id="p3">
     <div class="card">
+      <h3>✉ Kiểm tra nhận email khi khách để lại thông tin</h3>
+      <div class="sub">Dán URL Google Apps Script rồi bấm gửi thử. Nếu nhận được email trong hộp thư
+      <b>hoangvinhkta@gmail.com</b> nghĩa là cấu hình đã đúng — chỉ cần dán URL đó vào
+      <code>index.html</code> là xong.</div>
+
+      <input type="text" id="epUrl" placeholder="https://script.google.com/macros/s/AKfy....../exec"
+        style="width:100%;border:1.5px solid var(--line);border-radius:9px;padding:11px 14px;
+        font-size:13px;font-family:ui-monospace,monospace;margin-top:16px;outline:none">
+
+      <div style="display:flex;gap:9px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn pri" onclick="testLead()">📨 Gửi email thử</button>
+        <button class="btn" onclick="testLeadImg()">🖼 Gửi thử kèm ảnh</button>
+        <button class="btn" onclick="showCachedLeads()">📋 Xem khách lưu tạm</button>
+      </div>
+      <div id="epResult"></div>
+
+      <div class="warn" style="margin-top:18px">
+        <b>Vì sao có thể chưa nhận được email?</b><br>
+        1. Chưa dán URL vào <code>index.html</code> — đây là nguyên nhân hay gặp nhất.<br>
+        2. Khi triển khai Apps Script chọn nhầm <i>"Chỉ mình tôi"</i> thay vì <b>"Bất kỳ ai"</b>.<br>
+        3. Dán nhầm URL kết thúc bằng <code>/dev</code> thay vì <code>/exec</code>.<br>
+        4. Sửa code Apps Script nhưng chưa <b>Triển khai lại phiên bản mới</b>.<br>
+        5. Email rơi vào thư mục <b>Spam</b> ở lần đầu tiên.
+      </div>
+    </div>
+  </div>
+
+  <div class="pane" id="p4">
+    <div class="card">
       <h3>📖 Cách hệ thống đọc bảng giá của bạn</h3>
       <div class="sub">Trang khách <code>index.html</code> đọc <b>trực tiếp</b> từ Google Sheet đã xuất bản dạng CSV. Bạn sửa giá trên Sheet → khách vào web thấy giá mới ngay, không cần upload gì cả.</div>
 
@@ -230,6 +260,87 @@ const G=TP.GROUPS;
 const PK={eco:'Tiết kiệm',bal:'Tốt',pre:'Cao cấp'};
 let DB=[], LOG=null;
 const fmt=n=>(n*1000).toLocaleString('vi-VN')+'₫';
+
+/* ===== KIỂM TRA GỬI EMAIL ===== */
+function epMsg(html,cls){
+  document.getElementById('epResult').innerHTML=
+    '<div class="'+(cls||'okbox')+'" style="margin-top:14px">'+html+'</div>';
+}
+function getEp(){
+  const u=document.getElementById('epUrl').value.trim();
+  if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(u)){
+    epMsg('URL chưa đúng định dạng. Phải có dạng:<br><code>https://script.google.com/macros/s/AKfy...../exec</code>','warn');
+    return null;
+  }
+  return u;
+}
+function postEp(u,payload,label){
+  epMsg('⏳ Đang gửi '+label+'…','okbox');
+  fetch(u,{method:'POST',mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload)})
+  .then(()=>{
+    epMsg('✅ Đã gửi '+label+' thành công.<br>'+
+      'Kiểm tra hộp thư <b>hoangvinhkta@gmail.com</b> (kể cả mục <b>Spam</b>).<br><br>'+
+      'Nếu có email → dán URL này vào <code>index.html</code>, dòng:<br>'+
+      '<code>const LEAD_ENDPOINT = \'\';</code>','okbox');
+  })
+  .catch(e=>{
+    epMsg('❌ Không gửi được: '+e.message+'<br>'+
+      'Kiểm tra lại quyền truy cập của Apps Script (phải là "Bất kỳ ai").','warn');
+  });
+}
+function testLead(){
+  const u=getEp(); if(!u)return;
+  postEp(u,{
+    ten:'KHÁCH TEST', sdt:'0900000000',
+    ghiChu:'Đây là email gửi thử từ trang quản trị',
+    loaiNha:'2PN', giaDinh:'gia đình có con',
+    nganSach:'60.000.000₫ - 100.000.000₫',
+    soThietBi:3, tongTien:'45.000.000₫', tietKiem:'5.400.000₫',
+    chiTiet:'--- PHÒNG KHÁCH ---\n  TV: Samsung 55U8500F | Mã: 55U8500F | 12.900.000₫ | CÓ SẴN KHO',
+    anhBase64:'', thoiGian:new Date().toLocaleString('vi-VN'),
+    nguon:'admin.html (gửi thử)'
+  },'email thử');
+}
+function testLeadImg(){
+  const u=getEp(); if(!u)return;
+  /* Tạo ảnh nhỏ để kiểm tra đính kèm có hoạt động không */
+  const c=document.createElement('canvas'); c.width=560; c.height=260;
+  const g=c.getContext('2d');
+  g.fillStyle='#fff'; g.fillRect(0,0,560,260);
+  g.fillStyle='#2b3a75'; g.fillRect(0,0,560,64);
+  g.fillStyle='#fff'; g.font='800 22px Segoe UI,Arial';
+  g.fillText('TÍN PHÁT — ẢNH GỬI THỬ',24,40);
+  g.fillStyle='#111827'; g.font='600 16px Segoe UI,Arial';
+  g.fillText('Nếu bạn thấy ảnh này trong email,',24,112);
+  g.fillText('nghĩa là phần đính kèm hoạt động tốt.',24,140);
+  g.fillStyle='#667085'; g.font='400 13px Segoe UI,Arial';
+  g.fillText(new Date().toLocaleString('vi-VN'),24,180);
+  c.toBlob(b=>{
+    const fr=new FileReader();
+    fr.onloadend=()=>{
+      postEp(u,{
+        ten:'KHÁCH TEST (có ảnh)', sdt:'0900000000',
+        ghiChu:'Kiểm tra đính kèm ảnh',
+        tongTien:'0₫', soThietBi:0, chiTiet:'(gửi thử)',
+        anhBase64:String(fr.result).split(',')[1],
+        thoiGian:new Date().toLocaleString('vi-VN'),
+        nguon:'admin.html (gửi thử có ảnh)'
+      },'email kèm ảnh');
+    };
+    fr.readAsDataURL(b);
+  },'image/jpeg',0.9);
+}
+function showCachedLeads(){
+  let list=[];
+  try{ list=JSON.parse(localStorage.getItem('tpLeads')||'[]'); }catch(e){}
+  if(!list.length){ epMsg('Không có khách nào lưu tạm trong trình duyệt này.','okbox'); return; }
+  epMsg('<b>'+list.length+' khách đã lưu tạm</b> (khi chưa cấu hình email):<br><br>'+
+    list.slice().reverse().map(x=>
+      '• '+x.thoiGian+' — <b>'+x.ten+'</b> · '+x.sdt+' · '+(x.tongTien||'')+
+      (x.ghiChu?'<br>&nbsp;&nbsp;'+x.ghiChu:'')).join('<br>'),'okbox');
+}
 
 function tab(i,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',j===i));}
