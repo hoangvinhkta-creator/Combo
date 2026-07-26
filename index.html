@@ -292,6 +292,12 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   color:var(--blue);background:var(--sky);border:1px solid #dbe5fc;
   padding:5px 12px;border-radius:99px;margin-bottom:9px;letter-spacing:.01em}
 .pcCat .ico{color:var(--blue)}
+.featOpt{text-align:left;padding:18px 20px}
+.featOpt b{font-size:16px;font-weight:600;display:block}
+.featOpt small{display:block;font-size:13.5px;color:var(--mut);margin-top:5px;line-height:1.45}
+.featOpt.sel small{color:var(--blue)}
+.featNone{padding:20px 22px;background:var(--card);border:1px dashed var(--line);
+  border-radius:var(--r2);font-size:15px;color:var(--ink2);line-height:1.6}
 .pc b{font-size:22px;font-weight:600;line-height:1.3;display:block;letter-spacing:-.015em}
 .pc .md{font-size:15.5px;color:var(--mut);font-weight:500;margin-top:8px;line-height:1.5}
 .pc .md .dot{opacity:.5;margin:0 2px}
@@ -2015,14 +2021,116 @@ function buildUp(){
     return '<button class="opt" onclick="pick(\'up\',\''+k+'\',this);buildFeats();show(\'s7\')"><span class="ic">'+ic(icn,26)+
       '</span><b>'+nm+'</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>';}).join('');
 }
-const FEATS={tv:['Màn hình lớn hơn','Chất lượng hình 4K/OLED','Smart TV mượt','Âm thanh vòm'],
- fridge:['Dung tích lớn hơn','Tiết kiệm điện','Ngăn đông mềm','Lấy nước ngoài'],
- washer:['Khối lượng lớn hơn','Có sấy khô','Giặt hơi nước','Chạy êm hơn'],
- ac:['Tiết kiệm điện Inverter','Làm lạnh nhanh','Lọc không khí','Công suất lớn hơn'],
- home:['Tự động hoá','Dễ vệ sinh','Tiết kiệm điện','Thương hiệu cao cấp']};
+/* ==================================================================
+   TIÊU CHÍ NÂNG CẤP — sinh từ dữ liệu thật trong kho
+   Mỗi tiêu chí gắn với một điều kiện lọc cụ thể, không phải chữ suông.
+   Tiêu chí nào kho chưa có dữ liệu thì không hiện.
+   ================================================================== */
+function featOptions(groups){
+  var pool = DB.filter(function(p){ return groups.indexOf(p.nhom) >= 0; });
+  if(!pool.length) return [];
+  var out = [];
+  var has = function(fn){ return pool.filter(fn).length; };
+
+  /* --- Kích thước màn hình --- */
+  var inches = pool.map(function(p){ return p.inch; }).filter(Boolean).sort(function(a,b){return a-b;});
+  if(inches.length >= 3){
+    /* Mốc "lớn" = phân vị 60 của kho, làm tròn xuống bậc 5 inch */
+    var big = Math.floor(inches[Math.floor(inches.length*0.6)] / 5) * 5;
+    if(has(function(p){ return p.inch >= big; }) >= 1){
+      out.push({k:'inch:'+big, label:'Màn hình lớn', sub:'từ ' + big + ' inch',
+                test:function(p){ return p.inch && p.inch >= big; }});
+    }
+  }
+
+  /* --- Độ phân giải --- */
+  if(has(function(p){ return p.res==='4K' || p.res==='8K'; })){
+    out.push({k:'res:4K', label:'Độ phân giải cao', sub:'4K trở lên',
+              test:function(p){ return p.res==='4K' || p.res==='8K'; }});
+  }
+
+  /* --- Tấm nền cao cấp --- */
+  var premium = ['OLED','QLED','Neo QLED','MiniLED','QD-MiniLED','MicroLED','MiniRGB','MicroRGB'];
+  var panels = [...new Set(pool.map(function(p){ return p.panel; })
+                     .filter(function(v){ return v && premium.indexOf(v) >= 0; }))];
+  if(panels.length){
+    out.push({k:'panel:hi', label:'Tấm nền cao cấp',
+              sub: panels.slice(0,3).join(' · ') + (panels.length>3 ? '…' : ''),
+              test:function(p){ return p.panel && premium.indexOf(p.panel) >= 0; }});
+  }
+
+  /* --- Tần số quét --- */
+  var hzs = pool.map(function(p){ return p.hz; }).filter(Boolean);
+  if(hzs.length && Math.max.apply(null, hzs) >= 100){
+    out.push({k:'hz:100', label:'Tần số quét cao', sub:'từ 100Hz, hình mượt hơn',
+              test:function(p){ return p.hz && p.hz >= 100; }});
+  }
+
+  /* --- Điều khiển giọng nói --- */
+  if(has(function(p){ return p.voice; })){
+    out.push({k:'voice', label:'Điều khiển giọng nói', sub:'tìm kiếm bằng lời nói',
+              test:function(p){ return !!p.voice; }});
+  }
+
+  /* --- Công suất điều hoà --- */
+  var btus = pool.map(function(p){ return p.btu; }).filter(Boolean).sort(function(a,b){return a-b;});
+  if(btus.length >= 3){
+    var bigB = btus[Math.floor(btus.length*0.6)];
+    out.push({k:'btu:'+bigB, label:'Công suất lớn',
+              sub:'từ ' + bigB.toLocaleString('vi-VN') + ' BTU',
+              test:function(p){ return p.btu && p.btu >= bigB; }});
+  }
+
+  /* --- Dung tích tủ lạnh --- */
+  var lits = pool.map(function(p){ return p.lit; }).filter(Boolean).sort(function(a,b){return a-b;});
+  if(lits.length >= 3){
+    var bigL = Math.floor(lits[Math.floor(lits.length*0.6)] / 50) * 50;
+    out.push({k:'lit:'+bigL, label:'Dung tích lớn', sub:'từ ' + bigL + ' lít',
+              test:function(p){ return p.lit && p.lit >= bigL; }});
+  }
+
+  /* --- Khối lượng giặt --- */
+  var kgs = pool.map(function(p){ return p.kg; }).filter(Boolean).sort(function(a,b){return a-b;});
+  if(kgs.length >= 3){
+    var bigK = Math.floor(kgs[Math.floor(kgs.length*0.6)]);
+    out.push({k:'kg:'+bigK, label:'Giặt được nhiều', sub:'từ ' + bigK + ' kg',
+              test:function(p){ return p.kg && p.kg >= bigK; }});
+  }
+
+  /* --- Hàng có sẵn kho --- */
+  if(has(function(p){ return p.ton === 1; })){
+    out.push({k:'stock', label:'Có sẵn tại kho', sub:'giao lắp sớm',
+              test:function(p){ return p.ton === 1; }});
+  }
+  return out;
+}
+
+/* Bộ tiêu chí đang hiển thị, giữ lại để lọc ở bước sau */
+var FEAT_CACHE = [];
+/* Một sản phẩm đạt bao nhiêu tiêu chí khách đã chọn */
+function featScore(p){
+  if(!S.feats || !S.feats.size) return 0;
+  var n = 0;
+  FEAT_CACHE.forEach(function(f){
+    if(S.feats.has(f.k) && f.test(p)) n++;
+  });
+  return n;
+}
 function buildFeats(){
-  document.getElementById('featO').innerHTML=(FEATS[S.up]||FEATS.home).map(f=>
-    '<button class="opt" data-k="'+f+'" onclick="tgl(this,\'feats\')"><b>'+f+'</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>').join('');
+  FEAT_CACHE = featOptions(upGroups());
+  S.feats = new Set();
+  var host = document.getElementById('featO');
+  if(!FEAT_CACHE.length){
+    host.innerHTML = '<div class="featNone">Nhóm hàng này chưa có tiêu chí kỹ thuật để lọc. '+
+      'Bạn cứ chọn khoảng giá ở bước sau, chuyên viên sẽ tư vấn thêm.</div>';
+    return;
+  }
+  host.innerHTML = FEAT_CACHE.map(function(f){
+    return '<button class="opt featOpt" data-k="'+f.k+'" onclick="tgl(this,\'feats\')">'+
+      '<b>'+f.label+'</b>'+
+      (f.sub?'<small>'+f.sub+'</small>':'')+
+      '<span class="ck">'+ic('check',13)+'</span></button>';
+  }).join('');
 }
 function buildPrio(){
   document.getElementById('prioO').innerHTML=AVAIL.filter(g=>G[g].core).map(g=>
@@ -2249,8 +2357,21 @@ function buildCombo(){
 
   /* Luồng nâng cấp: lọc thẳng theo khoảng giá, lấy tối đa 3 mã tiêu biểu */
   if(S.flow==='upgrade'){
-    const pool=DB.filter(p=>gs.includes(p.nhom)&&p.gia>=S.lo&&p.gia<=S.hi).sort((a,b)=>a.gia-b.gia);
+    let pool=DB.filter(p=>gs.includes(p.nhom)&&p.gia>=S.lo&&p.gia<=S.hi).sort((a,b)=>a.gia-b.gia);
     if(!pool.length)return [];
+
+    /* Tiêu chí khách chọn ở bước 2 — lọc thật, không chỉ trang trí.
+       Ưu tiên mã đạt đủ tiêu chí; nếu không có mã nào đạt đủ thì
+       hạ dần yêu cầu để vẫn trả về được gợi ý.                     */
+    const need=S.feats?S.feats.size:0;
+    if(need){
+      let filtered=[];
+      for(let lv=need; lv>=1 && !filtered.length; lv--){
+        filtered=pool.filter(p=>featScore(p)>=lv);
+      }
+      if(filtered.length) pool=filtered;
+    }
+
     const lo=pool[0].gia, hi=pool[pool.length-1].gia;
     const marks=[lo, (lo+hi)/2, hi];
     const seen={}, out=[];
@@ -2266,7 +2387,10 @@ function buildCombo(){
         const cand=pool.filter(x=>!seen[x.model]);
         p=pickNearest(cand,m);
       }
-      if(p){seen[p.model]=1;out.push({...p,_slot:key,_room:G[p.nhom].room,_alt:true});}
+      if(p){
+        seen[p.model]=1;
+        out.push({...p,_slot:key,_room:G[p.nhom].room,_alt:true,_feat:featScore(p)});
+      }
     });
     return out.sort((a,b)=>a.gia-b.gia);
   }
@@ -2384,8 +2508,13 @@ function render(){
   });
   const p=[];if(S.sub)p.push(S.sub);if(S.sub)p.push(famLabel());
   if(S.flow==='space'&&ROOMS[S.space])p.push(ROOMS[S.space].replace(/^\S+\s/,''));
+  const featNames=(S.feats&&S.feats.size)
+    ? FEAT_CACHE.filter(f=>S.feats.has(f.k)).map(f=>f.label).join(' · ')
+    : '';
   document.getElementById('rSub').textContent = S.flow==='upgrade'
-    ? 'Hãy tham khảo hoặc lựa chọn thêm sản phẩm phù hợp hơn nhờ bộ lọc thông minh ở nút "Đổi mẫu".'
+    ? (featNames
+        ? 'Lọc theo tiêu chí: '+featNames+'. Bấm "Đổi mẫu khác" nếu muốn xem thêm lựa chọn.'
+        : 'Hãy tham khảo hoặc dùng nút "Đổi mẫu khác" để xem thêm lựa chọn.')
     : (p.length?'Thiết kế cho '+p.join(' · ')+'. ':'')+
       'Ngân sách '+fmt(S.lo)+' – '+fmt(S.hi)+'. Bấm "Đổi mẫu" ở từng dòng để chọn mã khác.';
 
@@ -2424,6 +2553,8 @@ function render(){
       '</div>'+
       '<div class="pcBody">'+
         (x.voice?'<div class="feat">'+ic('mic',14)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
+        (x._feat>0?'<div class="feat">'+ic('check',14)+'Đạt '+x._feat+'/'+S.feats.size+
+          ' tiêu chí bạn chọn</div>':'')+
         (x.ld?'<div class="why'+(x._over?' warn':'')+'"><b>'+
           (x._over?'Lưu ý:':'Vì sao chọn:')+'</b> '+x.ld+'</div>':'')+
         (x._pinWarn?'<div class="allocNote">'+ic('shield',13)+
