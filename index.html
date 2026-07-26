@@ -286,7 +286,12 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .pcTop{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:20px;align-items:start}
 .pc .pic{width:64px;height:64px;border-radius:14px;background:var(--line2);
   display:grid;place-items:center;color:var(--ink2)}
-.pcName{min-width:0;padding-top:2px}
+.pcName{min-width:0}
+/* Nhãn ngành hàng có nền để tên sản phẩm không bị chìm vào nền trắng */
+.pcCat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;
+  color:var(--blue);background:var(--sky);border:1px solid #dbe5fc;
+  padding:5px 12px;border-radius:99px;margin-bottom:9px;letter-spacing:.01em}
+.pcCat .ico{color:var(--blue)}
 .pc b{font-size:22px;font-weight:600;line-height:1.3;display:block;letter-spacing:-.015em}
 .pc .md{font-size:15.5px;color:var(--mut);font-weight:500;margin-top:8px;line-height:1.5}
 .pc .md .dot{opacity:.5;margin:0 2px}
@@ -380,7 +385,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   .pcBar{gap:16px;margin-top:16px;padding-top:14px}
   .sw{font-size:14.5px}
   .skip{font-size:14px}
-  .upBtn{font-size:15px;padding:13px 18px}
+  .upTo{font-size:14px}
   .roomModHead{padding:17px 18px;gap:12px}
   .roomModHead b{font-size:19px}
   .roomModHead .rmMeta{font-size:13.5px}
@@ -400,12 +405,22 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   padding:11px 14px;background:var(--goldbg);border:1px solid #f0dfae;
   border-radius:9px;font-size:13px;color:var(--gold);line-height:1.55}
 .allocNote .ico{color:var(--gold);flex-shrink:0;margin-top:1px}
-.upBtn{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;margin-top:14px;
-  font-size:15.5px;font-weight:600;padding:13px 22px;border-radius:10px;
+/* Hàng nút nâng cấp — mỗi hạng mục một nút */
+.upRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px;
+  padding-top:15px;border-top:1px dashed var(--line)}
+.upRowLbl{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);margin-right:2px}
+.upBtn{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;
+  white-space:nowrap;font-weight:600;padding:9px 16px;border-radius:10px;
   background:var(--sky);color:var(--blue);border:1.5px solid #cddcfb;transition:var(--tr)}
-.upBtn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
-.upBtn:hover .ico{color:#fff}
-.upBtn .ico{color:var(--blue)}
+.upBtn:hover{background:var(--blue);border-color:var(--blue)}
+.upBtn:hover .upAx,.upBtn:hover .upTo{color:#fff}
+.upAx{font-size:11.5px;font-weight:600;color:#6b86c9;letter-spacing:.01em}
+.upTo{font-size:15px;font-weight:700;color:var(--blue)}
+.upBtn.warn{background:var(--goldbg);border-color:#f0dfae}
+.upBtn.warn .upAx{color:#a98436}
+.upBtn.warn .upTo{color:var(--gold)}
+.upBtn.warn:hover{background:var(--gold);border-color:var(--gold)}
 @media(max-width:600px){
     .upBtn{justify-content:center}
 }
@@ -564,6 +579,13 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .arB:hover{border-color:var(--blue);background:var(--sky);transform:translateY(-1px)}
 .rc.on{background:var(--sky);color:var(--blue)}
 .rdel{font-size:13px;font-weight:800;color:var(--mut);padding:3px 9px;border-radius:8px;transition:var(--tr)}
+.rhide{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;
+  color:var(--mut);padding:6px 12px;border-radius:8px;transition:var(--tr);margin-left:8px}
+.rhide:hover{background:var(--redbg);color:var(--red)}
+.roomBlock.off{background:#fafaf8;border-style:dashed;padding:14px 20px}
+.roomBlock.off .roomTitle{margin:0}
+.roomBlock.off .roomTitle b{color:var(--mut)}
+.roomBlock.off .rall{color:var(--blue)}
 .rdel:hover{background:var(--redbg);color:var(--red)}
 .scrollHint{margin-top:16px;text-align:center;font-size:14px;font-weight:500;color:var(--mut);padding:12px}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
@@ -1004,7 +1026,7 @@ function ri(zone,size){ return ic(RICON[zone]||'box',size); }
 
 const S={flow:null,house:null,sub:null,space:null,up:null,
   lo:0,hi:0,           /* khoảng ngân sách khách chọn (nghìn đồng) */
-  picked:new Set(),pickInit:false,extraRooms:[],upgraded:{},_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
+  picked:new Set(),pickInit:false,extraRooms:[],hiddenRooms:new Set(),upgraded:{},_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
 const PROG={sLoad:0,sErr:0,s0:0,s1:25,s3:55,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
 const G=TP.GROUPS, ROOMS=TP.ROOMS;
 let DB=[], AVAIL=[];
@@ -1226,7 +1248,7 @@ function show(id){
 }
 function home(){
   Object.assign(S,{flow:null,house:null,sub:null,space:null,up:null,lo:0,hi:0});
-  S.picked=new Set();S.pickInit=false;S.extraRooms=[];S.upgraded={};S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
+  S.picked=new Set();S.pickInit=false;S.extraRooms=[];S.hiddenRooms=new Set();S.upgraded={};S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
   houseOpen=null;
   show('s0');
@@ -1484,7 +1506,7 @@ function openHouse(id){
   /* Loại không có tuỳ chọn con thì đi tiếp luôn */
   if(!h.opts.length){
     S.house = id; S.sub = 'Phòng trọ'; houseOpen = null;
-    S.pickInit = false; S.extraRooms = []; S.picked = new Set();
+    S.pickInit = false; S.extraRooms = []; S.picked = new Set(); S.hiddenRooms = new Set();
     buildHouse();
     show('s3');
     return;
@@ -1502,7 +1524,7 @@ function openHouse(id){
 
 function pickHouseSub(id, v){
   S.house = id; S.sub = v; houseOpen = null;
-  S.pickInit = false; S.extraRooms = []; S.picked = new Set();
+  S.pickInit = false; S.extraRooms = []; S.picked = new Set(); S.hiddenRooms = new Set();
   buildHouse();
   show('s3');          /* bỏ bước hỏi số người — suy ra từ loại nhà */
 }
@@ -1802,9 +1824,13 @@ function roomsInScope(){
 }
 function availableSlots(){
   const out=[];
-  roomsInScope().forEach(r=>r.devs.forEach(g=>{
-    if(G[g]&&hasStock(g)) out.push({room:r.id,g:g,key:dk(r.id,g)});
-  }));
+  const hidden=S.hiddenRooms||new Set();
+  roomsInScope().forEach(r=>{
+    if(hidden.has(r.id)) return;     /* phòng khách đã bỏ qua */
+    r.devs.forEach(g=>{
+      if(G[g]&&hasStock(g)) out.push({room:r.id,g:g,key:dk(r.id,g)});
+    });
+  });
   return out;
 }
 
@@ -1863,20 +1889,36 @@ function buildRoomPick(){
     S.picked=smartDefaults();
   }
   const host=document.getElementById('roomPick');
-  host.innerHTML=roomsInScope().map(r=>{
+  const rooms=roomsInScope();
+  S.hiddenRooms = S.hiddenRooms || new Set();
+
+  host.innerHTML=rooms.map(r=>{
     const devs=r.devs.filter(g=>G[g]);
     const usable=devs.filter(g=>hasStock(g));
     const on=usable.filter(g=>S.picked.has(dk(r.id,g))).length;
+    const hidden=S.hiddenRooms.has(r.id);
+
+    /* Phòng đã ẩn thu lại thành một dòng, bấm để mở lại */
+    if(hidden){
+      return '<div class="roomBlock off">'+
+        '<div class="roomTitle"><b>'+ri(zoneOf(r.id),19)+r.name+'</b>'+
+        '<span class="rc">không dùng</span>'+
+        '<button class="rall" onclick="unhideRoom(\''+r.id+'\')">'+ic('plus',13)+'Dùng lại phòng này</button>'+
+        '</div></div>';
+    }
+
     return '<div class="roomBlock">'+
       '<div class="roomTitle"><b>'+ri(zoneOf(r.id),19)+r.name+'</b>'+
       (on?'<span class="rc on">'+on+' thiết bị</span>':'<span class="rc">chưa chọn</span>')+
       (r.extra?'<button class="rdel" onclick="delRoom(\''+r.id+'\')" title="Xoá phòng">'+ic('close',13)+'</button>':'')+
       (usable.length?'<button class="rall" onclick="toggleRoom(\''+r.id+'\')">'+
         (on===usable.length?'Bỏ chọn cả phòng':'Chọn cả phòng')+'</button>':'')+
+      '<button class="rhide" onclick="hideRoom(\''+r.id+'\')" title="Nhà bạn không có phòng này">'+
+        ic('close',13)+'Bỏ qua phòng</button>'+
       '</div>'+
       '<div class="devGrid">'+devs.map(g=>{
         const k=dk(r.id,g);
-        if(!hasStock(g)) return '<div class="dev na"><span class="di">'+G[g].ic+'</span>'+
+        if(!hasStock(g)) return '<div class="dev na"><span class="di">'+gi(g,22)+'</span>'+
           '<span><b>'+G[g].name+'</b><span class="dn">tạm hết</span></span></div>';
         const sel=S.picked.has(k);
         return '<button class="dev'+(sel?' on':' off')+'" data-k="'+k+'" onclick="toggleDev(\''+k+'\')">'+
@@ -1895,6 +1937,18 @@ function buildRoomPick(){
         '<button class="arB" onclick="addRoom(\'kit\')">'+ic('plus',14)+'Bếp phụ</button>'+
       '</div></div>');
   updPickCount();
+}
+/* Ẩn cả phòng khi nhà khách không có — gọn giao diện, gọn cả combo */
+function hideRoom(rid){
+  S.hiddenRooms = S.hiddenRooms || new Set();
+  S.hiddenRooms.add(rid);
+  /* Gỡ luôn thiết bị đã chọn trong phòng đó */
+  [...S.picked].forEach(function(k){ if(roomOfSlot(k)===rid) S.picked.delete(k); });
+  buildRoomPick();
+}
+function unhideRoom(rid){
+  if(S.hiddenRooms) S.hiddenRooms.delete(rid);
+  buildRoomPick();
 }
 function addRoom(type){
   S.extraRooms=S.extraRooms||[];
@@ -1972,7 +2026,7 @@ function buildFeats(){
 }
 function buildPrio(){
   document.getElementById('prioO').innerHTML=AVAIL.filter(g=>G[g].core).map(g=>
-    '<button class="opt" data-k="'+g+'" onclick="tgl(this,\'prio\')"><span class="ic">'+G[g].ic+
+    '<button class="opt" data-k="'+g+'" onclick="tgl(this,\'prio\')"><span class="ic">'+gi(g,26)+
     '</span><b>'+G[g].name+'</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>').join('');
 }
 function tgl(el,set){const k=el.dataset.k;
@@ -2111,30 +2165,84 @@ function pickForSlot(group, roomId, alloc){
   return best;
 }
 
-/* Mã lớn hơn một bậc trong cùng nhóm — dùng cho nút nâng cấp thông minh */
-function upgradeFor(group, roomId, curModel){
-  var spec = idealSpec(group, roomId);
-  if(!spec) return null;
+/* ==================================================================
+   CÁC HƯỚNG NÂNG CẤP
+   Mỗi ngành hàng có nhiều trục nâng cấp. Với TV là:
+   kích thước · độ phân giải · tấm nền · tần số quét.
+   Muốn thêm trục mới chỉ cần khai báo thêm trong UPGRADE_AXES,
+   phần dựng giao diện tự bắt theo, không phải sửa lại.
+   ================================================================== */
+var RES_RANK   = {'HD':1, 'FHD':2, '4K':3, '8K':4};
+var PANEL_RANK = {'LED':1, 'QLED':2, 'OLED':3, 'MiniLED':3,
+                  'Neo QLED':4, 'QD-MiniLED':4, 'MicroLED':5,
+                  'MiniRGB':5, 'MicroRGB':6};
+
+var UPGRADE_AXES = {
+  tv: [
+    {key:'inch',  label:'Kích thước',    rank:function(v){return v;},
+     fmt:function(v){return v+' inch';}},
+    {key:'res',   label:'Độ phân giải',  rank:function(v){return RES_RANK[v]||0;},
+     fmt:function(v){return v;}},
+    {key:'panel', label:'Tấm nền',       rank:function(v){return PANEL_RANK[v]||0;},
+     fmt:function(v){return v;}},
+    {key:'hz',    label:'Tần số quét',   rank:function(v){return v;},
+     fmt:function(v){return v+'Hz';}}
+  ],
+  ac:      [{key:'btu', label:'Công suất', rank:function(v){return v;},
+             fmt:function(v){return v.toLocaleString('vi-VN')+' BTU';}}],
+  fridge:  [{key:'lit', label:'Dung tích', rank:function(v){return v;},
+             fmt:function(v){return v+' lít';}}],
+  freezer: [{key:'lit', label:'Dung tích', rank:function(v){return v;},
+             fmt:function(v){return v+' lít';}}],
+  washer:  [{key:'kg',  label:'Khối lượng giặt', rank:function(v){return v;},
+             fmt:function(v){return v+' kg';}}],
+  dryer:   [{key:'kg',  label:'Khối lượng sấy',  rank:function(v){return v;},
+             fmt:function(v){return v+' kg';}}]
+};
+
+/* Các hướng nâng cấp khả dụng cho một sản phẩm.
+   Trục nào chưa có dữ liệu trong hashtag thì tự bỏ qua —
+   khi bổ sung dữ liệu, nút sẽ tự xuất hiện.                 */
+function upgradeOptions(group, roomId, curModel){
+  var axes = UPGRADE_AXES[group];
+  if(!axes) return [];
   var cur = DB.filter(function(p){ return p.nhom===group && p.model===curModel; })[0];
-  if(!cur || !cur[spec.key]) return null;
+  if(!cur) return [];
+  var spec = idealSpec(group, roomId);
+  var out  = [];
 
-  /* Tìm mã có thông số lớn hơn gần nhất, ưu tiên còn hàng */
-  var bigger = DB.filter(function(p){
-    return p.nhom === group && p[spec.key] && p[spec.key] > cur[spec.key];
-  }).sort(function(a,b){
-    var d = a[spec.key] - b[spec.key];
-    if(d !== 0) return d;
-    return (b.ton - a.ton) || (a.gia - b.gia);
+  axes.forEach(function(ax){
+    var curVal = cur[ax.key];
+    if(!curVal) return;
+    var curRank = ax.rank(curVal);
+    if(!curRank) return;
+
+    /* Mã tốt hơn ở trục này, các trục khác không được kém đi */
+    var better = DB.filter(function(p){
+      if(p.nhom !== group || p.model === curModel) return false;
+      if(!p[ax.key] || ax.rank(p[ax.key]) <= curRank) return false;
+      return axes.every(function(o){
+        if(o.key === ax.key) return true;
+        if(!cur[o.key] || !p[o.key]) return true;
+        return o.rank(p[o.key]) >= o.rank(cur[o.key]);
+      });
+    });
+    if(!better.length) return;
+
+    better.sort(function(a,b){ return ax.rank(a[ax.key]) - ax.rank(b[ax.key]); });
+    var nextVal = better[0][ax.key];
+    var step = better.filter(function(p){ return p[ax.key] === nextVal; })
+                     .sort(function(a,b){ return (b.ton-a.ton) || (a.gia-b.gia); });
+
+    out.push({
+      key:ax.key, label:ax.label,
+      from:ax.fmt(curVal), to:ax.fmt(nextVal), p:step[0],
+      over: !!(spec && spec.key === ax.key && nextVal > spec.max)
+    });
   });
-  if(!bigger.length) return null;
-
-  /* Lấy bậc thông số kế tiếp, trong bậc đó chọn mã hợp lý nhất */
-  var nextVal = bigger[0][spec.key];
-  var sameStep = bigger.filter(function(p){ return p[spec.key] === nextVal; })
-                       .sort(function(a,b){ return (b.ton - a.ton) || (a.gia - b.gia); });
-  var pick = sameStep[0];
-  return {p:pick, spec:spec, from:cur[spec.key], to:nextVal};
+  return out;
 }
+
 function buildCombo(){
   const gs=neededGroups();
   if(!gs.length&&S.flow!=='upgrade')return [];
@@ -2301,14 +2409,15 @@ function render(){
     const k=x._slot||dk(G[x.nhom].room,x.nhom);
     const esc=x.model.replace(/'/g,"\\'");
     const sp=x._spec;
-    const up=(sp&&!x._over)?upgradeFor(x.nhom,x._room||G[x.nhom].room,x.model):null;
+    const ups=x._over?[]:upgradeOptions(x.nhom,x._room||G[x.nhom].room,x.model);
     /* Bố cục hàng ngang: tên và giá cùng dòng trên, phần giải thích trải hết
        chiều ngang bên dưới — không còn khoảng trống chết ở góc phải. */
     return '<article class="pc" style="animation-delay:'+(Math.min(i,8)*.05)+'s" id="pc-'+k.replace(':','-')+'">'+
       '<div class="pcTop">'+
         '<div class="pic">'+gi(x.nhom,26)+'</div>'+
-        '<div class="pcName"><b>'+G[x.nhom].name+': '+x.ten+
-          (x._pin?'<span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
+        '<div class="pcName">'+
+          '<div class="pcCat">'+gi(x.nhom,14)+G[x.nhom].name+'</div>'+
+          '<b>'+x.ten+(x._pin?'<span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
           '<div class="md">Mã '+x.model+(x.mota?' <span class="dot">·</span> '+x.mota:'')+'</div>'+
         '</div>'+
         '<div class="pp">'+fmt(x.gia)+'</div>'+
@@ -2320,9 +2429,16 @@ function render(){
         (x._pinWarn?'<div class="allocNote">'+ic('shield',13)+
             'Mã này nhỏ hơn mức thường dùng cho '+ctxPhrase(x._room||G[x.nhom].room)+
             '. Chuyên viên sẽ xác nhận lại theo không gian thực tế của bạn.</div>':'')+
-        (up?'<button class="upBtn" onclick="applyUpgrade(\''+k+'\',\''+
-              up.p.model.replace(/'/g,"\\'")+'\')">'+ic('trend',16)+
-              'Nâng lên '+up.to+' '+up.spec.unit+'</button>':'')+
+        (ups.length?'<div class="upRow">'+
+          '<span class="upRowLbl">Nâng cấp</span>'+
+          ups.map(function(u){
+            return '<button class="upBtn'+(u.over?' warn':'')+'" '+
+              'onclick="applyUpgrade(\''+k+'\',\''+u.p.model.replace(/'/g,"\\'")+'\')" '+
+              'title="'+u.from+' → '+u.to+'">'+
+              '<span class="upAx">'+u.label+'</span>'+
+              '<span class="upTo">'+u.to+'</span></button>';
+          }).join('')+
+        '</div>':'')+
       '</div>'+
       '<div class="pcBar">'+
         '<button class="sw" onclick="toggleSwap(\''+k+'\',\''+esc+'\')">'+ic('swap',15)+'Đổi mẫu khác</button>'+
@@ -2369,7 +2485,8 @@ function render(){
       '<div class="ri">'+combo.map((x,i)=>'<span class="chip" style="animation-delay:'+(.2+i*.08)+'s">'+ic('check',12)+
       x.model+'</span>').join('')+'</div></div>';
   } else {
-    document.getElementById('rms').innerHTML=roomsInScope().map(r=>{
+    const hiddenR=S.hiddenRooms||new Set();
+    document.getElementById('rms').innerHTML=roomsInScope().filter(r=>!hiddenR.has(r.id)).map(r=>{
       const devs=r.devs.filter(g=>G[g]&&hasStock(g)&&S.picked.has(dk(r.id,g)));
       if(!devs.length)return '';
       return '<div class="rm"><div class="rn">'+ri(zoneOf(r.id),15)+r.name+'</div><div class="ri">'+

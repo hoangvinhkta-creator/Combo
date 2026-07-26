@@ -367,6 +367,18 @@ function attrsFromTag(tag){
     if(v >= 40 && v <= 900) a.lit = v;
   }
 
+  /* --- Tần số quét màn hình (Hz) ---
+     Chấp nhận "120Hz", "120 Hz", "tan so quet 120".
+     Dữ liệu sẽ được bổ sung dần vào cột hashtag.                */
+  let hz = t.match(/(\d{2,3})\s*hz/);
+  if(!hz) hz = t.match(/tan so quet\s*(\d{2,3})/);
+  if(hz){
+    const v = +hz[1];
+    /* Chỉ nhận các mốc thực tế trên thị trường */
+    if([50,60,75,100,120,144,165,240].indexOf(v) >= 0) a.hz = v;
+    else if(v >= 50 && v <= 240) a.hz = v;
+  }
+
   /* --- Khối lượng máy giặt / máy sấy (kg) --- */
   const kg = t.match(/([\d.,]{1,4})\s*kg/);
   if(kg){
@@ -384,6 +396,7 @@ function attrLine(p){
   /* LED thường không đưa vào mô tả — chỉ dùng để lọc */
   if(p.panel && p.panel !== 'LED') out.push(p.panel);
   if(p.res)   out.push(p.res);
+  if(p.hz)    out.push(p.hz + 'Hz');
   if(p.btu)   out.push(p.btu.toLocaleString('vi-VN') + ' BTU');
   if(p.lit)   out.push(p.lit + ' lít');
   if(p.kg)    out.push(p.kg + ' kg');
@@ -470,6 +483,7 @@ function buildCatalog(rows, cfg){
       panel: at.panel || '',
       res:   at.res   || '',
       voice: at.voice ? 1 : 0,
+      hz:    at.hz    || null,
       btu:   at.btu   || null,
       lit:   at.lit   || null,
       kg:    at.kg    || null,
