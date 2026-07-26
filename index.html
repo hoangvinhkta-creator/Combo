@@ -507,9 +507,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .preset{font-size:12.5px;font-weight:700;padding:9px 16px;border-radius:99px;background:#f2f4f7;color:var(--ink2);transition:var(--tr)}
 .preset:hover{background:var(--sky);color:var(--blue)}
 .preset.on{background:var(--blue);color:#fff}
-.histo{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:14px}
-.histo i{flex:1;background:#e6e9ef;border-radius:2px 2px 0 0;min-height:3px;transition:background .25s}
-.histo i.on{background:#9dbcf7}
 
 .feasWarn{margin-top:16px;background:var(--goldbg,#fff8e8);border:1.5px solid #ffd58a;border-radius:11px;
   padding:13px 16px;font-size:12.5px;color:#7a5a12;line-height:1.6}
@@ -725,7 +722,6 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <div><div class="rangeVal" id="bgVal">—</div><small id="bgSub">Tổng ngân sách cho cả combo</small></div>
       <span class="rangeCount" id="bgCount">—</span>
     </div>
-    <div class="histo" id="bgHisto"></div>
     <div class="dual" id="bgDual">
       <div class="track"></div><div class="fill" id="bgFill"></div>
       <input type="range" id="bgLo" oninput="onBudget()">
@@ -767,7 +763,6 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <div><div class="rangeVal" id="u2Val">—</div><small id="u2Sub">Khoảng giá cho thiết bị này</small></div>
       <span class="rangeCount" id="u2Count">—</span>
     </div>
-    <div class="histo" id="u2Histo"></div>
     <div class="dual" id="u2Dual">
       <div class="track"></div><div class="fill" id="u2Fill"></div>
       <input type="range" id="u2Lo" oninput="onBudget3()">
@@ -788,7 +783,6 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <div><div class="rangeVal" id="b2Val">—</div><small>Tổng ngân sách cho cả combo</small></div>
       <span class="rangeCount" id="b2Count">—</span>
     </div>
-    <div class="histo" id="b2Histo"></div>
     <div class="dual" id="b2Dual">
       <div class="track"></div><div class="fill" id="b2Fill"></div>
       <input type="range" id="b2Lo" oninput="onBudget2()">
@@ -821,7 +815,6 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
       <small>Kéo để điều chỉnh ngân sách — combo tự cập nhật</small></div>
       <span class="rangeCount" id="rsCount">—</span>
     </div>
-    <div class="histo" id="rsHisto"></div>
     <div class="dual" id="rsDual"><div class="track"></div><div class="fill" id="rsFill"></div>
       <input type="range" id="rsLo" oninput="onResultRange()">
       <input type="range" id="rsHi" oninput="onResultRange()"></div>
@@ -994,7 +987,7 @@ function ri(zone,size){ return ic(RICON[zone]||'box',size); }
 
 const S={flow:null,house:null,sub:null,space:null,up:null,
   lo:0,hi:0,           /* khoảng ngân sách khách chọn (nghìn đồng) */
-  picked:new Set(),pickInit:false,extraRooms:[],_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
+  picked:new Set(),pickInit:false,extraRooms:[],upgraded:{},_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
 const PROG={sLoad:0,sErr:0,s0:0,s1:25,s3:55,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
 const G=TP.GROUPS, ROOMS=TP.ROOMS;
 let DB=[], AVAIL=[];
@@ -1216,7 +1209,7 @@ function show(id){
 }
 function home(){
   Object.assign(S,{flow:null,house:null,sub:null,space:null,up:null,lo:0,hi:0});
-  S.picked=new Set();S.pickInit=false;S.extraRooms=[];S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
+  S.picked=new Set();S.pickInit=false;S.extraRooms=[];S.upgraded={};S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
   houseOpen=null;
   show('s0');
@@ -1244,7 +1237,7 @@ function niceStep(range){
   return 10000;
 }
 /* Tạo một bộ chọn khoảng giá dùng chung.
-   ids: {lo,hi,fill,val,count,marks,presets,histo}
+   ids: {lo,hi,fill,val,count,marks,presets}
    opts: {min,max,step,initLo,initHi,presets:[{l,lo,hi}], countFn(lo,hi)} */
 function mountRange(ids,opts){
   const lo=document.getElementById(ids.lo), hi=document.getElementById(ids.hi);
@@ -1255,17 +1248,6 @@ function mountRange(ids,opts){
   if(marks){const n=4,out=[];
     for(let i=0;i<=n;i++)out.push('<span>'+fmtM(opts.min+(opts.max-opts.min)*i/n)+'</span>');
     marks.innerHTML=out.join('');}
-  /* biểu đồ mật độ giá */
-  const histo=document.getElementById(ids.histo);
-  if(histo&&opts.prices&&opts.prices.length){
-    const B=28,bins=new Array(B).fill(0);
-    opts.prices.forEach(p=>{
-      let k=Math.floor((p-opts.min)/(opts.max-opts.min)*B);
-      k=Math.max(0,Math.min(B-1,k)); bins[k]++;});
-    const mx=Math.max(...bins,1);
-    histo.innerHTML=bins.map((v,k)=>'<i data-k="'+k+'" style="height:'+Math.round(v/mx*100)+'%"></i>').join('');
-    histo._bins=B;
-  }
   return {lo,hi};
 }
 function syncRange(ids,onChange){
@@ -1276,13 +1258,6 @@ function syncRange(ids,onChange){
   const f=document.getElementById(ids.fill);
   f.style.left=((a-min)/(max-min)*100)+'%';
   f.style.width=((b-a)/(max-min)*100)+'%';
-  const histo=document.getElementById(ids.histo);
-  if(histo&&histo._bins){
-    const B=histo._bins;
-    histo.querySelectorAll('i').forEach((el,k)=>{
-      const c=min+(max-min)*(k+0.5)/B;
-      el.classList.toggle('on', c>=a&&c<=b);});
-  }
   onChange(a,b);
 }
 
@@ -1306,7 +1281,7 @@ function initBudget(){
   }
   S.lo=Math.max(BUD_MIN,Math.min(BUD_MAX,S.lo));
   S.hi=Math.max(BUD_MIN,Math.min(BUD_MAX,S.hi));
-  mountRange({lo:'bgLo',hi:'bgHi',fill:'bgFill',marks:'bgMarks',histo:'bgHisto'},
+  mountRange({lo:'bgLo',hi:'bgHi',fill:'bgFill',marks:'bgMarks'},
     {min:BUD_MIN,max:BUD_MAX,step:BUD_STEP,initLo:S.lo,initHi:S.hi,prices:comboSamplePrices()});
   const P=[['Dưới 30 triệu',BUD_MIN,30000],['30 – 60 triệu',30000,60000],
            ['60 – 100 triệu',60000,100000],['Trên 100 triệu',100000,BUD_MAX]];
@@ -1323,7 +1298,7 @@ function setBudget(a,b){
   document.getElementById('bgLo').value=a;document.getElementById('bgHi').value=b;onBudget();
 }
 function onBudget(){
-  syncRange({lo:'bgLo',hi:'bgHi',fill:'bgFill',histo:'bgHisto'},(a,b)=>{
+  syncRange({lo:'bgLo',hi:'bgHi',fill:'bgFill'},(a,b)=>{
     S.lo=a;S.hi=b;
     document.getElementById('bgVal').textContent=fmt(a)+'  –  '+fmt(b);
     const c=buildCombo();
@@ -1360,7 +1335,7 @@ function initBudget2(){
   if(!S.lo||!S.hi){S.lo=20000;S.hi=80000;}
   S.lo=Math.max(BUD_MIN,Math.min(BUD_MAX,S.lo));
   S.hi=Math.max(BUD_MIN,Math.min(BUD_MAX,S.hi));
-  mountRange({lo:'b2Lo',hi:'b2Hi',fill:'b2Fill',marks:'b2Marks',histo:'b2Histo'},
+  mountRange({lo:'b2Lo',hi:'b2Hi',fill:'b2Fill',marks:'b2Marks'},
     {min:BUD_MIN,max:BUD_MAX,step:BUD_STEP,initLo:S.lo,initHi:S.hi,prices:DB.map(p=>p.gia)});
   const P=[['Dưới 30 triệu',BUD_MIN,30000],['30 – 60 triệu',30000,60000],
            ['60 – 100 triệu',60000,100000],['Trên 100 triệu',100000,BUD_MAX]];
@@ -1370,7 +1345,7 @@ function initBudget2(){
 }
 function setB2(a,b){document.getElementById('b2Lo').value=a;document.getElementById('b2Hi').value=b;onBudget2();}
 function onBudget2(){
-  syncRange({lo:'b2Lo',hi:'b2Hi',fill:'b2Fill',histo:'b2Histo'},(a,b)=>{
+  syncRange({lo:'b2Lo',hi:'b2Hi',fill:'b2Fill'},(a,b)=>{
     S.lo=a;S.hi=b;
     document.getElementById('b2Val').textContent=fmt(a)+'  –  '+fmt(b);
     const el=document.getElementById('b2Count');
@@ -1386,7 +1361,7 @@ function initBudget3(){
   const lo=SWAP_MIN, hi=SWAP_MAX;
   S.lo=Math.max(lo,Math.floor(ps[0]/1000)*1000);
   S.hi=Math.min(hi,Math.ceil(ps[ps.length-1]/1000)*1000);
-  mountRange({lo:'u2Lo',hi:'u2Hi',fill:'u2Fill',marks:'u2Marks',histo:'u2Histo'},
+  mountRange({lo:'u2Lo',hi:'u2Hi',fill:'u2Fill',marks:'u2Marks'},
     {min:lo,max:hi,step:1000,initLo:S.lo,initHi:S.hi,prices:ps});
   const P=[['Dưới 20 triệu',lo,20000],['20 – 40 triệu',20000,40000],
            ['40 – 70 triệu',40000,70000],['Xem tất cả',lo,hi]];
@@ -1396,7 +1371,7 @@ function initBudget3(){
 }
 function setU2(a,b){document.getElementById('u2Lo').value=a;document.getElementById('u2Hi').value=b;onBudget3();}
 function onBudget3(){
-  syncRange({lo:'u2Lo',hi:'u2Hi',fill:'u2Fill',histo:'u2Histo'},(a,b)=>{
+  syncRange({lo:'u2Lo',hi:'u2Hi',fill:'u2Fill'},(a,b)=>{
     S.lo=a;S.hi=b;
     document.getElementById('u2Val').textContent=fmt(a)+'  –  '+fmt(b);
     const gs=upGroups();
@@ -2093,9 +2068,6 @@ function pickForSlot(group, roomId, alloc){
   best._fromStock = fromStock;
   /* Vượt phần ngân sách được phân bổ — báo cho khách biết thay vì
      hạ xuống mã sai nhu cầu */
-  /* Làm tròn lên mốc 100 nghìn — con số lẻ tới từng đồng trông thiếu tin cậy */
-  var over = (alloc > 0 && best.gia > alloc * 1.35) ? best.gia - alloc : 0;
-  best._overAlloc = over > 0 ? Math.round(over / 100) * 100 : 0;
   return best;
 }
 
@@ -2121,8 +2093,7 @@ function upgradeFor(group, roomId, curModel){
   var sameStep = bigger.filter(function(p){ return p[spec.key] === nextVal; })
                        .sort(function(a,b){ return (b.ton - a.ton) || (a.gia - b.gia); });
   var pick = sameStep[0];
-  return {p:pick, spec:spec, from:cur[spec.key], to:nextVal,
-          delta:pick.gia - cur.gia};
+  return {p:pick, spec:spec, from:cur[spec.key], to:nextVal};
 }
 function buildCombo(){
   const gs=neededGroups();
@@ -2169,9 +2140,10 @@ function buildCombo(){
       if(f){
         const sp=idealSpec(sl.g, sl.room);
         /* Tôn trọng lựa chọn của khách, nhưng nói rõ nếu lệch không gian */
-        const off = sp && f[sp.key] &&
-          (f[sp.key] < sp.min || f[sp.key] > sp.max)
-          ? (f[sp.key] < sp.min ? 'nhỏ' : 'lớn') : '';
+        /* Chỉ nhắc khi mã NHỎ hơn mức phù hợp — chọn lớn hơn là quyền của khách
+           và thường có chủ đích, không cần cảnh báo. */
+        const upgraded = S.upgraded && S.upgraded[sl.key];
+        const off = (!upgraded && sp && f[sp.key] && f[sp.key] < sp.min) ? 'nhỏ' : '';
         pinnedItems.push({...f,_slot:sl.key,_room:sl.room,_pin:true,_spec:sp,_pinWarn:off});
         pinnedCost+=f.gia;
         return;
@@ -2288,19 +2260,14 @@ function render(){
         (x.voice?'<div class="feat">'+ic('mic',13)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
         (x.ld?'<div class="why"><b>Vì sao chọn:</b> '+x.ld+'</div>':'')+
         (x._pinWarn?'<div class="allocNote">'+ic('shield',13)+
-            'Bạn đã chọn mã có thông số '+x._pinWarn+' hơn mức thường dùng cho '+
-            ctxPhrase(x._room||G[x.nhom].room)+'. Chuyên viên sẽ xác nhận lại khi tư vấn.</div>':'')+
-        (x._overAlloc>0?'<div class="allocNote">'+ic('shield',13)+
-            'Cao hơn phần ngân sách chia cho nhóm này khoảng '+fmt(x._overAlloc)+
-            '. Đây là mã thấp nhất còn phù hợp với không gian — chọn thấp hơn sẽ '+
-            'không đủ công năng.</div>':'')+
+            'Mã này nhỏ hơn mức thường dùng cho '+ctxPhrase(x._room||G[x.nhom].room)+
+            '. Chuyên viên sẽ xác nhận lại theo không gian thực tế của bạn.</div>':'')+
         (up?'<div class="upBox">'+
             '<span class="upTxt">'+up.spec.up+', nên chọn <b>'+
               up.to+' '+up.spec.unit+'</b> để trải nghiệm tốt hơn.</span>'+
             '<button class="upBtn" onclick="applyUpgrade(\''+k+'\',\''+
               up.p.model.replace(/'/g,"\\'")+'\')">'+ic('trend',14)+
-              'Nâng lên '+up.to+' '+up.spec.unit+
-              (up.delta>0?' · +'+fmt(up.delta):'')+'</button>'+
+              'Nâng lên '+up.to+' '+up.spec.unit+'</button>'+
           '</div>':'')+
       '</div>'+
       '<div class="pAct"><div class="pp">'+fmt(x.gia)+'</div>'+
@@ -2424,7 +2391,7 @@ function initResultRange(){
   }
   const box=document.getElementById('rsDual');
   if(box&&box.parentElement)box.parentElement.style.display='';
-  mountRange({lo:'rsLo',hi:'rsHi',fill:'rsFill',marks:'rsMarks',histo:'rsHisto'},
+  mountRange({lo:'rsLo',hi:'rsHi',fill:'rsFill',marks:'rsMarks'},
     {min:BUD_MIN,max:BUD_MAX,step:BUD_STEP,
      initLo:Math.max(BUD_MIN,Math.min(S.lo,BUD_MAX)),
      initHi:Math.min(BUD_MAX,Math.max(S.hi,BUD_MIN)),
@@ -2432,7 +2399,7 @@ function initResultRange(){
   onResultRange();
 }
 function onResultRange(){
-  syncRange({lo:'rsLo',hi:'rsHi',fill:'rsFill',histo:'rsHisto'},(a,b)=>{
+  syncRange({lo:'rsLo',hi:'rsHi',fill:'rsFill'},(a,b)=>{
     S.lo=a;S.hi=b;
     const v=document.getElementById('rsVal');
     if(v)v.textContent=fmt(a)+' – '+fmt(b);
@@ -2697,6 +2664,10 @@ function toggleSlot(k){
 /* Nâng lên mã có thông số lớn hơn khi khách xác nhận phòng rộng hơn */
 function applyUpgrade(k, model){
   S.pinned[k] = model;
+  /* Khách vừa chủ động chọn nâng cấp — không cảnh báo lệch chuẩn nữa,
+     tránh làm chùn ngay sau khi họ quyết định. */
+  S.upgraded = S.upgraded || {};
+  S.upgraded[k] = true;
   render();
   setTimeout(function(){
     var e = document.getElementById('pc-' + k.replace(':','-'));
