@@ -22,13 +22,15 @@
   --r:12px; --r2:14px;
   --sh:0 1px 2px rgba(17,24,39,.04),0 8px 24px rgba(17,24,39,.06);
   --tr:.22s cubic-bezier(.2,.8,.3,1);
-  --hdr:134px}   /* chiều cao header + thanh tóm tắt, dùng cho phần tử dính */
+  --hdr:134px;   /* chiều cao header + thanh tóm tắt, dùng cho phần tử dính */
+  --maxw:1340px; /* bề rộng nội dung — nới rộng để tận dụng màn hình lớn */
+  --side:360px}  /* cột phụ bên phải ở màn kết quả */
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 #prog{height:3px;background:linear-gradient(90deg,var(--blue),#6ea0ff);width:0;transition:width .4s}
-.hw{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:9px 18px}
+.hw{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:12px;padding:9px 24px}
 .logo{display:flex;align-items:center;gap:13px;font-weight:800;font-size:15px;min-width:0}
 .brandMark{display:block;flex-shrink:0;color:#2b3a75;line-height:0}
 .brandMark svg{display:block;width:58px;height:58px}
@@ -47,7 +49,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .hb:hover{background:var(--blue);color:#fff}
 .hb.ghost{background:transparent;color:var(--ink2);font-weight:500}
 .hb.ghost:hover{background:var(--line2);color:var(--ink)}
-.wrap{max-width:1080px;margin:0 auto;padding:26px 18px 70px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 24px 70px}
 .sc{display:none;animation:fu .4s ease both}.sc.on{display:block}
 @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
@@ -79,7 +81,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 
 /* ===== THANH TÓM TẮT GHIM Ở ĐẦU TRANG ===== */
 .sumBar{display:none;align-items:stretch;gap:0;border-top:1px solid var(--line);
-  background:var(--card);padding:0 18px;max-width:1080px;margin:0 auto}
+  background:var(--card);padding:0 24px;max-width:var(--maxw);margin:0 auto}
 .sumBar.on{display:flex}
 .sumCell{flex:1;min-width:0;text-align:left;padding:9px 0;background:none;cursor:pointer;
   display:flex;flex-direction:column;gap:1px;transition:var(--tr)}
@@ -144,9 +146,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   color:var(--mut);margin-bottom:9px}
 .opt b{font-size:15px;font-weight:600}
 .opt small{color:var(--mut);font-size:12.5px;display:block;margin-top:5px;line-height:1.45}
-.pc b{font-size:15px;font-weight:600;line-height:1.4}
+.pc b{font-size:16.5px;font-weight:600;line-height:1.4}
 /* ================= TRANG CHỦ ================= */
-.hero{text-align:center;padding:52px 0 8px;max-width:660px;margin:0 auto}
+.hero{text-align:center;padding:56px 0 8px;max-width:700px;margin:0 auto}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--mut);
   text-transform:uppercase;margin-bottom:18px}
 .hero h1{font-size:clamp(30px,5vw,46px);font-weight:700;line-height:1.1;
@@ -156,7 +158,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .micro{margin-top:18px;font-size:13.5px;color:var(--mut);font-weight:500}
 
 /* --- 4 lựa chọn: grid 2×2 trên mọi kích thước --- */
-.goals{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:44px}
+.goals{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:44px;
+  max-width:1000px;margin-left:auto;margin-right:auto}
 .goal{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
   padding:26px 26px 22px;text-align:left;transition:var(--tr);position:relative;
   display:flex;flex-direction:column;cursor:pointer;width:100%}
@@ -195,7 +198,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 }
 
 /* --- Trust strip: không card --- */
-.stats{display:flex;justify-content:center;gap:0;margin-top:52px;flex-wrap:wrap}
+.stats{display:flex;justify-content:center;gap:0;margin-top:52px;flex-wrap:wrap;
+  max-width:900px;margin-left:auto;margin-right:auto}
 .st{padding:0 40px;text-align:center;position:relative}
 .st + .st::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--line)}
 .st b{display:block;font-size:30px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
@@ -264,7 +268,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .ring{width:88px;height:88px;margin:0 auto 24px;border-radius:50%;border:5px solid var(--sky);border-top-color:var(--blue);animation:sp 1s linear infinite;display:grid;place-items:center;font-size:30px}
 @keyframes sp{to{transform:rotate(360deg)}}
 #aiL{margin-top:11px;color:var(--ink2);font-size:14.5px;min-height:22px;transition:opacity .3s}
-.rg{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+.rg{display:grid;grid-template-columns:minmax(0,1fr) var(--side);gap:24px;align-items:start}
 @media(max-width:880px){.rg{grid-template-columns:1fr}}
 .bctl{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .bctl b{font-size:13.5px}
@@ -273,20 +277,23 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .bp:hover{background:var(--sky);color:var(--blue)}
 .bp.on{background:var(--blue);color:#fff}
 .plist{display:flex;flex-direction:column;gap:12px}
-.pc{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:16px 18px;
-  display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:14px;align-items:center;animation:fu .45s ease both}
+.pc{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px 20px;
+  display:grid;grid-template-columns:54px minmax(0,1fr) 190px;gap:18px;align-items:start;
+  animation:fu .45s ease both}
+.pc > .pic{margin-top:2px}
+.pAct{align-items:flex-end;padding-top:2px}
 @media(max-width:600px){.pc{grid-template-columns:42px minmax(0,1fr);gap:11px}
   .pc .pAct{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;
     padding-top:10px;border-top:1px dashed var(--line)}}
 .pc .pic{width:46px;height:46px;border-radius:10px;background:var(--line2);display:grid;place-items:center}
 .pc b{font-size:14.5px;display:block;line-height:1.4}
-.pc .md{font-size:12px;color:var(--mut);font-weight:600;font-family:ui-monospace,monospace;margin-top:2px}
-.why{margin-top:7px;font-size:12.5px;color:var(--ink2);background:#f8fafd;border-left:3px solid var(--blue);padding:7px 11px;border-radius:0 9px 9px 0;line-height:1.5}
-.why b{font-size:11.5px;color:var(--blue);display:inline}
+.pc .md{font-size:13px;color:var(--mut);font-weight:600;font-family:ui-monospace,monospace;margin-top:4px}
+.why{margin-top:9px;font-size:13.5px;color:var(--ink2);background:#f8fafd;border-left:3px solid var(--blue);padding:10px 14px;border-radius:0 9px 9px 0;line-height:1.55}
+.why b{font-size:12.5px;color:var(--blue);display:inline;font-weight:700}
 .why.alt{border-left-color:var(--gold);background:#fffaf0}
 .why.alt b{color:#b57b0c}
-.pp{font-size:15.5px;font-weight:800;text-align:right;white-space:nowrap}
-.sw{display:block;margin-top:5px;font-size:11.5px;font-weight:700;color:var(--blue)}
+.pp{font-size:19px;font-weight:700;text-align:right;white-space:nowrap;letter-spacing:-.01em}
+.sw{display:block;margin-top:8px;font-size:13px;font-weight:600;color:var(--blue)}
 .sw:hover{text-decoration:underline}
 .side{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:22px;
   position:sticky;top:calc(var(--hdr) + 14px)}
@@ -295,13 +302,13 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .cf{height:100%;background:linear-gradient(90deg,var(--blue),#6ea0ff);border-radius:99px;width:0;transition:width .8s}
 .cl{font-size:12px;color:var(--mut);font-weight:700}
 .rm{margin-top:14px}
-.rn{font-size:11.5px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.rn{font-size:12.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
 .ri{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:12px;font-weight:700;padding:5px 11px;border-radius:99px;background:var(--greenbg);color:var(--green);animation:pop .4s ease both}
+.chip{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:99px;background:var(--greenbg);color:var(--green);animation:pop .4s ease both}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 .tb{margin-top:20px;padding-top:16px;border-top:1.5px dashed var(--line)}
 .tl{font-size:12.5px;color:var(--mut);font-weight:700}
-.tn{font-size:27px;font-weight:800;letter-spacing:-.02em}
+.tn{font-size:30px;font-weight:700;letter-spacing:-.02em}
 .sl{margin-top:7px;font-size:12.5px;font-weight:700;color:var(--green);background:var(--greenbg);padding:7px 11px;border-radius:9px}
 .ben{margin-top:22px;background:var(--navy);border-radius:var(--r2);padding:24px;color:#fff}
 .ben h3{font-size:15px;margin-bottom:12px}
@@ -334,30 +341,47 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .roomModHead{display:flex;align-items:center;gap:11px;padding:14px 18px;
   background:#fbfaf8;border-bottom:1px solid var(--line)}
 .roomModHead .rmIco{color:var(--ink2);line-height:0}
-.roomModHead b{font-size:14.5px;font-weight:700;letter-spacing:.01em}
-.roomModHead .rmMeta{margin-left:auto;font-size:12px;color:var(--mut);font-weight:600;
+.roomModHead b{font-size:16px;font-weight:700;letter-spacing:.01em}
+.roomModHead .rmMeta{margin-left:auto;font-size:13px;color:var(--mut);font-weight:600;
   white-space:nowrap}
 .roomModBody{padding:14px;display:flex;flex-direction:column;gap:12px}
 .roomModBody .pc{border-color:var(--line2);background:#fff}
 @media(max-width:600px){
+  .roomModBody{grid-template-columns:1fr}
+  .pc{grid-template-columns:44px minmax(0,1fr);gap:12px;padding:15px 16px}
+  .pc b{font-size:15.5px}
+  .pp{font-size:17px}
   .roomModHead{padding:12px 14px;gap:9px}
   .roomModHead b{font-size:13.5px}
   .roomModHead .rmMeta{font-size:11px}
   .roomModBody{padding:11px;gap:10px}
 }
 
+
+/* --- Màn hình rộng: trải thông tin ra hai cột thay vì dồn giữa --- */
+@media(min-width:1180px){
+  .roomModBody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;align-items:start}
+  /* Bảng đổi mẫu mở ra thì chiếm trọn hàng cho dễ thao tác.
+     Dùng cả class dự phòng vì :has() chưa chạy trên webview cũ. */
+  .roomModBody .pc.wide{grid-column:1 / -1}
+  .roomModBody .pc:has(.swapPanel){grid-column:1 / -1}
+}
+@media(min-width:1560px){
+  :root{--maxw:1480px}
+}
 /* ===== GỢI Ý NÂNG CẤP THÔNG MINH ===== */
-.allocNote{display:flex;align-items:flex-start;gap:7px;margin-top:8px;
-  padding:9px 12px;background:var(--goldbg);border:1px solid #f0dfae;
-  border-radius:9px;font-size:12px;color:var(--gold);line-height:1.5}
+.allocNote{display:flex;align-items:flex-start;gap:8px;margin-top:9px;
+  padding:11px 14px;background:var(--goldbg);border:1px solid #f0dfae;
+  border-radius:9px;font-size:13px;color:var(--gold);line-height:1.55}
 .allocNote .ico{color:var(--gold);flex-shrink:0;margin-top:1px}
 .upBox{margin-top:9px;padding:11px 13px;background:var(--sky);
   border:1px solid #d9e3fb;border-radius:10px;
   display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.upTxt{flex:1;min-width:190px;font-size:12.5px;color:var(--ink2);line-height:1.5}
+.upTxt{flex:1;min-width:220px;font-size:13.5px;color:var(--ink2);line-height:1.55}
 .upTxt b{color:var(--blue);font-weight:700}
-.upBtn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
-  font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;
+.upBtn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  font-size:13.5px;font-weight:600;padding:10px 16px;border-radius:8px;
   background:var(--blue);color:#fff;transition:var(--tr)}
 .upBtn:hover{background:var(--blue2)}
 .upBtn .ico{color:#fff}
@@ -368,14 +392,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .pc.flash{animation:flashCard .9s ease}
 @keyframes flashCard{0%{background:var(--sky)}100%{background:#fff}}
 /* ===== MÔ TẢ NGẮN + NÚT BỎ QUA ===== */
-.desc{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.5}
-.feat{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;
+.desc{font-size:13.5px;color:var(--ink2);margin-top:6px;line-height:1.5}
+.feat{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;
   font-weight:600;color:var(--green);background:var(--greenbg);
   padding:4px 10px;border-radius:99px}
 .feat .ico{color:var(--green)}
 .roomTag{font-size:11px;font-weight:700;color:var(--blue);background:var(--sky);padding:2px 8px;border-radius:99px;font-family:inherit}
 .pAct{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.skip{font-size:11.5px;font-weight:700;color:var(--mut);transition:var(--tr)}
+.skip{font-size:12.5px;font-weight:500;color:var(--mut);transition:var(--tr);margin-top:3px}
 .skip:hover{color:var(--red);text-decoration:underline}
 .chip.pend{background:#f2f4f7;color:var(--mut)}
 .chip{cursor:pointer;border:1px solid transparent;transition:var(--tr)}
@@ -600,7 +624,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   background:var(--goldbg);color:var(--gold);display:inline-flex;align-items:center;gap:4px}
 .badChip .ico{color:var(--gold)}
 .swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px}
-.swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:1px 7px;border-radius:99px}
+.tagCur{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;
+  color:var(--blue);background:var(--sky);border:1px solid #cddcfb;
+  padding:2px 9px;border-radius:99px;margin-left:7px;vertical-align:middle;
+  white-space:nowrap;letter-spacing:.01em}
+.swapItem .tagCur{background:#fff;border-color:var(--blue);margin-left:0}
 .swapItem .pz{font-size:15px;font-weight:800;white-space:nowrap}
 .swapDiv{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;
   padding:12px 2px 6px;border-top:1px dashed var(--line);margin-top:4px}
@@ -2065,7 +2093,9 @@ function pickForSlot(group, roomId, alloc){
   best._fromStock = fromStock;
   /* Vượt phần ngân sách được phân bổ — báo cho khách biết thay vì
      hạ xuống mã sai nhu cầu */
-  best._overAlloc = (alloc > 0 && best.gia > alloc * 1.35) ? best.gia - alloc : 0;
+  /* Làm tròn lên mốc 100 nghìn — con số lẻ tới từng đồng trông thiếu tin cậy */
+  var over = (alloc > 0 && best.gia > alloc * 1.35) ? best.gia - alloc : 0;
+  best._overAlloc = over > 0 ? Math.round(over / 100) * 100 : 0;
   return best;
 }
 
@@ -2261,8 +2291,9 @@ function render(){
             'Bạn đã chọn mã có thông số '+x._pinWarn+' hơn mức thường dùng cho '+
             ctxPhrase(x._room||G[x.nhom].room)+'. Chuyên viên sẽ xác nhận lại khi tư vấn.</div>':'')+
         (x._overAlloc>0?'<div class="allocNote">'+ic('shield',13)+
-            'Cao hơn phần ngân sách của nhóm này khoảng '+fmt(x._overAlloc)+
-            ' — đây là mức thấp nhất còn phù hợp với không gian.</div>':'')+
+            'Cao hơn phần ngân sách chia cho nhóm này khoảng '+fmt(x._overAlloc)+
+            '. Đây là mã thấp nhất còn phù hợp với không gian — chọn thấp hơn sẽ '+
+            'không đủ công năng.</div>':'')+
         (up?'<div class="upBox">'+
             '<span class="upTxt">'+up.spec.up+', nên chọn <b>'+
               up.to+' '+up.spec.unit+'</b> để trải nghiệm tốt hơn.</span>'+
@@ -2431,13 +2462,21 @@ function toggleSwap(k,cur){
   };
   renderSwap();
 }
-function closeSwap(){openSwap=null;document.querySelectorAll('[id^=sp-]').forEach(e=>e.innerHTML='');}
+function closeSwap(){
+  openSwap=null;
+  document.querySelectorAll('[id^=sp-]').forEach(e=>e.innerHTML='');
+  document.querySelectorAll('.pc.wide').forEach(e=>e.classList.remove('wide'));
+}
 
 function renderSwap(){
   if(!openSwap)return;
   const host=document.getElementById('sp-'+openSwap.k.replace(':','-'));
   if(!host)return;
   document.querySelectorAll('[id^=sp-]').forEach(e=>{if(e!==host)e.innerHTML=''});
+  /* Thẻ đang mở bảng đổi mẫu chiếm trọn hàng trên màn hình rộng */
+  document.querySelectorAll('.pc.wide').forEach(e=>e.classList.remove('wide'));
+  const card=host.closest?host.closest('.pc'):null;
+  if(card)card.classList.add('wide');
   const g=openSwap.g;
 
   const pool0=DB.filter(p=>p.nhom===g);
