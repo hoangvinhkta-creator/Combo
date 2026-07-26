@@ -327,6 +327,46 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 
 
 
+
+/* ===== KHỐI THEO PHÒNG Ở MÀN KẾT QUẢ ===== */
+.roomMod{margin-bottom:22px;border:1px solid var(--line);border-radius:var(--r2);
+  background:var(--card);overflow:hidden}
+.roomModHead{display:flex;align-items:center;gap:11px;padding:14px 18px;
+  background:#fbfaf8;border-bottom:1px solid var(--line)}
+.roomModHead .rmIco{color:var(--ink2);line-height:0}
+.roomModHead b{font-size:14.5px;font-weight:700;letter-spacing:.01em}
+.roomModHead .rmMeta{margin-left:auto;font-size:12px;color:var(--mut);font-weight:600;
+  white-space:nowrap}
+.roomModBody{padding:14px;display:flex;flex-direction:column;gap:12px}
+.roomModBody .pc{border-color:var(--line2);background:#fff}
+@media(max-width:600px){
+  .roomModHead{padding:12px 14px;gap:9px}
+  .roomModHead b{font-size:13.5px}
+  .roomModHead .rmMeta{font-size:11px}
+  .roomModBody{padding:11px;gap:10px}
+}
+
+/* ===== GỢI Ý NÂNG CẤP THÔNG MINH ===== */
+.allocNote{display:flex;align-items:flex-start;gap:7px;margin-top:8px;
+  padding:9px 12px;background:var(--goldbg);border:1px solid #f0dfae;
+  border-radius:9px;font-size:12px;color:var(--gold);line-height:1.5}
+.allocNote .ico{color:var(--gold);flex-shrink:0;margin-top:1px}
+.upBox{margin-top:9px;padding:11px 13px;background:var(--sky);
+  border:1px solid #d9e3fb;border-radius:10px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.upTxt{flex:1;min-width:190px;font-size:12.5px;color:var(--ink2);line-height:1.5}
+.upTxt b{color:var(--blue);font-weight:700}
+.upBtn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;
+  background:var(--blue);color:#fff;transition:var(--tr)}
+.upBtn:hover{background:var(--blue2)}
+.upBtn .ico{color:#fff}
+@media(max-width:600px){
+  .upBox{flex-direction:column;align-items:stretch;gap:9px}
+  .upBtn{justify-content:center}
+}
+.pc.flash{animation:flashCard .9s ease}
+@keyframes flashCard{0%{background:var(--sky)}100%{background:#fff}}
 /* ===== MÔ TẢ NGẮN + NÚT BỎ QUA ===== */
 .desc{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.5}
 .feat{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;
@@ -555,6 +595,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .vChip{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;
   background:var(--greenbg);color:var(--green);display:inline-flex;align-items:center;gap:4px}
 .vChip .ico{color:var(--green)}
+.swapItem.warn{border-color:#f0dfae;background:#fffdf7}
+.badChip{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;
+  background:var(--goldbg);color:var(--gold);display:inline-flex;align-items:center;gap:4px}
+.badChip .ico{color:var(--gold)}
 .swapItem .tagFast{font-size:10px;font-weight:800;color:#0a6e3d;background:var(--greenbg);padding:2px 8px;border-radius:99px}
 .swapItem .tagCur{font-size:10px;font-weight:800;color:var(--blue);background:#fff;border:1px solid var(--blue);padding:1px 7px;border-radius:99px}
 .swapItem .pz{font-size:15px;font-weight:800;white-space:nowrap}
@@ -628,18 +672,6 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
   <div class="qh"><button class="bk" onclick="home()">← Quay lại</button>
   <div class="eb">Hoàn thiện toàn bộ ngôi nhà</div><h2>Nhà của bạn thuộc loại nào?</h2></div>
   <div id="houseO"></div>
-</section>
-
-<section class="sc" id="s2">
-  <div class="qh"><button class="bk" onclick="show('s1')">← Quay lại</button>
-  <div class="eb">Bước 2</div><h2>Ai đang sinh sống ở đây?</h2>
-  <p>Một câu hỏi này giúp AI suy ra dung tích tủ lạnh, khối lượng máy giặt và số điều hoà.</p></div>
-  <div class="opts">
-    <button class="opt" onclick="pick('fam','single',this);show('s3')"><span class="ic"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg></span><b>Độc thân</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>
-    <button class="opt" onclick="pick('fam','couple',this);show('s3')"><span class="ic"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4ZM15.5 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4ZM2.5 20a6 6 0 0 1 12 0M12.5 15.5a6 6 0 0 1 9 4.5"/></svg></span><b>Vợ chồng</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>
-    <button class="opt" onclick="pick('fam','kids',this);show('s3')"><span class="ic"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 10.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM16.5 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM2 20a5.5 5.5 0 0 1 11 0M14 20a4.5 4.5 0 0 1 8-2.5M18 20v-3"/></svg></span><b>Gia đình có con</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>
-    <button class="opt" onclick="pick('fam','multi',this);show('s3')"><span class="ic"><svg class="ico" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12.5a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg>s</span><b>Nhiều thế hệ</b><span class="ck"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></span></button>
-  </div>
 </section>
 
 <section class="sc" id="s3">
@@ -932,10 +964,10 @@ function gi(g,size){ return ic(GICON[g]||'box',size); }
 var RICON={living:'living',kit:'kitchen',bed:'bed',bath:'bath'};
 function ri(zone,size){ return ic(RICON[zone]||'box',size); }
 
-const S={flow:null,house:null,sub:null,fam:null,space:null,up:null,
+const S={flow:null,house:null,sub:null,space:null,up:null,
   lo:0,hi:0,           /* khoảng ngân sách khách chọn (nghìn đồng) */
   picked:new Set(),pickInit:false,extraRooms:[],_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
-const PROG={sLoad:0,sErr:0,s0:0,s1:18,s2:36,s3:54,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
+const PROG={sLoad:0,sErr:0,s0:0,s1:25,s3:55,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
 const G=TP.GROUPS, ROOMS=TP.ROOMS;
 let DB=[], AVAIL=[];
 
@@ -1155,7 +1187,7 @@ function show(id){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function home(){
-  Object.assign(S,{flow:null,house:null,sub:null,fam:null,space:null,up:null,lo:0,hi:0});
+  Object.assign(S,{flow:null,house:null,sub:null,space:null,up:null,lo:0,hi:0});
   S.picked=new Set();S.pickInit=false;S.extraRooms=[];S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
   houseOpen=null;
@@ -1171,7 +1203,7 @@ function go(f){
   });
 }
 function pick(k,v,el){S[k]=v;if(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}}
-function ownBack(){S.flow==='space'?show('s5'):show('s2')}
+function ownBack(){S.flow==='space'?show('s5'):show('s1')}
 function ownNext(){show('s4')}
 
 /* ===== TRÌNH CHỌN KHOẢNG GIÁ (dual range) ===== */
@@ -1434,7 +1466,7 @@ function openHouse(id){
     S.house = id; S.sub = 'Phòng trọ'; houseOpen = null;
     S.pickInit = false; S.extraRooms = []; S.picked = new Set();
     buildHouse();
-    show('s2');
+    show('s3');
     return;
   }
   houseOpen = (houseOpen === id) ? null : id;
@@ -1452,7 +1484,191 @@ function pickHouseSub(id, v){
   S.house = id; S.sub = v; houseOpen = null;
   S.pickInit = false; S.extraRooms = []; S.picked = new Set();
   buildHouse();
-  show('s2');
+  show('s3');          /* bỏ bước hỏi số người — suy ra từ loại nhà */
+}
+
+/* ==================================================================
+   BỘ LUẬT CHỌN THIẾT BỊ THEO MÔ HÌNH NHÀ
+   Suy ra diện tích phòng và số người từ loại nhà, rồi chọn thông số
+   phù hợp cho từng ngành hàng. Không hỏi thêm câu nào của khách.
+   ================================================================== */
+
+/* Hồ sơ ước lượng theo loại nhà.
+   CHỈ dùng để xếp hạng nội bộ — không bao giờ hiển thị như diện tích thật
+   của nhà khách, vì khách chưa hề nhập số đo nào.                        */
+var HOME_SPEC = {
+  'Phòng trọ':       {people:[1,2], fam:'solo',   living:[10,18], bed:[10,14], kit:[5,8],  label:'phòng trọ'},
+  'Studio':          {people:[1,2], fam:'solo',   living:[12,20], bed:[10,14], kit:[6,9],  label:'căn hộ studio'},
+  '1PN':             {people:[1,2], fam:'couple', living:[15,22], bed:[9,14],  kit:[7,10], label:'căn hộ 1 phòng ngủ'},
+  '2PN':             {people:[3,4], fam:'kids',   living:[18,28], bed:[9,15],  kit:[8,12], label:'căn hộ 2 phòng ngủ'},
+  '3PN':             {people:[4,5], fam:'kids',   living:[22,35], bed:[10,16], kit:[10,14],label:'căn hộ 3 phòng ngủ'},
+  '1 tầng':          {people:[2,4], fam:'couple', living:[18,30], bed:[10,18], kit:[9,13], label:'nhà phố 1 tầng'},
+  '2 tầng':          {people:[3,5], fam:'kids',   living:[20,35], bed:[10,18], kit:[10,14],label:'nhà phố 2 tầng'},
+  '3 tầng':          {people:[4,6], fam:'kids',   living:[20,35], bed:[10,18], kit:[11,16],label:'nhà phố 3 tầng'},
+  '4 tầng trở lên':  {people:[4,8], fam:'multi',  living:[20,40], bed:[10,20], kit:[12,18],label:'nhà phố nhiều tầng'}
+};
+function homeSpec(){ return HOME_SPEC[S.sub] || HOME_SPEC['2PN']; }
+function peopleAvg(){ var p = homeSpec().people; return Math.round((p[0]+p[1])/2); }
+/* Nhóm hộ gia đình suy ra từ loại nhà — dùng cho tủ lạnh, máy giặt */
+function famGroup(){ return homeSpec().fam; }
+/* Cụm từ mô tả bối cảnh, KHÔNG nêu số đo cụ thể */
+function ctxPhrase(roomId){
+  var h = homeSpec(), z = zoneOf(roomId);
+  var room = z==='living' ? 'phòng khách'
+           : z==='bed'    ? 'phòng ngủ'
+           : z==='kit'    ? 'khu bếp' : 'phòng tắm';
+  return 'nhóm ' + room + ' của ' + h.label;
+}
+/* Khoảng diện tích ước lượng, chỉ dùng nội bộ để tra bảng */
+function roomAreaRange(roomId){
+  var h = homeSpec(), z = zoneOf(roomId);
+  if(z === 'living') return h.living;
+  if(z === 'kit')    return h.kit;
+  if(z === 'bed'){
+    /* Phòng ngủ chính thường rộng hơn khoảng 15% */
+    return /bed1$/.test(roomId)
+      ? [Math.round(h.bed[0]*1.15), Math.round(h.bed[1]*1.15)]
+      : h.bed;
+  }
+  return [4,8];
+}
+function roomAreaMid(roomId){
+  var r = roomAreaRange(roomId);
+  return Math.round((r[0]+r[1])/2);
+}
+
+/* ================= MA TRẬN THEO NGÀNH HÀNG =================
+   Ngưỡng lấy từ bảng đề xuất nghiệp vụ, sẽ hiệu chỉnh khi có
+   dữ liệu bán hàng thật.                                      */
+
+/* --- TV: hard minimum theo loại nhà, không theo giá --- */
+var TV_RULE = {
+  'Phòng trọ':      {min:43, ideal:50, max:55},
+  'Studio':         {min:43, ideal:55, max:65},
+  '1PN':            {min:55, ideal:55, max:65},
+  '2PN':            {min:55, ideal:65, max:75},
+  '3PN':            {min:65, ideal:65, max:85},
+  '1 tầng':         {min:55, ideal:65, max:75},
+  '2 tầng':         {min:55, ideal:65, max:85},
+  '3 tầng':         {min:55, ideal:65, max:85},
+  '4 tầng trở lên': {min:65, ideal:75, max:120}
+};
+function tvRange(roomId){
+  if(zoneOf(roomId) === 'bed'){
+    /* Phòng ngủ ngồi gần, TV lớn quá gây mỏi mắt */
+    var big = /bed1$/.test(roomId) && peopleAvg() >= 3;
+    return big ? {min:32, ideal:50, max:55} : {min:32, ideal:43, max:50};
+  }
+  return TV_RULE[S.sub] || TV_RULE['2PN'];
+}
+
+/* --- Điều hoà: phòng ngủ ưu tiên 9k, phòng khách theo diện tích --- */
+function acRange(roomId){
+  var z = zoneOf(roomId), a = roomAreaMid(roomId);
+  if(z === 'bed'){
+    /* Căn hộ 1PN/2PN: phòng ngủ ưu tiên 9.000 BTU.
+       Phòng ngủ lớn hoặc nhà phố mới nâng lên 12.000.          */
+    if(a <= 14) return {min:9000, ideal:9000,  max:9000};
+    if(a <= 18) return {min:9000, ideal:9000,  max:12000};
+    return           {min:9000, ideal:12000, max:18000};
+  }
+  if(a <= 15) return {min:9000,  ideal:9000,  max:12000};
+  if(a <= 20) return {min:9000,  ideal:12000, max:18000};
+  if(a <= 30) return {min:12000, ideal:18000, max:24000};
+  if(a <= 40) return {min:18000, ideal:24000, max:28000};
+  return           {min:24000, ideal:28000, max:60000};
+}
+
+/* --- Tủ lạnh: theo nhóm hộ gia đình, không theo diện tích --- */
+var FRIDGE_RULE = {
+  solo:   {min:180, ideal:300, max:400},
+  couple: {min:250, ideal:350, max:450},
+  kids:   {min:330, ideal:450, max:600},
+  multi:  {min:400, ideal:550, max:900}
+};
+/* --- Máy giặt / máy sấy --- */
+var WASHER_RULE = {
+  solo:   {min:6,  ideal:8,  max:9},
+  couple: {min:7,  ideal:9,  max:10},
+  kids:   {min:9,  ideal:10, max:12},
+  multi:  {min:10, ideal:12, max:30}
+};
+/* --- Máy rửa bát: theo số người --- */
+function dishRange(){
+  var n = peopleAvg();
+  if(n <= 2) return {min:6,  ideal:8,  max:10};
+  if(n <= 4) return {min:10, ideal:12, max:14};
+  return           {min:12, ideal:14, max:20};
+}
+/* --- Bình nóng lạnh --- */
+function heaterRange(){
+  var n = peopleAvg();
+  if(n <= 2) return {min:15, ideal:20, max:25};
+  if(n <= 4) return {min:20, ideal:20, max:30};
+  return           {min:20, ideal:30, max:50};
+}
+
+var FAM_TEXT = {solo:'1–2 người', couple:'2 người', kids:'gia đình có con', multi:'gia đình nhiều thế hệ'};
+
+/* ---------- Tra thông số mong muốn cho một khe thiết bị ---------- */
+function idealSpec(group, roomId){
+  var zone = zoneOf(roomId);
+  var ctx  = ctxPhrase(roomId);
+  var fam  = famGroup();
+  var r;
+
+  if(group === 'tv'){
+    r = tvRange(roomId);
+    return {key:'inch', unit:'inch', min:r.min, ideal:r.ideal, max:r.max,
+      why: ctx,
+      up:  'Nếu khoảng cách từ chỗ ngồi tới TV xa hơn mức thông thường'};
+  }
+  if(group === 'ac'){
+    r = acRange(roomId);
+    return {key:'btu', unit:'BTU', min:r.min, ideal:r.ideal, max:r.max,
+      why: ctx + ', chạy đúng tải nên tiết kiệm điện',
+      up:  zone==='bed'
+           ? 'Nếu phòng lớn hơn mức thông thường, hướng Tây hoặc sát mái'
+           : 'Nếu phòng khách thông với bếp, trần cao hoặc hướng nắng chiều'};
+  }
+  if(group === 'fridge' || group === 'freezer'){
+    r = FRIDGE_RULE[fam];
+    return {key:'lit', unit:'lít', min:r.min, ideal:r.ideal, max:r.max,
+      why: 'nhu cầu của ' + FAM_TEXT[fam],
+      up:  'Nếu thường tích trữ thực phẩm theo tuần hoặc cần nhiều ngăn đông'};
+  }
+  if(group === 'washer' || group === 'dryer'){
+    r = WASHER_RULE[fam];
+    return {key:'kg', unit:'kg', min:r.min, ideal:r.ideal, max:r.max,
+      why: 'nhu cầu giặt của ' + FAM_TEXT[fam],
+      up:  'Nếu thường giặt chăn ga gối đệm hoặc dồn đồ nhiều ngày'};
+  }
+  if(group === 'dishwasher'){
+    r = dishRange();
+    return {key:'sets', unit:'bộ', min:r.min, ideal:r.ideal, max:r.max,
+      why: 'số bát đĩa của ' + FAM_TEXT[fam],
+      up:  'Nếu hay tiếp khách hoặc nấu nhiều món mỗi bữa'};
+  }
+  if(group === 'heater'){
+    r = heaterRange();
+    return {key:'lit', unit:'lít', min:r.min, ideal:r.ideal, max:r.max,
+      why: 'nhu cầu nước nóng của ' + FAM_TEXT[fam],
+      up:  'Nếu nhiều người tắm liên tục hoặc dùng bồn tắm'};
+  }
+  if(group === 'purifier'){
+    var a = roomAreaRange(roomId);
+    return {key:'area', unit:'m²', min:a[1], ideal:Math.round(a[1]*1.3), max:200,
+      why: ctx,
+      up:  'Nếu phòng thông nhau hoặc trần cao'};
+  }
+  return null;
+}
+
+/* Có bao nhiêu mã trong nhóm khai báo thông số này? */
+function specCoverage(group, key){
+  var pool = DB.filter(function(p){ return p.nhom === group; });
+  if(!pool.length) return 0;
+  return pool.filter(function(p){ return p[key]; }).length / pool.length;
 }
 
 /* ================= BỐ CỤC PHÒNG ĐỘNG THEO MÔ HÌNH NHÀ =================
@@ -1580,10 +1796,11 @@ function smartDefaults(){
   add('living','tv'); add('living','ac');
   if(nb>=2) add('living','robot');
 
-  /* Bếp: tủ lạnh + lọc nước, nhà lớn thêm hút mùi & bếp từ */
+  /* Bếp: từ 1PN trở lên đã nên có bếp từ và hút mùi */
   add('kit','fridge'); add('kit','water');
-  if(nb>=2){ add('kit','hood'); add('kit','cooktop'); }
-  if(nb>=3) add('kit','dishwasher');
+  add('kit','hood'); add('kit','cooktop');
+  /* Máy rửa bát: theo số người thay vì chỉ số phòng ngủ */
+  if(peopleAvg()>=3) add('kit','dishwasher');
 
   /* Mỗi phòng ngủ 1 điều hoà; phòng ngủ 1 thêm lọc không khí */
   for(let i=1;i<=nb;i++){ add('bed'+i,'ac'); }
@@ -1743,9 +1960,38 @@ function neededGroups(){
 /* ===== CHỌN SẢN PHẨM THEO KHOẢNG GIÁ =====
    Chia ngân sách theo tỉ trọng giá trung vị của từng nhóm,
    rồi chọn mã có giá gần mức phân bổ nhất (trong khoảng khách chọn). */
-function medianOf(g){
-  const a=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((x,y)=>x-y);
-  return a.length?a[Math.floor(a.length/2)]:0;
+/* Giá trung vị tính trên nhóm ĐÃ LỌC PHÙ HỢP.
+   Nếu tính trên cả ngành, TV 32 inch sẽ kéo tụt phần ngân sách dành cho TV. */
+function medianOf(g, roomId){
+  var pool = compatiblePool(g, roomId);
+  if(!pool.length) pool = DB.filter(function(p){ return p.nhom===g; });
+  var a = pool.map(function(p){ return p.gia; }).sort(function(x,y){ return x-y; });
+  return a.length ? a[Math.floor(a.length/2)] : 0;
+}
+
+/* ==================================================================
+   CỔNG 1 — LỌC PHÙ HỢP
+   Sản phẩm phải nằm trong khoảng thông số cho phép của khe thiết bị.
+   Ngành hàng chưa khai báo đủ thông số thì bỏ qua bước lọc này.
+   ================================================================== */
+function compatiblePool(group, roomId){
+  var all = DB.filter(function(p){ return p.nhom === group; });
+  if(!all.length) return [];
+  var spec = idealSpec(group, roomId);
+  if(!spec || specCoverage(group, spec.key) < 0.4) return all;
+
+  var withSpec = all.filter(function(p){ return p[spec.key]; });
+  if(!withSpec.length) return all;
+
+  var fit = withSpec.filter(function(p){
+    return p[spec.key] >= spec.min && p[spec.key] <= spec.max;
+  });
+  if(fit.length) return fit;
+  /* Không mã nào lọt khoảng cứng — nới nhẹ để vẫn có hàng trả về */
+  fit = withSpec.filter(function(p){
+    return p[spec.key] >= spec.min * 0.85 && p[spec.key] <= spec.max * 1.2;
+  });
+  return fit.length ? fit : withSpec;
 }
 
 /* ============ ƯU TIÊN HÀNG CÓ SẴN KHO ============
@@ -1775,6 +2021,78 @@ function pickNearest(pool,alloc){
     if(d<bs-1e-9||(Math.abs(d-bs)<1e-9&&p.ton===1&&best.ton!==1)){bs=d;best=p;}
   });
   return best;
+}
+
+/* ==================================================================
+   CHỌN SẢN PHẨM CÓ XÉT THÔNG SỐ KỸ THUẬT
+   Thứ tự ưu tiên:
+     1. Thông số nằm trong khoảng phù hợp với phòng  (bắt buộc)
+     2. Càng gần thông số lý tưởng càng tốt
+     3. Còn hàng tồn kho
+     4. Giá gần mức ngân sách phân bổ
+   Nếu ngành hàng chưa khai báo thông số thì quay về chọn theo giá.
+   ================================================================== */
+function pickForSlot(group, roomId, alloc){
+  var all = DB.filter(function(p){ return p.nhom === group; });
+  if(!all.length) return null;
+
+  var spec = idealSpec(group, roomId);
+  var compatible = compatiblePool(group, roomId);
+
+  /* ---- CỔNG 2: hàng sẵn kho được xét TRƯỚC, không phải điểm cộng ----
+     Chỉ mở sang hàng phải đặt khi trong kho không còn mã nào phù hợp.
+     Hàng phải đặt rẻ hơn cũng không được thắng hàng sẵn đã đạt chuẩn.  */
+  var inStock = compatible.filter(function(p){ return p.ton === 1; });
+  var pool    = inStock.length ? inStock : compatible;
+  var fromStock = inStock.length > 0;
+
+  /* ---- Xếp hạng trong pool: độ phù hợp trước, ngân sách sau ---- */
+  var best = null, bestScore = Infinity;
+  pool.forEach(function(p){
+    var dSpec = 0;
+    if(spec && p[spec.key]){
+      dSpec = Math.abs(p[spec.key] - spec.ideal) / spec.ideal;
+    }
+    var dPrice = Math.abs(p.gia - alloc) / Math.max(alloc, 1);
+    /* Lệch thông số nặng gấp 4 lần lệch giá */
+    var score = dSpec * 4.0 + dPrice * 0.6;
+    if(score < bestScore){ bestScore = score; best = p; }
+  });
+  if(!best) return null;
+
+  best = Object.assign({}, best);
+  best._spec = spec || null;
+  best._fromStock = fromStock;
+  /* Vượt phần ngân sách được phân bổ — báo cho khách biết thay vì
+     hạ xuống mã sai nhu cầu */
+  best._overAlloc = (alloc > 0 && best.gia > alloc * 1.35) ? best.gia - alloc : 0;
+  return best;
+}
+
+/* Mã lớn hơn một bậc trong cùng nhóm — dùng cho nút nâng cấp thông minh */
+function upgradeFor(group, roomId, curModel){
+  var spec = idealSpec(group, roomId);
+  if(!spec) return null;
+  var cur = DB.filter(function(p){ return p.nhom===group && p.model===curModel; })[0];
+  if(!cur || !cur[spec.key]) return null;
+
+  /* Tìm mã có thông số lớn hơn gần nhất, ưu tiên còn hàng */
+  var bigger = DB.filter(function(p){
+    return p.nhom === group && p[spec.key] && p[spec.key] > cur[spec.key];
+  }).sort(function(a,b){
+    var d = a[spec.key] - b[spec.key];
+    if(d !== 0) return d;
+    return (b.ton - a.ton) || (a.gia - b.gia);
+  });
+  if(!bigger.length) return null;
+
+  /* Lấy bậc thông số kế tiếp, trong bậc đó chọn mã hợp lý nhất */
+  var nextVal = bigger[0][spec.key];
+  var sameStep = bigger.filter(function(p){ return p[spec.key] === nextVal; })
+                       .sort(function(a,b){ return (b.ton - a.ton) || (a.gia - b.gia); });
+  var pick = sameStep[0];
+  return {p:pick, spec:spec, from:cur[spec.key], to:nextVal,
+          delta:pick.gia - cur.gia};
 }
 function buildCombo(){
   const gs=neededGroups();
@@ -1807,7 +2125,7 @@ function buildCombo(){
   /* Phân bổ ngân sách theo tỉ trọng giá trung vị của từng khe */
   const slots=neededSlots();
   const med={}; let sumMed=0;
-  slots.forEach(sl=>{med[sl.key]=medianOf(sl.g); sumMed+=med[sl.key];});
+  slots.forEach(sl=>{med[sl.key]=medianOf(sl.g, sl.room); sumMed+=med[sl.key];});
   const target=(S.lo+S.hi)/2 || sumMed;
 
   /* Khe đã ghim thì giữ nguyên, phần ngân sách còn lại chia cho các khe khác */
@@ -1818,7 +2136,16 @@ function buildCombo(){
     if(!pool.length)return;
     if(S.pinned[sl.key]){
       const f=pool.find(p=>p.model===S.pinned[sl.key]);
-      if(f){pinnedItems.push({...f,_slot:sl.key,_room:sl.room,_pin:true});pinnedCost+=f.gia;return;}
+      if(f){
+        const sp=idealSpec(sl.g, sl.room);
+        /* Tôn trọng lựa chọn của khách, nhưng nói rõ nếu lệch không gian */
+        const off = sp && f[sp.key] &&
+          (f[sp.key] < sp.min || f[sp.key] > sp.max)
+          ? (f[sp.key] < sp.min ? 'nhỏ' : 'lớn') : '';
+        pinnedItems.push({...f,_slot:sl.key,_room:sl.room,_pin:true,_spec:sp,_pinWarn:off});
+        pinnedCost+=f.gia;
+        return;
+      }
     }
     freeSlots.push({sl:sl,pool:pool});
     freeMed+=med[sl.key];
@@ -1829,7 +2156,8 @@ function buildCombo(){
     const res=[];
     freeSlots.forEach(fs=>{
       const share=freeMed?med[fs.sl.key]/freeMed:1/Math.max(1,freeSlots.length);
-      res.push({...pickNearest(fs.pool,budget*share),_slot:fs.sl.key,_room:fs.sl.room});
+      const p=pickForSlot(fs.sl.g, fs.sl.room, budget*share);
+      if(p) res.push({...p,_slot:fs.sl.key,_room:fs.sl.room});
     });
     return res;
   }
@@ -1868,12 +2196,33 @@ function runAI(){
     if(i>=LINES.length){clearInterval(iv);initResultRange();render();show('sR');return;}
     el.style.opacity=0;setTimeout(()=>{el.textContent=LINES[i];el.style.opacity=1},240);},620);
 }
-const FAM={single:'người độc thân',couple:'vợ chồng',kids:'gia đình có con',multi:'gia đình nhiều thế hệ'};
+/* Mô tả hộ gia đình suy ra từ loại nhà, không hỏi khách nữa */
+function famLabel(){
+  var p = homeSpec().people;
+  if(p[1] <= 2) return 'phù hợp 1–2 người';
+  if(p[1] <= 4) return 'phù hợp ' + p[0] + '–' + p[1] + ' người';
+  return 'phù hợp gia đình ' + p[0] + '–' + p[1] + ' người';
+}
 let openSwap=null;
 
 function render(){
   const combo=buildCombo();
-  const p=[];if(S.sub)p.push(S.sub);if(S.fam)p.push(FAM[S.fam]);
+  /* Viết lại lý do dựa trên thông số thật và diện tích phòng */
+  combo.forEach(function(x){
+    if(!x._spec) return;
+    var v = x[x._spec.key];
+    if(!v) return;
+    var label = x._spec.unit === 'BTU'
+      ? v.toLocaleString('vi-VN') + ' BTU'
+      : v + ' ' + x._spec.unit;
+    /* Lớp 1: phù hợp bối cảnh · Lớp 2: mốc tham khảo · Lớp 3: khi nào nâng cấp
+       Không nêu số đo cụ thể vì khách chưa nhập diện tích nào. */
+    x.ld = label + ' phù hợp với ' + x._spec.why + '.';
+    if(x._fromStock === false){
+      x.ld += ' Mã này cần đặt từ nhà cung cấp.';
+    }
+  });
+  const p=[];if(S.sub)p.push(S.sub);if(S.sub)p.push(famLabel());
   if(S.flow==='space'&&ROOMS[S.space])p.push(ROOMS[S.space].replace(/^\S+\s/,''));
   document.getElementById('rSub').textContent = S.flow==='upgrade'
     ? 'Hãy tham khảo hoặc lựa chọn thêm sản phẩm phù hợp hơn nhờ bộ lọc thông minh ở nút "Đổi mẫu".'
@@ -1887,25 +2236,67 @@ function render(){
       ? 'Đã có gợi ý dành cho bạn'
       : 'Phương án của bạn đã sẵn sàng';
   }
-  document.getElementById('pl').innerHTML=combo.length?combo.map((x,i)=>{
+  /* ---- Gom sản phẩm theo phòng, mỗi phòng một khối riêng ---- */
+  const byRoom={};
+  combo.forEach(x=>{
+    const r=x._room||G[x.nhom].room;
+    (byRoom[r]=byRoom[r]||[]).push(x);
+  });
+  const roomOrder=roomsInScope().map(r=>r.id).filter(r=>byRoom[r]);
+  Object.keys(byRoom).forEach(r=>{ if(roomOrder.indexOf(r)<0) roomOrder.push(r); });
+
+  const cardOf=(x,i)=>{
     const k=x._slot||dk(G[x.nhom].room,x.nhom);
     const esc=x.model.replace(/'/g,"\\'");
-    return '<div class="pc" style="animation-delay:'+(i*.06)+'s" id="pc-'+k.replace(':','-')+'">'+
-    '<div class="pic">'+gi(x.nhom,24)+'</div>'+
-    '<div><b>'+G[x.nhom].name+': '+x.ten+(x._pin?' <span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
-     '<div class="md">Mã: '+x.model+
-       (x._room&&roomName(x._room)?' · <span class="roomTag">'+roomName(x._room)+'</span>':'')+'</div>'+
-     (x.mota?'<div class="desc">'+x.mota+'</div>':'')+
-     (x.voice?'<div class="feat">'+ic('mic',13)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
-     (x.ld?'<div class="why"><b>Vì sao chọn:</b> '+x.ld+'</div>':'')+
-    '</div>'+
-    '<div class="pAct"><div class="pp">'+fmt(x.gia)+'</div>'+
-     '<button class="sw" onclick="toggleSwap(\''+k+'\',\''+esc+'\')">'+ic('swap',14)+'Đổi mẫu</button>'+
-     '<button class="skip" onclick="skipSlot(\''+k+'\')">'+ic('close',13)+'Bỏ qua thiết bị này</button></div>'+
-    '<div id="sp-'+k.replace(':','-')+'"></div>'+
-   '</div>';}).join('')
-   :'<div class="pc"><div class="pic">'+ic('shield',22)+'</div><div><b>Chưa có thiết bị nào được chọn</b>'+
-    '<div class="md">Quay lại bước chọn thiết bị hoặc mở rộng khoảng ngân sách.</div></div><div></div></div>';
+    const sp=x._spec;
+    const up=sp?upgradeFor(x.nhom,x._room||G[x.nhom].room,x.model):null;
+    return '<div class="pc" style="animation-delay:'+(Math.min(i,8)*.05)+'s" id="pc-'+k.replace(':','-')+'">'+
+      '<div class="pic">'+gi(x.nhom,24)+'</div>'+
+      '<div><b>'+G[x.nhom].name+': '+x.ten+(x._pin?' <span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
+        '<div class="md">Mã: '+x.model+'</div>'+
+        (x.mota?'<div class="desc">'+x.mota+'</div>':'')+
+        (x.voice?'<div class="feat">'+ic('mic',13)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
+        (x.ld?'<div class="why"><b>Vì sao chọn:</b> '+x.ld+'</div>':'')+
+        (x._pinWarn?'<div class="allocNote">'+ic('shield',13)+
+            'Bạn đã chọn mã có thông số '+x._pinWarn+' hơn mức thường dùng cho '+
+            ctxPhrase(x._room||G[x.nhom].room)+'. Chuyên viên sẽ xác nhận lại khi tư vấn.</div>':'')+
+        (x._overAlloc>0?'<div class="allocNote">'+ic('shield',13)+
+            'Cao hơn phần ngân sách của nhóm này khoảng '+fmt(x._overAlloc)+
+            ' — đây là mức thấp nhất còn phù hợp với không gian.</div>':'')+
+        (up?'<div class="upBox">'+
+            '<span class="upTxt">'+up.spec.up+', nên chọn <b>'+
+              up.to+' '+up.spec.unit+'</b> để trải nghiệm tốt hơn.</span>'+
+            '<button class="upBtn" onclick="applyUpgrade(\''+k+'\',\''+
+              up.p.model.replace(/'/g,"\\'")+'\')">'+ic('trend',14)+
+              'Nâng lên '+up.to+' '+up.spec.unit+
+              (up.delta>0?' · +'+fmt(up.delta):'')+'</button>'+
+          '</div>':'')+
+      '</div>'+
+      '<div class="pAct"><div class="pp">'+fmt(x.gia)+'</div>'+
+        '<button class="sw" onclick="toggleSwap(\''+k+'\',\''+esc+'\')">'+ic('swap',14)+'Đổi mẫu</button>'+
+        '<button class="skip" onclick="skipSlot(\''+k+'\')">'+ic('close',13)+'Bỏ qua thiết bị này</button></div>'+
+      '<div id="sp-'+k.replace(':','-')+'"></div>'+
+    '</div>';
+  };
+
+  let idx=0;
+  document.getElementById('pl').innerHTML = combo.length
+    ? (S.flow==='upgrade'
+        ? combo.map((x,i)=>cardOf(x,i)).join('')
+        : roomOrder.map(rid=>{
+            const items=byRoom[rid];
+            return '<section class="roomMod">'+
+              '<header class="roomModHead">'+
+                '<span class="rmIco">'+ri(zoneOf(rid),18)+'</span>'+
+                '<b>'+(roomName(rid)||'Khác')+'</b>'+
+                '<span class="rmMeta">'+items.length+' thiết bị · '+
+                  fmt(items.reduce((a,x)=>a+x.gia,0))+'</span>'+
+              '</header>'+
+              '<div class="roomModBody">'+items.map(x=>cardOf(x,idx++)).join('')+'</div>'+
+            '</section>';
+          }).join(''))
+    : '<div class="pc"><div class="pic">'+ic('shield',22)+'</div><div><b>Chưa có thiết bị nào được chọn</b>'+
+      '<div class="md">Quay lại bước chọn thiết bị hoặc mở rộng khoảng ngân sách.</div></div><div></div></div>';
 
   /* Danh sách thiết bị đã bỏ qua — cho phép thêm lại */
   const skHost=document.getElementById('skippedBox');
@@ -2222,18 +2613,25 @@ function onSwap(){
       el.textContent=list.length?list.length+' lựa chọn':'Không có mã nào';
       el.classList.toggle('none',!list.length);
     }
+    /* Mã nào nằm ngoài khoảng phù hợp với phòng thì báo cho khách biết */
+    const roomId=openSwap.k.split(':')[0];
+    const sp=idealSpec(g,roomId);
+    const okSpec=p=>!sp||!p[sp.key]||(p[sp.key]>=sp.min&&p[sp.key]<=sp.max);
+
     let html='',divided=false;
     list.forEach((p,i)=>{
       if(nStock&&i===nStock&&!divided){divided=true;
         html+='<div class="swapDiv">Các mã khác cùng khoảng giá</div>';}
       const esc=p.model.replace(/'/g,"\\'");
-      html+='<button class="swapItem'+(p.model===openSwap.cur?' cur':'')+'" '+
+      const bad=!okSpec(p);
+      html+='<button class="swapItem'+(p.model===openSwap.cur?' cur':'')+(bad?' warn':'')+'" '+
         'onclick="chooseModel(\''+openSwap.k+'\',\''+esc+'\')">'+
         '<div class="siMain"><b>'+p.ten+'</b>'+
         '<div class="siMeta"><span class="mm">'+p.model+'</span>'+
         (attrChip(p)||'')+
         (p.voice?'<span class="vChip">'+ic('mic',11)+'Giọng nói</span>':'')+
         (p.ton===1?'<span class="tagFast">Giao nhanh</span>':'')+
+        (bad?'<span class="badChip">'+ic('shield',11)+'Chưa hợp không gian</span>':'')+
         (p.model===openSwap.cur?'<span class="tagCur">đang chọn</span>':'')+'</div></div>'+
         '<div class="pz">'+fmt(p.gia)+'</div></button>';
     });
@@ -2257,6 +2655,17 @@ function toggleSlot(k){
   else { S.skipped.add(k); delete S.pinned[k]; if(openSwap&&openSwap.k===k) openSwap=null; }
   render();
 }
+/* Nâng lên mã có thông số lớn hơn khi khách xác nhận phòng rộng hơn */
+function applyUpgrade(k, model){
+  S.pinned[k] = model;
+  render();
+  setTimeout(function(){
+    var e = document.getElementById('pc-' + k.replace(':','-'));
+    if(e && e.scrollIntoView) e.scrollIntoView({behavior:'smooth', block:'center'});
+    if(e){ e.classList.remove('flash'); void e.offsetWidth; e.classList.add('flash'); }
+  }, 60);
+  toast('Đã nâng cấp thiết bị cho không gian rộng hơn');
+}
 function skipSlot(k){
   S.skipped.add(k);
   delete S.pinned[k];
@@ -2264,14 +2673,6 @@ function skipSlot(k){
   render();
 }
 function unskipSlot(k){ S.skipped.delete(k); render(); }
-function chooseModel(g,model){
-  S.pinned[g]=model;
-  openSwap=null;
-  render();
-  setTimeout(()=>{const e=document.getElementById('pc-'+g);
-    if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'center'})},60);
-}
-
 function anim(id,a,b,d,f){const el=document.getElementById(id);if(!el)return;const t0=performance.now();
   (function s(t){const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=f(a+(b-a)*e);
    if(p<1)requestAnimationFrame(s)})(performance.now())}
@@ -2434,7 +2835,7 @@ function renderProjectImage(combo, logo, detail, cb){
 
   var meta = [];
   if(S.sub) meta.push(S.sub);
-  if(S.fam && FAM[S.fam]) meta.push(FAM[S.fam]);
+  meta.push(famLabel());
   if(!meta.length) meta.push('Phương án theo nhu cầu');
 
   /* ---- Đo chiều cao ---- */
@@ -2709,7 +3110,7 @@ function imgClip(g,text,maxW){
    Hướng dẫn từng bước: file HUONG_DAN_EMAIL.md
    Kiểm tra trước: mở trang này với ?kiemtra ở cuối URL
    ============================================================ */
-const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwAuoF--cvUcq5EBpf4D2PV1Zl_-dxWquzhHqtEvcWk7GlZDjT5ZW4x0PWAVtSoekGEFQ/exec';   /* VD: https://script.google.com/macros/s/AKfy..../exec */
+const LEAD_ENDPOINT = '';   /* VD: https://script.google.com/macros/s/AKfy..../exec */
 
 /* URL hợp lệ chưa? Dùng để cảnh báo sớm thay vì mất khách âm thầm */
 function leadConfigured(){
@@ -2812,7 +3213,7 @@ function subLead(){
 
   const base={
     ten:n, sdt:p, email:em, ghiChu:note,
-    loaiNha:S.sub||'', giaDinh:(S.fam&&FAM[S.fam])||'',
+    loaiNha:S.sub||'', giaDinh:famLabel(),
     luong:S.flow||'', nganSach:fmt(S.lo)+' - '+fmt(S.hi),
     soThietBi:combo.length, tongTien:fmt(tot),
     tietKiem:fmt(Math.round(tot*0.12)),

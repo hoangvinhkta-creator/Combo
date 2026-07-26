@@ -346,6 +346,34 @@ function attrsFromTag(tag){
   /* --- Điều khiển / tìm kiếm bằng giọng nói --- */
   if(/giong noi|voice|dieu khien giong|tim kiem giong/.test(t)) a.voice = true;
 
+  /* --- Công suất điều hoà: BTU hoặc HP --- */
+  let b = t.match(/(\d{4,5})\s*btu/);
+  if(b){ a.btu = +b[1]; }
+  else {
+    /* 1HP ≈ 9000 BTU · 1.5HP ≈ 12000 · 2HP ≈ 18000 · 2.5HP ≈ 24000 */
+    const hp = t.match(/([\d.,]+)\s*hp/);
+    if(hp){
+      const v = parseFloat(String(hp[1]).replace(',', '.'));
+      const MAP = {1:9000, 1.5:12000, 2:18000, 2.5:24000, 3:28000};
+      if(MAP[v]) a.btu = MAP[v];
+      else if(v > 0 && v <= 4) a.btu = Math.round(v * 9000 / 500) * 500;
+    }
+  }
+
+  /* --- Dung tích tủ lạnh / tủ đông (lít) --- */
+  const li = t.match(/(\d{2,4})\s*(?:lit|l)\b/);
+  if(li){
+    const v = +li[1];
+    if(v >= 40 && v <= 900) a.lit = v;
+  }
+
+  /* --- Khối lượng máy giặt / máy sấy (kg) --- */
+  const kg = t.match(/([\d.,]{1,4})\s*kg/);
+  if(kg){
+    const v = parseFloat(String(kg[1]).replace(',', '.'));
+    if(v >= 4 && v <= 30) a.kg = v;
+  }
+
   return a;
 }
 
@@ -356,6 +384,9 @@ function attrLine(p){
   /* LED thường không đưa vào mô tả — chỉ dùng để lọc */
   if(p.panel && p.panel !== 'LED') out.push(p.panel);
   if(p.res)   out.push(p.res);
+  if(p.btu)   out.push(p.btu.toLocaleString('vi-VN') + ' BTU');
+  if(p.lit)   out.push(p.lit + ' lít');
+  if(p.kg)    out.push(p.kg + ' kg');
   return out.join(' · ');
 }
 
@@ -439,6 +470,9 @@ function buildCatalog(rows, cfg){
       panel: at.panel || '',
       res:   at.res   || '',
       voice: at.voice ? 1 : 0,
+      btu:   at.btu   || null,
+      lit:   at.lit   || null,
+      kg:    at.kg    || null,
       gia: price,
       ton: stock>0 ? 1 : 0,
       giaTon: stock,
