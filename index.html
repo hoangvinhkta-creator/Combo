@@ -83,18 +83,18 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .sumBar{display:none;align-items:stretch;gap:0;border-top:1px solid var(--line);
   background:var(--card);padding:0 24px;max-width:var(--maxw);margin:0 auto}
 .sumBar.on{display:flex}
-.sumCell{flex:1;min-width:0;text-align:left;padding:9px 0;background:none;cursor:pointer;
-  display:flex;flex-direction:column;gap:1px;transition:var(--tr)}
+.sumCell{flex:1;min-width:0;text-align:left;padding:13px 0;background:none;cursor:pointer;
+  display:flex;flex-direction:column;gap:3px;transition:var(--tr)}
 .sumCell:hover{opacity:.72}
-.sumLbl{font-size:11px;font-weight:600;color:var(--mut);letter-spacing:.02em}
-.sumVal{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.02em;
+.sumLbl{font-size:12.5px;font-weight:600;color:var(--mut);letter-spacing:.02em}
+.sumVal{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.025em;
   line-height:1.15;white-space:nowrap;transition:color .3s}
 .sumCell.save .sumVal{color:var(--green)}
 .sumVal.bump{animation:bump .45s cubic-bezier(.3,1.4,.5,1)}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.09)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion: reduce){.sumVal.bump{animation:none}}
 .sumSep{width:1px;background:var(--line);margin:10px 18px}
-.sumEnd{display:flex;align-items:center;padding-left:14px;font-size:11.5px;
+.sumEnd{display:flex;align-items:center;padding-left:18px;font-size:13px;
   font-weight:600;white-space:nowrap}
 .sumEnd .ok{color:var(--green)}
 .sumEnd .over{color:var(--red)}
@@ -102,7 +102,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   :root{--hdr:114px}
   .sumBar{padding:0 14px}
   .sumCell{padding:7px 0}
-  .sumVal{font-size:17px}
+  .sumVal{font-size:21px}
+  .sumLbl{font-size:11.5px}
+  .sumCell{padding:10px 0}
   .sumLbl{font-size:10px}
   .sumSep{margin:9px 12px}
   .sumEnd{padding-left:10px;font-size:10.5px;max-width:74px;white-space:normal;line-height:1.25}
@@ -277,38 +279,61 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .bp:hover{background:var(--sky);color:var(--blue)}
 .bp.on{background:var(--blue);color:#fff}
 .plist{display:flex;flex-direction:column;gap:12px}
-.pc{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px 20px;
-  display:grid;grid-template-columns:54px minmax(0,1fr) 190px;gap:18px;align-items:start;
-  animation:fu .45s ease both}
-.pc > .pic{margin-top:2px}
-.pAct{align-items:flex-end;padding-top:2px}
-@media(max-width:600px){.pc{grid-template-columns:42px minmax(0,1fr);gap:11px}
-  .pc .pAct{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;
-    padding-top:10px;border-top:1px dashed var(--line)}}
-.pc .pic{width:46px;height:46px;border-radius:10px;background:var(--line2);display:grid;place-items:center}
-.pc b{font-size:14.5px;display:block;line-height:1.4}
-.pc .md{font-size:13px;color:var(--mut);font-weight:600;font-family:ui-monospace,monospace;margin-top:4px}
-.why{margin-top:9px;font-size:13.5px;color:var(--ink2);background:#f8fafd;border-left:3px solid var(--blue);padding:10px 14px;border-radius:0 9px 9px 0;line-height:1.55}
-.why b{font-size:12.5px;color:var(--blue);display:inline;font-weight:700}
+.pc{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
+  padding:22px 24px;animation:fu .45s ease both;display:block}
+.pc:hover{border-color:#d9d6cf}
+
+/* Hàng trên: icon · tên+mã · giá — giá luôn nằm cùng dòng với tên */
+.pcTop{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:start}
+.pc .pic{width:56px;height:56px;border-radius:12px;background:var(--line2);
+  display:grid;place-items:center;color:var(--ink2)}
+.pcName{min-width:0;padding-top:2px}
+.pc b{font-size:19px;font-weight:600;line-height:1.35;display:block;letter-spacing:-.01em}
+.pc .md{font-size:14px;color:var(--mut);font-weight:500;margin-top:6px;line-height:1.45}
+.pc .md .dot{opacity:.5;margin:0 2px}
+.pp{font-size:25px;font-weight:700;text-align:right;white-space:nowrap;
+  letter-spacing:-.02em;padding-top:4px}
+
+/* Thân thẻ: trải hết chiều ngang, không bị bó vào cột giữa */
+.pcBody{margin-top:14px}
+.pcBody:empty{display:none}
+
+/* Hàng thao tác dưới cùng */
+.pcBar{display:flex;align-items:center;gap:20px;margin-top:16px;padding-top:14px;
+  border-top:1px solid var(--line2)}
+.sw{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:600;
+  color:var(--blue);transition:var(--tr)}
+.sw:hover{text-decoration:underline}
+.skip{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;
+  color:var(--mut);transition:var(--tr);margin-left:auto}
+.skip:hover{color:var(--red)}
+
+.why{font-size:15px;color:var(--ink2);background:#f7f9fd;border-left:3px solid var(--blue);
+  padding:13px 16px;border-radius:0 10px 10px 0;line-height:1.6}
+.why + .why,.feat + .why{margin-top:10px}
+.why b{font-size:14px;color:var(--blue);display:inline;font-weight:700}
+/* Khi vượt khuyến nghị thì đổi sang tông nhắc nhở */
+.why.warn{background:var(--goldbg);border-left-color:var(--gold);color:#7a5a12}
+.why.warn b{color:var(--gold)}
 .why.alt{border-left-color:var(--gold);background:#fffaf0}
 .why.alt b{color:#b57b0c}
 .pp{font-size:19px;font-weight:700;text-align:right;white-space:nowrap;letter-spacing:-.01em}
 .sw{display:block;margin-top:8px;font-size:13px;font-weight:600;color:var(--blue)}
 .sw:hover{text-decoration:underline}
-.side{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:22px;
+.side{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:26px;
   position:sticky;top:calc(var(--hdr) + 14px)}
-.side h3{font-size:15px;font-weight:800}
+.side h3{font-size:17px;font-weight:700;letter-spacing:-.01em}
 .cb{height:9px;background:var(--sky);border-radius:99px;margin:13px 0 5px;overflow:hidden}
 .cf{height:100%;background:linear-gradient(90deg,var(--blue),#6ea0ff);border-radius:99px;width:0;transition:width .8s}
 .cl{font-size:12px;color:var(--mut);font-weight:700}
 .rm{margin-top:14px}
-.rn{font-size:12.5px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.rn{font-size:13px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
 .ri{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:99px;background:var(--greenbg);color:var(--green);animation:pop .4s ease both}
+.chip{font-size:13.5px;font-weight:600;padding:8px 14px;border-radius:99px;background:var(--greenbg);color:var(--green);animation:pop .4s ease both}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 .tb{margin-top:20px;padding-top:16px;border-top:1.5px dashed var(--line)}
-.tl{font-size:12.5px;color:var(--mut);font-weight:700}
-.tn{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.tl{font-size:13px;color:var(--mut);font-weight:600;letter-spacing:.02em}
+.tn{font-size:34px;font-weight:700;letter-spacing:-.025em}
 .sl{margin-top:7px;font-size:12.5px;font-weight:700;color:var(--green);background:var(--greenbg);padding:7px 11px;border-radius:9px}
 .ben{margin-top:22px;background:var(--navy);border-radius:var(--r2);padding:24px;color:#fff}
 .ben h3{font-size:15px;margin-bottom:12px}
@@ -336,32 +361,41 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 
 
 /* ===== KHỐI THEO PHÒNG Ở MÀN KẾT QUẢ ===== */
-.roomMod{margin-bottom:22px;border:1px solid var(--line);border-radius:var(--r2);
+.roomMod{margin-bottom:26px;border:1px solid var(--line);border-radius:var(--r2);
   background:var(--card);overflow:hidden}
-.roomModHead{display:flex;align-items:center;gap:11px;padding:14px 18px;
+.roomModHead{display:flex;align-items:center;gap:13px;padding:18px 24px;
   background:#fbfaf8;border-bottom:1px solid var(--line)}
 .roomModHead .rmIco{color:var(--ink2);line-height:0}
-.roomModHead b{font-size:16px;font-weight:700;letter-spacing:.01em}
-.roomModHead .rmMeta{margin-left:auto;font-size:13px;color:var(--mut);font-weight:600;
+.roomModHead b{font-size:19px;font-weight:700;letter-spacing:-.01em}
+.roomModHead .rmMeta{margin-left:auto;font-size:14px;color:var(--mut);font-weight:600;
   white-space:nowrap}
-.roomModBody{padding:14px;display:flex;flex-direction:column;gap:12px}
+.roomModBody{padding:18px;display:flex;flex-direction:column;gap:16px}
 .roomModBody .pc{border-color:var(--line2);background:#fff}
 @media(max-width:600px){
-  .roomModBody{grid-template-columns:1fr}
-  .pc{grid-template-columns:44px minmax(0,1fr);gap:12px;padding:15px 16px}
-  .pc b{font-size:15.5px}
-  .pp{font-size:17px}
-  .roomModHead{padding:12px 14px;gap:9px}
-  .roomModHead b{font-size:13.5px}
-  .roomModHead .rmMeta{font-size:11px}
-  .roomModBody{padding:11px;gap:10px}
+  .roomModBody{grid-template-columns:1fr;padding:13px;gap:13px}
+  .pc{padding:17px 16px}
+  .pcTop{grid-template-columns:46px minmax(0,1fr);gap:13px}
+  .pc .pic{width:46px;height:46px}
+  .pc b{font-size:17px}
+  .pc .md{font-size:13px}
+  /* Giá xuống hàng riêng cho khỏi bóp tên sản phẩm */
+  .pp{grid-column:1 / -1;text-align:left;font-size:22px;padding-top:0;margin-top:4px}
+  .why{font-size:14px;padding:11px 14px}
+  .pcBar{gap:14px;margin-top:13px;padding-top:12px}
+  .sw{font-size:13.5px}
+  .skip{font-size:13px}
+  .roomModHead{padding:14px 16px;gap:10px}
+  .roomModHead b{font-size:16px}
+  .roomModHead .rmMeta{font-size:12.5px}
 }
 
 
 /* --- Màn hình rộng: trải thông tin ra hai cột thay vì dồn giữa --- */
 @media(min-width:1180px){
-  .roomModBody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:14px;align-items:start}
+  /* auto-fit: phòng có 1 thiết bị thì thẻ trải hết chiều ngang,
+     có 2 thiết bị trở lên mới chia đôi. */
+  .roomModBody{display:grid;grid-template-columns:repeat(auto-fit,minmax(430px,1fr));
+    gap:18px;align-items:start}
   /* Bảng đổi mẫu mở ra thì chiếm trọn hàng cho dễ thao tác.
      Dùng cả class dự phòng vì :has() chưa chạy trên webview cũ. */
   .roomModBody .pc.wide{grid-column:1 / -1}
@@ -375,13 +409,13 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
   padding:11px 14px;background:var(--goldbg);border:1px solid #f0dfae;
   border-radius:9px;font-size:13px;color:var(--gold);line-height:1.55}
 .allocNote .ico{color:var(--gold);flex-shrink:0;margin-top:1px}
-.upBox{margin-top:9px;padding:11px 13px;background:var(--sky);
-  border:1px solid #d9e3fb;border-radius:10px;
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.upTxt{flex:1;min-width:220px;font-size:13.5px;color:var(--ink2);line-height:1.55}
+.upBox{margin-top:12px;padding:15px 18px;background:var(--sky);
+  border:1px solid #d9e3fb;border-radius:11px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.upTxt{flex:1;min-width:240px;font-size:14.5px;color:var(--ink2);line-height:1.6}
 .upTxt b{color:var(--blue);font-weight:700}
-.upBtn{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
-  font-size:13.5px;font-weight:600;padding:10px 16px;border-radius:8px;
+.upBtn{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  font-size:14.5px;font-weight:600;padding:12px 20px;border-radius:9px;
   background:var(--blue);color:#fff;transition:var(--tr)}
 .upBtn:hover{background:var(--blue2)}
 .upBtn .ico{color:#fff}
@@ -393,12 +427,11 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 @keyframes flashCard{0%{background:var(--sky)}100%{background:#fff}}
 /* ===== MÔ TẢ NGẮN + NÚT BỎ QUA ===== */
 .desc{font-size:13.5px;color:var(--ink2);margin-top:6px;line-height:1.5}
-.feat{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;
+.feat{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;
   font-weight:600;color:var(--green);background:var(--greenbg);
-  padding:4px 10px;border-radius:99px}
+  padding:7px 14px;border-radius:99px;margin-bottom:2px}
 .feat .ico{color:var(--green)}
 .roomTag{font-size:11px;font-weight:700;color:var(--blue);background:var(--sky);padding:2px 8px;border-radius:99px;font-family:inherit}
-.pAct{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
 .skip{font-size:12.5px;font-weight:500;color:var(--mut);transition:var(--tr);margin-top:3px}
 .skip:hover{color:var(--red);text-decoration:underline}
 .chip.pend{background:#f2f4f7;color:var(--mut)}
@@ -561,8 +594,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .saveBox{margin-top:12px;background:var(--green);border-radius:12px;padding:16px 18px;color:#fff}
 .saveTop{display:flex;align-items:center;gap:12px}
 .saveIc{font-size:30px;line-height:1}
-.saveLbl{font-size:12px;font-weight:700;opacity:.9;letter-spacing:.02em}
-.saveNum{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+.saveLbl{font-size:13px;font-weight:600;opacity:.9;letter-spacing:.02em}
+.saveNum{font-size:29px;font-weight:700;letter-spacing:-.025em;line-height:1.15;margin-top:3px}
 .saveWhy{margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.25);
   font-size:11.5px;line-height:1.55;opacity:.95}
 /* ===== BỘ LỌC TRONG PANEL ĐỔI MẪU ===== */
@@ -1614,6 +1647,29 @@ function heaterRange(){
 var FAM_TEXT = {solo:'1–2 người', couple:'2 người', kids:'gia đình có con', multi:'gia đình nhiều thế hệ'};
 
 /* ---------- Tra thông số mong muốn cho một khe thiết bị ---------- */
+/* Câu nhắc khi thông số vượt khuyến nghị — theo từng ngành hàng */
+function OVER_TEXT(group, label, sp){
+  if(group === 'tv'){
+    return label + ' lớn hơn khuyến nghị cho ' + sp.why +
+           '. Hãy kiểm tra lại khoảng cách từ chỗ ngồi tới TV — ngồi quá gần ' +
+           'màn hình lớn sẽ mỏi mắt và thấy rõ điểm ảnh.';
+  }
+  if(group === 'ac'){
+    return label + ' cao hơn khuyến nghị cho ' + sp.why +
+           '. Máy thừa tải chạy ngắt liên tục, tốn điện hơn và dễ gây khô lạnh.';
+  }
+  if(group === 'fridge' || group === 'freezer'){
+    return label + ' lớn hơn khuyến nghị cho ' + sp.why +
+           '. Tủ rộng hơn nhu cầu sẽ tốn điện và chiếm diện tích bếp.';
+  }
+  if(group === 'washer' || group === 'dryer'){
+    return label + ' lớn hơn khuyến nghị cho ' + sp.why +
+           '. Máy tải lớn tốn nước và điện hơn khi giặt ít đồ.';
+  }
+  return label + ' lớn hơn khuyến nghị cho ' + sp.why +
+         '. Chuyên viên sẽ xác nhận lại theo nhu cầu thực tế của bạn.';
+}
+
 function idealSpec(group, roomId){
   var zone = zoneOf(roomId);
   var ctx  = ctxPhrase(roomId);
@@ -2212,14 +2268,24 @@ function render(){
   /* Viết lại lý do dựa trên thông số thật và diện tích phòng */
   combo.forEach(function(x){
     if(!x._spec) return;
-    var v = x[x._spec.key];
+    var sp = x._spec;
+    var v  = x[sp.key];
     if(!v) return;
-    var label = x._spec.unit === 'BTU'
-      ? v.toLocaleString('vi-VN') + ' BTU'
-      : v + ' ' + x._spec.unit;
-    /* Lớp 1: phù hợp bối cảnh · Lớp 2: mốc tham khảo · Lớp 3: khi nào nâng cấp
-       Không nêu số đo cụ thể vì khách chưa nhập diện tích nào. */
-    x.ld = label + ' phù hợp với ' + x._spec.why + '.';
+    var label = sp.unit === 'BTU' ? v.toLocaleString('vi-VN') + ' BTU'
+              : v + ' ' + sp.unit;
+
+    if(v > sp.max){
+      /* Vượt khuyến nghị — nói thật thay vì khẳng định "phù hợp" */
+      x._over = true;
+      x.ld = OVER_TEXT(x.nhom, label, sp);
+    } else if(v < sp.min){
+      x._over = true;
+      x.ld = label + ' thấp hơn mức thường dùng cho ' + sp.why +
+             '. Chuyên viên sẽ xác nhận lại theo không gian thực tế.';
+    } else {
+      x._over = false;
+      x.ld = label + ' phù hợp với ' + sp.why + '.';
+    }
     if(x._fromStock === false){
       x.ld += ' Mã này cần đặt từ nhà cung cấp.';
     }
@@ -2251,14 +2317,22 @@ function render(){
     const k=x._slot||dk(G[x.nhom].room,x.nhom);
     const esc=x.model.replace(/'/g,"\\'");
     const sp=x._spec;
-    const up=sp?upgradeFor(x.nhom,x._room||G[x.nhom].room,x.model):null;
-    return '<div class="pc" style="animation-delay:'+(Math.min(i,8)*.05)+'s" id="pc-'+k.replace(':','-')+'">'+
-      '<div class="pic">'+gi(x.nhom,24)+'</div>'+
-      '<div><b>'+G[x.nhom].name+': '+x.ten+(x._pin?' <span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
-        '<div class="md">Mã: '+x.model+'</div>'+
-        (x.mota?'<div class="desc">'+x.mota+'</div>':'')+
-        (x.voice?'<div class="feat">'+ic('mic',13)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
-        (x.ld?'<div class="why"><b>Vì sao chọn:</b> '+x.ld+'</div>':'')+
+    const up=(sp&&!x._over)?upgradeFor(x.nhom,x._room||G[x.nhom].room,x.model):null;
+    /* Bố cục hàng ngang: tên và giá cùng dòng trên, phần giải thích trải hết
+       chiều ngang bên dưới — không còn khoảng trống chết ở góc phải. */
+    return '<article class="pc" style="animation-delay:'+(Math.min(i,8)*.05)+'s" id="pc-'+k.replace(':','-')+'">'+
+      '<div class="pcTop">'+
+        '<div class="pic">'+gi(x.nhom,26)+'</div>'+
+        '<div class="pcName"><b>'+G[x.nhom].name+': '+x.ten+
+          (x._pin?'<span class="tagCur">bạn đã chọn</span>':'')+'</b>'+
+          '<div class="md">Mã '+x.model+(x.mota?' <span class="dot">·</span> '+x.mota:'')+'</div>'+
+        '</div>'+
+        '<div class="pp">'+fmt(x.gia)+'</div>'+
+      '</div>'+
+      '<div class="pcBody">'+
+        (x.voice?'<div class="feat">'+ic('mic',14)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
+        (x.ld?'<div class="why'+(x._over?' warn':'')+'"><b>'+
+          (x._over?'Lưu ý:':'Vì sao chọn:')+'</b> '+x.ld+'</div>':'')+
         (x._pinWarn?'<div class="allocNote">'+ic('shield',13)+
             'Mã này nhỏ hơn mức thường dùng cho '+ctxPhrase(x._room||G[x.nhom].room)+
             '. Chuyên viên sẽ xác nhận lại theo không gian thực tế của bạn.</div>':'')+
@@ -2270,11 +2344,12 @@ function render(){
               'Nâng lên '+up.to+' '+up.spec.unit+'</button>'+
           '</div>':'')+
       '</div>'+
-      '<div class="pAct"><div class="pp">'+fmt(x.gia)+'</div>'+
-        '<button class="sw" onclick="toggleSwap(\''+k+'\',\''+esc+'\')">'+ic('swap',14)+'Đổi mẫu</button>'+
-        '<button class="skip" onclick="skipSlot(\''+k+'\')">'+ic('close',13)+'Bỏ qua thiết bị này</button></div>'+
+      '<div class="pcBar">'+
+        '<button class="sw" onclick="toggleSwap(\''+k+'\',\''+esc+'\')">'+ic('swap',15)+'Đổi mẫu khác</button>'+
+        '<button class="skip" onclick="skipSlot(\''+k+'\')">'+ic('close',14)+'Bỏ qua thiết bị này</button>'+
+      '</div>'+
       '<div id="sp-'+k.replace(':','-')+'"></div>'+
-    '</div>';
+    '</article>';
   };
 
   let idx=0;
