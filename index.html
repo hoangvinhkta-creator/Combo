@@ -50,7 +50,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .hb.ghost{background:transparent;color:var(--ink2);font-weight:500}
 .hb.ghost:hover{background:var(--line2);color:var(--ink)}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:26px 24px 70px}
-.sc{display:none;animation:fu .4s ease both}.sc.on{display:block}
+.sc{display:none;animation:fu .48s var(--ease-settle) both}.sc.on{display:block}
 @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
 
@@ -90,7 +90,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .sumVal{font-size:33px;font-weight:700;color:var(--ink);letter-spacing:-.03em;
   line-height:1.1;white-space:nowrap;transition:color .3s}
 .sumCell.save .sumVal{color:var(--green)}
-.sumVal.bump{animation:bump .45s cubic-bezier(.3,1.4,.5,1)}
+.sumVal.bump{animation:bump .55s var(--ease-pop)}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.09)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion: reduce){.sumVal.bump{animation:none}}
 .sumSep{width:1px;background:var(--line);margin:14px 24px}
@@ -118,6 +118,29 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 @media(max-width:360px){
   .sumVal{font-size:15.5px}
   .sumEnd{display:none}
+}
+
+/* ================= CHUYỂN ĐỘNG CÓ QUÁN TÍNH =================
+   Mượn nguyên lý từ mô phỏng vật lý: chuyển động giảm tốc tự nhiên
+   rồi ổn định, thay vì chạy đều rồi dừng đột ngột.
+   Dùng linear() nên trình duyệt tự nội suy, KHÔNG cần vòng lặp
+   requestAnimationFrame — không tốn CPU khi đang cuộn trang.
+   Trình duyệt cũ không hiểu linear() sẽ tự rơi về cubic-bezier.  */
+:root{
+  /* giảm chấn tới hạn — vào chỗ rồi dừng, không nảy */
+  --ease-settle: cubic-bezier(.22,.8,.3,1);
+  --ease-settle: linear(0, 0.0478, 0.1535, 0.2791, 0.4039, 0.5175, 0.6159,
+    0.6982, 0.7653, 0.8191, 0.8615, 0.8947, 0.9204, 0.9401, 0.9551, 0.9664,
+    0.975, 0.9815, 0.9863, 0.9899, 1);
+  /* nảy nhẹ 12% rồi ổn định — dành cho con số thay đổi */
+  --ease-pop: cubic-bezier(.3,1.4,.5,1);
+  --ease-pop: linear(0, 0.1084, 0.3457, 0.6085, 0.8337, 0.9933, 1.0843,
+    1.1188, 1.1147, 1.0898, 1.058, 1.0286, 1.0065, 0.9927, 0.9864, 0.9856,
+    0.988, 0.9917, 0.9954, 0.9984, 1.0004, 1.0015, 1.0018, 1);
+  /* chắc tay, dùng cho panel bung ra */
+  --ease-firm: cubic-bezier(.25,.85,.35,1);
+  --ease-firm: linear(0, 0.0656, 0.2006, 0.3494, 0.4868, 0.6037, 0.6985,
+    0.7731, 0.8307, 0.8744, 0.9072, 0.9317, 0.9499, 0.9633, 0.9732, 0.9804, 1);
 }
 /* ================= HỆ ICON ================= */
 .ico{display:inline-block;vertical-align:-.18em;flex-shrink:0}
@@ -279,7 +302,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .bp.on{background:var(--blue);color:#fff}
 .plist{display:flex;flex-direction:column;gap:12px}
 .pc{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
-  padding:26px 28px;animation:fu .45s ease both;display:block}
+  padding:26px 28px;animation:fu .55s var(--ease-settle) both;display:block}
 .pc:hover{border-color:#d9d6cf}
 
 /* Hàng trên: icon · tên+mã · giá — giá luôn nằm cùng dòng với tên */
@@ -336,7 +359,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .rm{margin-top:14px}
 .rn{font-size:14px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px}
 .ri{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:99px;background:var(--greenbg);color:var(--green);animation:pop .4s ease both}
+.chip{font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:99px;background:var(--greenbg);color:var(--green);animation:pop .5s var(--ease-pop) both}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 .tb{margin-top:20px;padding-top:16px;border-top:1.5px dashed var(--line)}
 .tl{font-size:14px;color:var(--mut);font-weight:600;letter-spacing:.02em}
@@ -475,7 +498,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 
 .hPanel{margin-top:10px;padding:18px 20px;background:#f6f8fd;
   border:1px solid #dbe4fa;border-radius:var(--r2);
-  animation:slideDown .26s cubic-bezier(.22,.9,.3,1) both}
+  animation:slideDown .34s var(--ease-firm) both}
 .hPanelLbl{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   color:var(--mut);margin-bottom:13px}
 .hGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
@@ -563,7 +586,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .imgBox{max-width:520px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(90px);
   background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-size:13.5px;
-  font-weight:500;z-index:300;transition:transform .3s cubic-bezier(.2,.8,.3,1);
+  font-weight:500;z-index:300;transition:transform .42s var(--ease-pop);
   display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 28px rgba(17,24,39,.25);
   max-width:90vw}
 .toast.on{transform:translateX(-50%) translateY(0)}
