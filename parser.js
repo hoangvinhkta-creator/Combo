@@ -379,14 +379,100 @@ function attrsFromTag(tag){
     else if(v >= 50 && v <= 240) a.hz = v;
   }
 
-  /* --- Khối lượng máy giặt / máy sấy (kg) --- */
-  const kg = t.match(/([\d.,]{1,4})\s*kg/);
-  if(kg){
-    const v = parseFloat(String(kg[1]).replace(',', '.'));
-    if(v >= 4 && v <= 30) a.kg = v;
+  /* --- Khối lượng máy giặt / máy sấy (kg) ---
+     Máy giặt sấy thường ghi "9/6 kg" — số đầu là giặt, số sau là sấy. */
+  const gs = t.match(/([\d.,]{1,4})\s*\/\s*([\d.,]{1,4})\s*kg/);
+  if(gs){
+    const v1 = parseFloat(String(gs[1]).replace(',', '.'));
+    const v2 = parseFloat(String(gs[2]).replace(',', '.'));
+    if(v1 >= 4 && v1 <= 30) a.kg = v1;
+    if(v2 >= 3 && v2 <= 30) a.kgSay = v2;
+  } else {
+    const kg = t.match(/([\d.,]{1,4})\s*kg/);
+    if(kg){
+      const v = parseFloat(String(kg[1]).replace(',', '.'));
+      if(v >= 4 && v <= 30) a.kg = v;
+    }
   }
 
+  /* --- Kiểu tủ lạnh / tủ đông (cột AK) --- */
+  const door = doorFromText(t);
+  if(door) a.door = door;
+
+  /* --- Kiểu máy giặt --- */
+  const wt = wtypeFromText(t);
+  if(wt) a.wtype = wt;
+
+  /* --- Công nghệ Inverter tiết kiệm điện --- */
+  if(/\binverter\b|\binv\b|\bdigital inverter\b|tiet kiem dien/.test(t)) a.inv = true;
+
+  /* --- Các thuộc tính còn lại giữ nguyên chữ khách ghi trong cột AK ---
+     Đoạn nào không rơi vào các thuộc tính đã đọc ở trên thì coi là
+     "tính năng" và tự trở thành một lựa chọn lọc cho khách.
+     Nhờ vậy chỉ cần bổ sung hashtag là giao diện có thêm bộ lọc mới. */
+  a.feats = [];
+  const seen = {};
+  tagParts(raw).forEach(function(seg, i){
+    if(i === 0) return;                 /* đoạn đầu là ngành hàng + hãng */
+    if(segUsed(seg)) return;
+    const lb = featLabel(seg);
+    if(!lb) return;
+    const key = noAccent(lb);
+    if(seen[key]) return;
+    seen[key] = 1;
+    if(a.feats.length < 8) a.feats.push(lb);
+  });
+
   return a;
+}
+
+/* ---------- KIỂU TỦ LẠNH / TỦ ĐÔNG ---------- */
+/* Xét từ cụ thể tới chung, tránh "2 cánh" nuốt mất "Side by Side" */
+function doorFromText(t){
+  if(/side\s*by\s*side|\bsbs\b/.test(t))                  return 'Side by Side';
+  if(/french\s*door/.test(t))                             return 'French Door';
+  if(/multi\s*-?\s*door|multidoor|4\s*(canh|cua)|3\s*(canh|cua)/.test(t)) return 'Multi Door';
+  if(/ngan da duoi|dong duoi|bottom\s*freezer|da duoi/.test(t)) return 'Ngăn đá dưới';
+  if(/ngan da tren|dong tren|top\s*freezer|da tren|2\s*(canh|cua)/.test(t)) return 'Ngăn đá trên';
+  if(/nam ngang|tu dong nam/.test(t))                     return 'Nằm ngang';
+  if(/dung dung|tu dong dung|dang dung/.test(t))          return 'Đứng';
+  if(/1\s*(canh|cua)|mot cua|mini bar/.test(t))           return '1 cánh';
+  return '';
+}
+/* ---------- KIỂU MÁY GIẶT ---------- */
+function wtypeFromText(t){
+  if(/giat say|say kem|washer\s*dryer|wash\s*&?\s*dry/.test(t)) return 'Giặt sấy';
+  if(/cua truoc|long ngang|front\s*load|cua ngang/.test(t))     return 'Cửa trước';
+  if(/cua tren|long dung|top\s*load|cua dung/.test(t))          return 'Cửa trên';
+  return '';
+}
+
+/* Đoạn hashtag này đã được đọc thành thuộc tính có sẵn chưa? */
+function segUsed(seg){
+  const t = noAccent(seg);
+  if(!t) return true;
+  if(/\d{2,3}\s*(inch|inh|in)\b/.test(t))       return true;
+  if(/"|”/.test(String(seg)))                   return true;
+  if(/\b(4k|8k|fhd|uhd|hd)\b|full hd/.test(t))  return true;
+  if(/led|rgb/.test(t))                         return true;
+  if(/\d{2,3}\s*hz|tan so quet/.test(t))        return true;
+  if(/giong noi|voice/.test(t))                 return true;
+  if(/\d{3,5}\s*btu|[\d.,]+\s*hp\b/.test(t))    return true;
+  if(/\d{2,4}\s*(lit|l)\b/.test(t))             return true;
+  if(/[\d.,]+\s*kg\b/.test(t))                  return true;
+  if(/inverter|\binv\b|tiet kiem dien/.test(t)) return true;
+  if(doorFromText(t))                           return true;
+  if(wtypeFromText(t))                          return true;
+  return false;
+}
+/* Chuẩn hoá một đoạn hashtag thành nhãn tính năng hiển thị cho khách */
+function featLabel(seg){
+  let s = String(seg || '').trim().replace(/^[#\-–—:|/]+\s*/, '').trim();
+  if(s.length < 2 || s.length > 30) return '';
+  if(!/[a-zA-ZÀ-ỹ]/.test(s)) return '';
+  /* Loại các đoạn thực chất là mã máy: chỉ gồm chữ + số dính liền */
+  if(/^[A-Za-z0-9.\-\/]+$/.test(s) && /\d/.test(s) && s.length > 4) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 /* Chuỗi thuộc tính hiển thị cho khách */
@@ -399,7 +485,10 @@ function attrLine(p){
   if(p.hz)    out.push(p.hz + 'Hz');
   if(p.btu)   out.push(p.btu.toLocaleString('vi-VN') + ' BTU');
   if(p.lit)   out.push(p.lit + ' lít');
-  if(p.kg)    out.push(p.kg + ' kg');
+  if(p.kg)    out.push(p.kg + (p.kgSay ? '/' + p.kgSay : '') + ' kg');
+  if(p.door)  out.push(p.door);
+  if(p.wtype) out.push(p.wtype);
+  if(p.inv)   out.push('Inverter');
   return out.join(' · ');
 }
 
@@ -487,6 +576,11 @@ function buildCatalog(rows, cfg){
       btu:   at.btu   || null,
       lit:   at.lit   || null,
       kg:    at.kg    || null,
+      kgSay: at.kgSay || null,
+      door:  at.door  || '',
+      wtype: at.wtype || '',
+      inv:   at.inv ? 1 : 0,
+      feats: at.feats || [],
       gia: price,
       ton: stock>0 ? 1 : 0,
       giaTon: stock,
@@ -545,5 +639,6 @@ async function load(cfg){
 return {CONFIG, GROUPS, ROOMS, KEYWORDS, TAG_MAP, SEG_MAP, COL_HINTS, detectColumns,
         load, parseCSV, buildCatalog,
         num, noAccent, detectHeader, isBrandName, specOf, groupFromTag, brandFromTag,
-        attrsFromTag, attrLine, tagParts, segFromCell};
+        attrsFromTag, attrLine, tagParts, segFromCell,
+        doorFromText, wtypeFromText, featLabel};
 })();

@@ -652,8 +652,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .fchip.qchip{background:#f2f4f7;border-color:transparent}
 .fchip.qchip:hover{background:var(--sky);border-color:var(--blue)}
 /* ===== ĐỔI MẪU ===== */
-.pc > [id^="sp-"]{grid-column:1 / -1}
-.pc > [id^="sp-"]:empty{display:none}
+.pc [id^="sp-"]{grid-column:1 / -1}
+.pc [id^="sp-"]:empty{display:none}
 .swapPanel{margin-top:16px;padding:18px;background:#fafbfd;border:1.5px solid var(--line);
   border-radius:14px;animation:fu .3s ease both}
 .swapHead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;
@@ -698,6 +698,98 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop
 .swapDiv{font-size:11px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;
   padding:12px 2px 6px;border-top:1px dashed var(--line);margin-top:4px}
 .swapEmpty{text-align:center;padding:26px 18px;color:var(--mut);font-size:13px;line-height:1.6}
+
+/* ===================================================================
+   MÀN KẾT QUẢ — TỐI ƯU CHO ĐIỆN THOẠI
+   Nguyên tắc: khách thấy ngay tổng quan và tổng tiền, phần chi tiết
+   nằm trong các khối đóng mở để không phải cuộn qua hàng loạt thẻ.
+   =================================================================== */
+.rsBox{margin-bottom:18px;padding:20px 24px}
+
+/* --- Nút mở danh sách thiết bị theo phòng trong bảng tổng quan --- */
+.rmsTgl{display:none;width:100%;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:14px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;
+  background:#fbfaf8;font-size:14px;font-weight:700;color:var(--ink2);transition:var(--tr)}
+.rmsTgl::after{content:'';width:9px;height:9px;border-right:2px solid var(--mut);
+  border-bottom:2px solid var(--mut);transform:rotate(45deg) translateY(-2px);transition:var(--tr)}
+.side.rmsOpen .rmsTgl::after{transform:rotate(-135deg) translateY(-1px)}
+.rmsTgl:hover{border-color:var(--blue);color:var(--blue)}
+
+/* --- Accordion theo phòng --- */
+.roomModHead{width:100%;text-align:left;cursor:pointer;transition:var(--tr)}
+.roomModHead:hover{background:#f5f3ef}
+.rmCv{margin-left:10px;color:var(--mut);line-height:0;transition:transform var(--tr);flex-shrink:0}
+.roomMod.open .rmCv{transform:rotate(180deg)}
+.roomMod:not(.open) .roomModBody{display:none}
+.roomMod:not(.open) .roomModHead{border-bottom-color:transparent}
+
+/* --- Thẻ sản phẩm: mặc định chỉ tên · thông số · giá --- */
+.pcTgl{display:none;width:100%;align-items:center;gap:8px;margin-top:14px;padding-top:13px;
+  border-top:1px solid var(--line2);font-size:14.5px;font-weight:700;color:var(--blue)}
+.pcTgl .ico{margin-left:auto;transition:transform var(--tr)}
+.pc.open .pcTgl .ico{transform:rotate(180deg)}
+.pcTgl .lblOpen{display:none}
+.pc.open .pcTgl .lblOpen{display:inline}
+.pc.open .pcTgl .lblShut{display:none}
+
+/* --- Thanh hành động cố định --- */
+.ctaBar{display:none;position:fixed;left:0;right:0;bottom:0;z-index:80;gap:10px;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);box-shadow:0 -4px 20px rgba(17,24,39,.07)}
+body.onResult .ctaBar{display:none}
+.cbBtn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 10px;border-radius:12px;font-size:15px;font-weight:700;
+  text-decoration:none;white-space:nowrap;transition:var(--tr)}
+.cbBtn.main{background:var(--blue);color:#fff;flex:1.35}
+.cbBtn.main:active{background:var(--blue2)}
+.cbBtn.ghost{background:var(--sky);color:var(--blue)}
+.zaloLink{display:block;text-align:center;margin-top:12px;font-size:13.5px;
+  font-weight:700;color:var(--blue);text-decoration:none}
+.zaloLink:hover{text-decoration:underline}
+
+/* --- Header rút gọn còn một hàng khi cuộn --- */
+.sumMini{display:none;width:100%;max-width:var(--maxw);margin:0 auto;
+  align-items:center;gap:8px;padding:11px 16px;text-align:left;
+  border-top:1px solid var(--line);background:var(--card)}
+.sumMini b{font-size:17px;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.sumMini .smDot{color:var(--mut)}
+.sumMini .smNote{font-size:13px;font-weight:600;color:var(--green);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.sumMini .smNote.over{color:var(--red)}
+.sumMini .smLink{margin-left:auto;font-size:13px;font-weight:700;color:var(--blue);
+  white-space:nowrap;flex-shrink:0}
+
+@media(max-width:880px){
+  /* Khối tổng quan lên ngay dưới tiêu đề */
+  .side{order:-1;position:static;display:flex;flex-direction:column;padding:20px}
+  .side > h3{order:0}
+  .side > .tb{order:1;margin-top:16px;padding-top:15px}
+  .side > .cb{order:2}
+  .side > .cl{order:3}
+  .side > .rmsTgl{order:4;display:flex}
+  .side > #rmsWrap{order:5;display:none}
+  .side.rmsOpen > #rmsWrap{display:block}
+  .side .scrollHint{display:none}
+  .rsBox{padding:15px 16px;margin-bottom:14px}
+  .rsBox .rangeVal{font-size:17px}
+
+  /* Thẻ sản phẩm gập lại */
+  .pcTgl{display:flex}
+  .pcMore{display:none}
+  .pc.open .pcMore{display:block}
+  .pcBody{margin-top:14px}
+
+  /* Chừa chỗ cho thanh CTA cố định */
+  body.onResult .ctaBar{display:flex}
+  body.onResult .wrap{padding-bottom:96px}
+  body.onResult footer{padding-bottom:88px}
+
+  /* Header thu gọn */
+  header.mini .hw,
+  header.mini .sumBar{display:none}
+  header.mini .sumMini{display:flex}
+}
 footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var(--mut);font-size:12px}
 </style></head><body>
 <header>
@@ -724,6 +816,13 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     </button>
     <div class="sumEnd" id="sbNote"></div>
   </div>
+  <!-- Bản thu gọn một hàng — thay cho cả header khi khách cuộn xuống trên điện thoại -->
+  <button class="sumMini" id="sumMini" onclick="scrollToSummary()">
+    <b id="smTotal">—</b>
+    <span class="smDot">·</span>
+    <span class="smNote" id="smNote">Trong ngân sách</span>
+    <span class="smLink">Xem tổng kết</span>
+  </button>
 </header>
 
 <div class="wrap">
@@ -877,19 +976,19 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 <section class="sc" id="sR">
   <div class="qh"><button class="bk" onclick="home()">← Thiết kế lại từ đầu</button>
   <div class="eb">Kết quả gợi ý</div><h2 id="rTitle">Phương án của bạn đã sẵn sàng</h2><p id="rSub"></p></div>
-  <div class="rangeBox" style="margin-bottom:18px;padding:20px 24px">
-    <div class="rangeHead" style="margin-bottom:2px">
-      <div><div class="rangeVal" style="font-size:20px" id="rsVal">—</div>
-      <small>Kéo để điều chỉnh ngân sách — combo tự cập nhật</small></div>
-      <span class="rangeCount" id="rsCount">—</span>
-    </div>
-    <div class="dual" id="rsDual"><div class="track"></div><div class="fill" id="rsFill"></div>
-      <input type="range" id="rsLo" oninput="onResultRange()">
-      <input type="range" id="rsHi" oninput="onResultRange()"></div>
-    <div class="rangeMarks" id="rsMarks"></div>
-  </div>
   <div class="rg">
-    <div>
+    <div class="rgMain">
+      <div class="rangeBox rsBox">
+        <div class="rangeHead" style="margin-bottom:2px">
+          <div><div class="rangeVal" style="font-size:20px" id="rsVal">—</div>
+          <small>Kéo để điều chỉnh ngân sách — combo tự cập nhật</small></div>
+          <span class="rangeCount" id="rsCount">—</span>
+        </div>
+        <div class="dual" id="rsDual"><div class="track"></div><div class="fill" id="rsFill"></div>
+          <input type="range" id="rsLo" oninput="onResultRange()">
+          <input type="range" id="rsHi" oninput="onResultRange()"></div>
+        <div class="rangeMarks" id="rsMarks"></div>
+      </div>
       <div class="plist" id="pl"></div>
       <div id="skippedBox"></div>
       <div class="ben"><h3>Quyền lợi khi mua tại Điện Máy Tín Phát</h3>
@@ -910,12 +1009,16 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
         <button class="cta gh" onclick="saveProject()"><svg class="ico" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 3.5h10L20.5 8.5v12a1 1 0 0 1-1 1h-14a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1ZM8 3.5v6h7v-6M8 15h8"/></svg> Lưu phương án</button>
       </div>
     </div>
-    <div class="side">
+    <div class="side" id="sideSum">
       <h3><svg class="ico" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.6 12 3.2l9 7.4M5.6 9.4V20a1 1 0 0 0 1 1h10.8a1 1 0 0 0 1-1V9.4"/></svg>Ngôi nhà của bạn</h3>
       <div class="cb"><div class="cf" id="cf"></div></div>
       <div class="cl"><span id="cp">0</span>% hoàn thiện</div>
-      <div id="rms"></div>
-      <div class="rmHint" id="rmHint"></div>
+      <button class="rmsTgl" id="rmsTgl" onclick="toggleRms()">
+        <span id="rmsTglTxt">Xem thiết bị theo phòng</span></button>
+      <div id="rmsWrap">
+        <div id="rms"></div>
+        <div class="rmHint" id="rmHint"></div>
+      </div>
       <div class="tb"><div class="tl">Tổng giá trị combo</div><div class="tn" id="tn">0₫</div>
       <div class="saveBox">
         <div class="saveTop">
@@ -934,7 +1037,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
 
 <div class="modal" id="md" onclick="if(event.target===this)closeLead()">
   <div class="mb"><button class="cl2" onclick="closeLead()">&times;</button>
-    <div id="lf"><h3>Tôi cần tư vấn thêm</h3>
+    <div id="lf"><h3>Nhận báo giá &amp; tư vấn riêng</h3>
       <p style="color:var(--ink2);font-size:13.5px;margin-top:7px;line-height:1.5">Để lại thông tin, chuyên viên sẽ liên hệ tư vấn chi tiết và gửi ưu đãi riêng — đã có sẵn toàn bộ phương án bạn vừa tạo, không phải trao đổi lại từ đầu.</p>
       <input id="ln" placeholder="Họ và tên *" autocomplete="name">
       <input id="lp" placeholder="Số điện thoại (Zalo) *" type="tel" inputmode="tel" autocomplete="tel">
@@ -945,6 +1048,8 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
         <a href="tel:0327339229">0327.339.229</a> để được tư vấn ngay.
       </div>
       <button class="cta" id="lBtn" onclick="subLead()">Gửi thông tin</button>
+      <a class="zaloLink" href="https://zalo.me/0327339229" target="_blank" rel="noopener">
+        Hoặc nhắn Zalo cho chuyên viên ngay</a>
       <div class="leadNote"><svg class="ico" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.8 20 6v6c0 5-3.5 8-8 9.2C7.5 20 4 17 4 12V6Zm-2.5 9.5 2 2 4.5-4.5"/></svg> Thông tin chỉ dùng để liên hệ tư vấn, không chia sẻ cho bên thứ ba.</div>
     </div>
     <div class="succ" id="ls"><div class="bigIc ok"><svg class="ico" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19.5 7"/></svg></div><h3>Đã gửi thành công!</h3>
@@ -977,6 +1082,16 @@ footer{border-top:1px solid var(--line);text-align:center;padding:24px;color:var
     <button class="diagBtn" onclick="diagShowLeads()">Khách lưu tạm</button>
   </div>
   <div id="diagOut"></div>
+</div>
+
+<!-- Thanh hành động cố định — chỉ hiện ở màn kết quả trên điện thoại -->
+<div class="ctaBar" id="ctaBar">
+  <a class="cbBtn ghost" href="tel:0327339229">
+    <svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3.5h-3a1 1 0 0 0-1 1c0 8.8 7.2 16 16 16a1 1 0 0 0 1-1v-3a1 1 0 0 0-.8-1l-3.4-.7a1 1 0 0 0-1 .4l-1.2 1.6a13.5 13.5 0 0 1-6.4-6.4l1.6-1.2a1 1 0 0 0 .4-1L8.5 4.3a1 1 0 0 0-1-.8Z"/></svg>
+    Gọi tư vấn</a>
+  <button class="cbBtn main" onclick="openLead()">
+    <svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.8-.3-4-.9L3.5 21l1.4-4.5A8.5 8.5 0 1 1 20.5 12Z"/></svg>
+    Nhận báo giá qua Zalo</button>
 </div>
 
 <footer>Điện Máy Tín Phát · AI hoàn thiện không gian sống · Bảng giá cập nhật liên tục</footer>
@@ -1035,7 +1150,9 @@ var ICON={
   sparkle:'M12 3.2 13.8 9 19.6 10.8 13.8 12.6 12 18.4 10.2 12.6 4.4 10.8 10.2 9ZM18.5 3v3M20 4.5h-3',
   mic:'M12 14.5a3 3 0 0 0 3-3v-5a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3ZM5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M9 21h6',
   star:'M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.4 9.9l6-.9Z',
-  trend:'M3.5 16.5 9 11l4 4 7.5-7.5M15 7.5h5.5V13'
+  trend:'M3.5 16.5 9 11l4 4 7.5-7.5M15 7.5h5.5V13',
+  chevronDown:'m6 9.5 6 6 6-6',
+  phone:'M7.5 3.5h-3a1 1 0 0 0-1 1c0 8.8 7.2 16 16 16a1 1 0 0 0 1-1v-3a1 1 0 0 0-.8-1l-3.4-.7a1 1 0 0 0-1 .4l-1.2 1.6a13.5 13.5 0 0 1-6.4-6.4l1.6-1.2a1 1 0 0 0 .4-1L8.5 4.3a1 1 0 0 0-1-.8Z'
 };
 function ic(name,size,cls){
   var d=ICON[name];
@@ -1055,13 +1172,22 @@ function ri(zone,size){ return ic(RICON[zone]||'box',size); }
 
 const S={flow:null,house:null,sub:null,space:null,up:null,
   lo:0,hi:0,           /* khoảng ngân sách khách chọn (nghìn đồng) */
-  picked:new Set(),pickInit:false,extraRooms:[],hiddenRooms:new Set(),upgraded:{},_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{}};
+  picked:new Set(),pickInit:false,extraRooms:[],hiddenRooms:new Set(),upgraded:{},_lead:null,skipped:new Set(),feats:new Set(),prio:new Set(),pinned:{},
+  /* Màn kết quả: phòng nào đang mở, thẻ nào đang xem chi tiết */
+  openRooms:null, openCards:new Set()};
 const PROG={sLoad:0,sErr:0,s0:0,s1:25,s3:55,s4:85,s5:28,s6:22,s7:48,s8:82,s9:34,s10:70,sAI:95,sR:100};
 const G=TP.GROUPS, ROOMS=TP.ROOMS;
 let DB=[], AVAIL=[];
 
 const fmt=n=>Math.round(n*1000).toLocaleString('vi-VN')+'₫';
 const fmtM=n=>{const t=n/1000; return (t>=10?t.toFixed(0):t.toFixed(1).replace('.',','))+' tr';};
+/* 72600 (nghìn đồng) → "72,6 triệu" — dùng cho thanh rút gọn trên điện thoại */
+const fmtTr=n=>{
+  const t=n/1000;
+  if(t>=100) return Math.round(t).toLocaleString('vi-VN')+' triệu';
+  const s=t.toFixed(1).replace('.',',');
+  return (s.endsWith(',0')?s.slice(0,-2):s)+' triệu';
+};
 
 /* ===== TRANG CHỦ ===== */
 const GOALS=[
@@ -1091,9 +1217,14 @@ function syncHeader(){
   if(rs)  rs.style.display  = onHome ? 'none' : '';
   /* Thanh tóm tắt chỉ có ý nghĩa ở màn kết quả */
   const bar=document.getElementById('sumBar');
-  if(bar){
-    const onResult=document.getElementById('sR').classList.contains('on');
-    bar.classList.toggle('on', onResult);
+  const onResult=document.getElementById('sR').classList.contains('on');
+  if(bar) bar.classList.toggle('on', onResult);
+  /* Thanh CTA cố định và header rút gọn chỉ dùng ở màn kết quả */
+  document.body.classList.toggle('onResult', onResult);
+  if(!onResult){
+    const h=document.querySelector('header');
+    if(h)h.classList.remove('mini');
+    _hdrMini=false;
   }
 }
 
@@ -1114,6 +1245,13 @@ function syncSumBar(total, save, overBy){
     n.innerHTML = overBy>0
       ? '<span class="over">Vượt '+fmt(overBy)+'</span>'
       : '<span class="ok">Trong ngân sách</span>';
+  }
+  /* Bản một hàng khi cuộn: 72,6 triệu · Trong ngân sách · Xem tổng kết */
+  const mt=document.getElementById('smTotal'), mn=document.getElementById('smNote');
+  if(mt) mt.textContent=fmtTr(total);
+  if(mn){
+    mn.textContent = overBy>0 ? 'Vượt '+fmtTr(overBy) : 'Trong ngân sách';
+    mn.classList.toggle('over', overBy>0);
   }
 }
 
@@ -1278,6 +1416,7 @@ function show(id){
 function home(){
   Object.assign(S,{flow:null,house:null,sub:null,space:null,up:null,lo:0,hi:0});
   S.picked=new Set();S.pickInit=false;S.extraRooms=[];S.hiddenRooms=new Set();S.upgraded={};S.skipped=new Set();S.feats=new Set();S.prio=new Set();S.pinned={};
+  S.openRooms=null;S.openCards=new Set();openSwap=null;
   document.querySelectorAll('.opt.sel').forEach(o=>o.classList.remove('sel'));
   houseOpen=null;
   show('s0');
@@ -2120,6 +2259,54 @@ function featOptions(groups){
               test:function(p){ return p.kg && p.kg >= bigK; }});
   }
 
+  /* --- Khối lượng sấy (máy giặt sấy) --- */
+  if(has(function(p){ return p.kgSay; })){
+    out.push({k:'kgSay', label:'Có sấy khô', sub:'giặt xong sấy luôn, hết lo trời nồm',
+              test:function(p){ return !!p.kgSay; }});
+  }
+
+  /* --- Kiểu tủ lạnh --- */
+  var doors = [...new Set(pool.map(function(p){ return p.door; }).filter(Boolean))];
+  var doorHi = ['Side by Side','French Door','Multi Door','Ngăn đá dưới'];
+  var doorHave = doors.filter(function(d){ return doorHi.indexOf(d) >= 0; });
+  if(doorHave.length){
+    out.push({k:'door:hi', label:'Kiểu tủ nhiều ngăn',
+              sub: doorHave.slice(0,3).join(' · '),
+              test:function(p){ return p.door && doorHave.indexOf(p.door) >= 0; }});
+  }
+
+  /* --- Kiểu máy giặt --- */
+  if(has(function(p){ return p.wtype === 'Cửa trước' || p.wtype === 'Giặt sấy'; })){
+    out.push({k:'wtype:front', label:'Máy lồng ngang', sub:'cửa trước, giặt sạch và êm hơn',
+              test:function(p){ return p.wtype === 'Cửa trước' || p.wtype === 'Giặt sấy'; }});
+  }
+
+  /* --- Công nghệ Inverter --- */
+  if(has(function(p){ return p.inv; })){
+    out.push({k:'inv', label:'Tiết kiệm điện', sub:'công nghệ Inverter',
+              test:function(p){ return !!p.inv; }});
+  }
+
+  /* --- Tính năng khác lấy thẳng từ cột AK ---
+     Chỉ hiện tính năng xuất hiện ở từ 2 mã trở lên để tránh nhiễu. */
+  var cnt = {}, lbl = {};
+  pool.forEach(function(p){
+    (p.feats || []).forEach(function(f){
+      var key = TP.noAccent(f);
+      cnt[key] = (cnt[key] || 0) + 1;
+      lbl[key] = lbl[key] || f;
+    });
+  });
+  Object.keys(cnt).filter(function(k){ return cnt[k] >= 2; })
+    .sort(function(a,b){ return cnt[b] - cnt[a]; })
+    .slice(0, 5)
+    .forEach(function(k){
+      out.push({k:'feat:'+k, label:lbl[k], sub:cnt[k]+' mã có tính năng này',
+        test:function(p){
+          return (p.feats || []).some(function(f){ return TP.noAccent(f) === k; });
+        }});
+    });
+
   /* --- Hàng có sẵn kho --- */
   if(has(function(p){ return p.ton === 1; })){
     out.push({k:'stock', label:'Có sẵn tại kho', sub:'giao lắp sớm',
@@ -2308,6 +2495,17 @@ var PANEL_RANK = {'LED':1, 'QLED':2, 'OLED':3, 'MiniLED':3,
                   'Neo QLED':4, 'QD-MiniLED':4, 'MicroLED':5,
                   'MiniRGB':5, 'MicroRGB':6};
 
+/* Thứ hạng kiểu tủ lạnh và kiểu máy giặt — dùng để biết hướng nào là nâng cấp */
+var DOOR_RANK  = {'1 cánh':1, 'Nằm ngang':1, 'Đứng':1, 'Ngăn đá trên':2,
+                  'Ngăn đá dưới':3, 'Multi Door':4, 'French Door':4, 'Side by Side':5};
+var WTYPE_RANK = {'Cửa trên':1, 'Cửa trước':2, 'Giặt sấy':3};
+
+/* Trục "có / không" — dùng cho Inverter. zero:1 nghĩa là mã chưa có
+   cũng được xét, để còn gợi ý khách nâng lên bản có Inverter. */
+var AX_INV = {key:'inv', label:'Tiết kiệm điện', zero:1,
+              rank:function(v){ return v ? 2 : 1; },
+              fmt:function(v){ return v ? 'Inverter' : 'Thường'; }};
+
 var UPGRADE_AXES = {
   tv: [
     {key:'inch',  label:'Kích thước',    rank:function(v){return v;},
@@ -2320,15 +2518,23 @@ var UPGRADE_AXES = {
      fmt:function(v){return v+'Hz';}}
   ],
   ac:      [{key:'btu', label:'Công suất', rank:function(v){return v;},
-             fmt:function(v){return v.toLocaleString('vi-VN')+' BTU';}}],
-  fridge:  [{key:'lit', label:'Dung tích', rank:function(v){return v;},
-             fmt:function(v){return v+' lít';}}],
-  freezer: [{key:'lit', label:'Dung tích', rank:function(v){return v;},
-             fmt:function(v){return v+' lít';}}],
-  washer:  [{key:'kg',  label:'Khối lượng giặt', rank:function(v){return v;},
-             fmt:function(v){return v+' kg';}}],
+             fmt:function(v){return v.toLocaleString('vi-VN')+' BTU';}}, AX_INV],
+  fridge:  [{key:'lit',  label:'Dung tích', rank:function(v){return v;},
+             fmt:function(v){return v+' lít';}},
+            {key:'door', label:'Kiểu tủ',   rank:function(v){return DOOR_RANK[v]||0;},
+             fmt:function(v){return v;}},
+            AX_INV],
+  freezer: [{key:'lit',  label:'Dung tích', rank:function(v){return v;},
+             fmt:function(v){return v+' lít';}}, AX_INV],
+  washer:  [{key:'kg',    label:'Khối lượng giặt', rank:function(v){return v;},
+             fmt:function(v){return v+' kg';}},
+            {key:'wtype', label:'Kiểu máy',        rank:function(v){return WTYPE_RANK[v]||0;},
+             fmt:function(v){return v;}},
+            AX_INV],
   dryer:   [{key:'kg',  label:'Khối lượng sấy',  rank:function(v){return v;},
-             fmt:function(v){return v+' kg';}}]
+             fmt:function(v){return v+' kg';}}, AX_INV],
+  heater:  [{key:'lit', label:'Dung tích', rank:function(v){return v;},
+             fmt:function(v){return v+' lít';}}]
 };
 
 /* Các hướng nâng cấp khả dụng cho một sản phẩm.
@@ -2344,16 +2550,19 @@ function upgradeOptions(group, roomId, curModel){
 
   axes.forEach(function(ax){
     var curVal = cur[ax.key];
-    if(!curVal) return;
+    if(!curVal && !ax.zero) return;
+    if(!curVal) curVal = 0;
     var curRank = ax.rank(curVal);
     if(!curRank) return;
 
     /* Mã tốt hơn ở trục này, các trục khác không được kém đi */
     var better = DB.filter(function(p){
       if(p.nhom !== group || p.model === curModel) return false;
-      if(!p[ax.key] || ax.rank(p[ax.key]) <= curRank) return false;
+      var pv = p[ax.key] || (ax.zero ? 0 : null);
+      if(pv === null || ax.rank(pv) <= curRank) return false;
       return axes.every(function(o){
         if(o.key === ax.key) return true;
+        if(o.zero) return o.rank(p[o.key]||0) >= o.rank(cur[o.key]||0);
         if(!cur[o.key] || !p[o.key]) return true;
         return o.rank(p[o.key]) >= o.rank(cur[o.key]);
       });
@@ -2557,6 +2766,14 @@ function render(){
   const roomOrder=roomsInScope().map(r=>r.id).filter(r=>byRoom[r]);
   Object.keys(byRoom).forEach(r=>{ if(roomOrder.indexOf(r)<0) roomOrder.push(r); });
 
+  /* Lần đầu vào màn kết quả: điện thoại chỉ mở phòng đầu tiên để khách
+     nhìn thấy ngay tổng kết; màn hình lớn mở hết vì có đủ chỗ.        */
+  if(!S.openRooms){
+    S.openRooms=new Set();
+    const narrow = window.matchMedia && window.matchMedia('(max-width:880px)').matches;
+    roomOrder.forEach((r,i)=>{ if(!narrow || i===0) S.openRooms.add(r); });
+  }
+
   const cardOf=(x,i)=>{
     const k=x._slot||dk(G[x.nhom].room,x.nhom);
     const esc=x.model.replace(/'/g,"\\'");
@@ -2564,7 +2781,8 @@ function render(){
     const ups=x._over?[]:upgradeOptions(x.nhom,x._room||G[x.nhom].room,x.model);
     /* Bố cục hàng ngang: tên và giá cùng dòng trên, phần giải thích trải hết
        chiều ngang bên dưới — không còn khoảng trống chết ở góc phải. */
-    return '<article class="pc" style="animation-delay:'+(Math.min(i,8)*.05)+'s" id="pc-'+k.replace(':','-')+'">'+
+    const cOpen=S.openCards.has(k);
+    return '<article class="pc'+(cOpen?' open':'')+'" style="animation-delay:'+(Math.min(i,8)*.05)+'s" id="pc-'+k.replace(':','-')+'">'+
       '<div class="pcTop">'+
         '<div class="pic">'+gi(x.nhom,26)+'</div>'+
         '<div class="pcName">'+
@@ -2574,6 +2792,10 @@ function render(){
         '</div>'+
         '<div class="pp">'+fmt(x.gia)+'</div>'+
       '</div>'+
+      '<button class="pcTgl" onclick="toggleCard(\''+k+'\')">'+
+        '<span class="lblShut">Vì sao chọn · Nâng cấp · Đổi mẫu</span>'+
+        '<span class="lblOpen">Thu gọn</span>'+ic('chevronDown',17)+'</button>'+
+      '<div class="pcMore">'+
       '<div class="pcBody">'+
         (x.voice?'<div class="feat">'+ic('mic',14)+'Điều khiển & tìm kiếm bằng giọng nói</div>':'')+
         (x._feat>0?'<div class="feat">'+ic('check',14)+'Đạt '+x._feat+'/'+S.feats.size+
@@ -2599,6 +2821,7 @@ function render(){
         '<button class="skip" onclick="skipSlot(\''+k+'\')">'+ic('close',14)+'Bỏ qua thiết bị này</button>'+
       '</div>'+
       '<div id="sp-'+k.replace(':','-')+'"></div>'+
+      '</div>'+
     '</article>';
   };
 
@@ -2606,15 +2829,18 @@ function render(){
   document.getElementById('pl').innerHTML = combo.length
     ? (S.flow==='upgrade'
         ? combo.map((x,i)=>cardOf(x,i)).join('')
-        : roomOrder.map(rid=>{
+        : roomOrder.map((rid,ri2)=>{
             const items=byRoom[rid];
-            return '<section class="roomMod">'+
-              '<header class="roomModHead">'+
+            const op=S.openRooms.has(rid);
+            return '<section class="roomMod'+(op?' open':'')+'" data-room="'+rid+'">'+
+              '<button class="roomModHead" onclick="toggleRoomBox(\''+rid+'\')" '+
+                'aria-expanded="'+(op?'true':'false')+'">'+
                 '<span class="rmIco">'+ri(zoneOf(rid),18)+'</span>'+
                 '<b>'+(roomName(rid)||'Khác')+'</b>'+
                 '<span class="rmMeta">'+items.length+' thiết bị · '+
                   fmt(items.reduce((a,x)=>a+x.gia,0))+'</span>'+
-              '</header>'+
+                '<span class="rmCv">'+ic('chevronDown',18)+'</span>'+
+              '</button>'+
               '<div class="roomModBody">'+items.map(x=>cardOf(x,idx++)).join('')+'</div>'+
             '</section>';
           }).join(''))
@@ -2737,19 +2963,157 @@ function onResultRange(){
   });
 }
 
-/* ===== ĐỔI MẪU: chọn theo phân khúc + khoảng giá (mục 9, 10) ===== */
+/* ===== ĐỔI MẪU: bộ lọc sinh theo từng ngành hàng =====
+   Mỗi ngành hàng khai báo các tiêu chí riêng ở FACET_DEFS.
+   Tiêu chí nào kho chưa có dữ liệu thì tự ẩn — khi cột AK được
+   bổ sung, bộ lọc tương ứng tự xuất hiện, không phải sửa code.   */
 const SWAP_MIN=1000, SWAP_MAX=50000;   /* 1 triệu – 50 triệu */
 const SEG_LABEL={eco:'Tiết kiệm',bal:'Cân bằng',pre:'Cao cấp'};
 
+var PANEL_ORDER=['MicroRGB','MiniRGB','MicroLED','QD-MiniLED','Neo QLED','MiniLED','OLED','QLED','LED'];
+var RES_ORDER  =['8K','4K','FHD','HD'];
+var DOOR_ORDER =['Side by Side','French Door','Multi Door','Ngăn đá dưới','Ngăn đá trên','1 cánh','Nằm ngang','Đứng'];
+var WTYPE_ORDER=['Giặt sấy','Cửa trước','Cửa trên'];
+
+/* type:'num'  — giá trị số. Nếu có quá nhiều giá trị rời rạc thì tự gom
+                 thành khoảng theo mốc `breaks` cho khách dễ chọn.
+   type:'enum' — giá trị chữ, sắp theo `order`.                        */
+var FACET_DEFS = {
+  tv: [
+    {k:'inch',  label:'Kích thước',         type:'num',  unit:' inch', max:9,
+     breaks:[43,55,65,75]},
+    {k:'panel', label:'Công nghệ màn hình', type:'enum', order:PANEL_ORDER},
+    {k:'res',   label:'Độ phân giải',       type:'enum', order:RES_ORDER}
+  ],
+  fridge: [
+    {k:'lit',   label:'Dung tích', type:'num',  unit:' lít', max:6, breaks:[150,250,350,500]},
+    {k:'door',  label:'Kiểu tủ',   type:'enum', order:DOOR_ORDER}
+  ],
+  freezer: [
+    {k:'lit',   label:'Dung tích', type:'num',  unit:' lít', max:6, breaks:[150,250,400]},
+    {k:'door',  label:'Kiểu tủ',   type:'enum', order:DOOR_ORDER}
+  ],
+  washer: [
+    {k:'kg',    label:'Khối lượng giặt', type:'num',  unit:' kg', max:7, breaks:[8,9,10,12]},
+    {k:'wtype', label:'Kiểu máy',        type:'enum', order:WTYPE_ORDER}
+  ],
+  dryer: [
+    {k:'kg',    label:'Khối lượng sấy',  type:'num',  unit:' kg', max:7, breaks:[8,9,10]}
+  ],
+  ac: [
+    {k:'btu',   label:'Công suất', type:'num', max:9,
+     fmtNum:function(v){ return v.toLocaleString('vi-VN')+' BTU'; }}
+  ],
+  heater: [
+    {k:'lit',   label:'Dung tích', type:'num', unit:' lít', max:7}
+  ],
+  hotcold: [
+    {k:'lit',   label:'Dung tích', type:'num', unit:' lít', max:7}
+  ]
+};
+
+/* ---------- DỰNG DANH SÁCH TIÊU CHÍ CHO MỘT NGÀNH HÀNG ---------- */
+function buildFacets(g, pool){
+  var out = [];
+
+  /* Hãng — luôn có, xếp theo số mã nhiều nhất trước */
+  var bc = {};
+  pool.forEach(function(p){ var b=p.hang||'Khác'; bc[b]=(bc[b]||0)+1; });
+  var bl = Object.keys(bc).sort(function(a,b){ return bc[b]-bc[a]; });
+  if(bl.length > 1){
+    out.push({key:'brand', label:'Hãng', values: bl.map(function(b){
+      return {id:'b:'+b, label:b, test:function(p){ return (p.hang||'Khác')===b; }};
+    })});
+  }
+
+  (FACET_DEFS[g]||[]).forEach(function(d){
+    var raw = pool.map(function(p){ return p[d.k]; }).filter(function(v){ return v||v===0; });
+    var uniq = [...new Set(raw)];
+    if(uniq.length < 2) return;
+
+    if(d.type === 'num'){
+      uniq.sort(function(a,b){ return a-b; });
+      var fmtN = d.fmtNum || function(v){ return v + (d.unit||''); };
+      /* Ít giá trị thì hiện đúng số, nhiều quá thì gom thành khoảng */
+      if(uniq.length <= (d.max||8) || !d.breaks){
+        out.push({key:d.k, label:d.label, values: uniq.map(function(v){
+          return {id:d.k+':'+v, label:fmtN(v),
+                  test:function(p){ return p[d.k]===v; }};
+        })});
+      } else {
+        var bks = d.breaks.slice().sort(function(a,b){ return a-b; });
+        var vals = [], lo = 0;
+        bks.concat([Infinity]).forEach(function(hi, i){
+          var lb = (i===0) ? ('Dưới ' + fmtN(hi))
+                 : (hi===Infinity) ? ('Từ ' + fmtN(lo))
+                 : (lo + '–' + fmtN(hi));
+          var a = lo, b = hi;
+          if(pool.some(function(p){ return p[d.k] && p[d.k]>=a && p[d.k]<b; })){
+            vals.push({id:d.k+':'+a+'-'+b, label:lb,
+              test:function(p){ return p[d.k] && p[d.k]>=a && p[d.k]<b; }});
+          }
+          lo = hi;
+        });
+        if(vals.length > 1) out.push({key:d.k, label:d.label, values:vals});
+      }
+    } else {
+      var ord = d.order || [];
+      uniq.sort(function(a,b){
+        var ia=ord.indexOf(a), ib=ord.indexOf(b);
+        return (ia<0?99:ia)-(ib<0?99:ib);
+      });
+      out.push({key:d.k, label:d.label, values: uniq.map(function(v){
+        return {id:d.k+':'+v, label:v, test:function(p){ return p[d.k]===v; }};
+      })});
+    }
+  });
+  return out;
+}
+
+/* ---------- TÍNH NĂNG (chọn được nhiều cùng lúc) ----------
+   Gồm các cờ cố định + mọi tính năng khách ghi trong cột AK.  */
+function buildSwapFeats(pool){
+  var out = [];
+  if(pool.some(function(p){ return p.inv; }))
+    out.push({id:'inv', label:'Inverter', ic:'sparkle', test:function(p){ return !!p.inv; }});
+  if(pool.some(function(p){ return p.voice; }))
+    out.push({id:'voice', label:'Điều khiển giọng nói', ic:'mic', test:function(p){ return !!p.voice; }});
+  if(pool.some(function(p){ return p.kgSay; }))
+    out.push({id:'kgSay', label:'Có sấy khô', ic:'check', test:function(p){ return !!p.kgSay; }});
+
+  var cnt = {}, lbl = {};
+  pool.forEach(function(p){
+    (p.feats||[]).forEach(function(f){
+      var key = TP.noAccent(f);
+      cnt[key] = (cnt[key]||0)+1; lbl[key] = lbl[key]||f;
+    });
+  });
+  Object.keys(cnt).sort(function(a,b){ return cnt[b]-cnt[a]; }).slice(0,10)
+    .forEach(function(k){
+      out.push({id:'f:'+k, label:lbl[k], test:function(p){
+        return (p.feats||[]).some(function(f){ return TP.noAccent(f)===k; });
+      }});
+    });
+  return out;
+}
+
 function toggleSwap(k,cur){
   if(openSwap&&openSwap.k===k){closeSwap();return;}
-  const g=k.split(':')[1];
-  const curP=DB.find(p=>p.nhom===g&&p.model===cur);
-  const pool=DB.filter(p=>p.nhom===g).map(p=>p.gia).sort((a,b)=>a-b);
-  const c=curP?curP.gia:pool[Math.floor(pool.length/2)];
+  /* Luồng "nâng cấp" dùng khoá up0/up1/up2 nên không tách được ngành hàng
+     từ khoá — khi đó tra ngược từ mã đang hiển thị.                      */
+  const curP=DB.find(p=>p.model===cur);
+  const g=(k.indexOf(':')>=0)?k.split(':')[1]:(curP?curP.nhom:'');
+  if(!g||!G[g])return;
+  const room=(k.indexOf(':')>=0)?k.split(':')[0]:G[g].room;
+  const pool=DB.filter(p=>p.nhom===g);
+  if(!pool.length)return;
+  const ps=pool.map(p=>p.gia).sort((a,b)=>a-b);
+  const c=curP?curP.gia:(ps[Math.floor(ps.length/2)]||10000);
   openSwap={
-    k:k, g:g, cur:cur,
-    brand:'all', inch:'all', panel:'all', res:'all', voice:0,
+    k:k, g:g, cur:cur, room:room,
+    fx: buildFacets(g,pool),        /* tiêu chí một-lựa-chọn   */
+    ft: buildSwapFeats(pool),       /* tính năng nhiều-lựa-chọn */
+    sel:{}, on:new Set(),
     lo: Math.max(SWAP_MIN,Math.floor(c*0.55/500)*500),
     hi: Math.min(SWAP_MAX,Math.ceil(c*1.7/500)*500)
   };
@@ -2759,6 +3123,101 @@ function closeSwap(){
   openSwap=null;
   document.querySelectorAll('[id^=sp-]').forEach(e=>e.innerHTML='');
   document.querySelectorAll('.pc.wide').forEach(e=>e.classList.remove('wide'));
+}
+
+/* Lọc theo một bộ tiêu chí bất kỳ, CHƯA xét khoảng giá */
+function swapFilter(sel, on){
+  if(!openSwap) return [];
+  const fx=openSwap.fx, ft=openSwap.ft;
+  return DB.filter(function(p){
+    if(p.nhom!==openSwap.g) return false;
+    for(var i=0;i<fx.length;i++){
+      var id=sel[fx[i].key];
+      if(!id) continue;
+      var v=fx[i].values.filter(function(x){return x.id===id;})[0];
+      if(v && !v.test(p)) return false;
+    }
+    for(var j=0;j<ft.length;j++){
+      if(on.has(ft[j].id) && !ft[j].test(p)) return false;
+    }
+    return true;
+  });
+}
+function swapMatches(){ return openSwap ? swapFilter(openSwap.sel, openSwap.on) : []; }
+
+/* Nếu chọn thêm tiêu chí này thì còn bao nhiêu mã? — để làm mờ ô hết hàng */
+function countWith(key, id){
+  var sel=Object.assign({}, openSwap.sel);
+  if(id===null) delete sel[key]; else sel[key]=id;
+  return swapFilter(sel, openSwap.on).length;
+}
+function countWithFeat(fid){
+  var on=new Set(openSwap.on);
+  if(on.has(fid)) on.delete(fid); else on.add(fid);
+  return swapFilter(openSwap.sel, on).length;
+}
+
+/* Chọn / bỏ chọn một tiêu chí. fi = vị trí tiêu chí, vi = vị trí giá trị (-1 = Tất cả) */
+function setSwapFacet(fi, vi){
+  if(!openSwap) return;
+  var f=openSwap.fx[fi]; if(!f) return;
+  if(vi<0) delete openSwap.sel[f.key];
+  else     openSwap.sel[f.key]=f.values[vi].id;
+  relaxSwap(f.key);
+  renderSwap();
+}
+function toggleSwapFeat(i){
+  if(!openSwap) return;
+  var f=openSwap.ft[i]; if(!f) return;
+  if(openSwap.on.has(f.id)) openSwap.on.delete(f.id); else openSwap.on.add(f.id);
+  relaxSwap(null);
+  renderSwap();
+}
+/* Bỏ bớt tiêu chí cũ nếu bộ lọc mới không còn mã nào — tránh khách bị kẹt ở 0 kết quả */
+function relaxSwap(keepKey){
+  openSwap.fx.forEach(function(f){
+    if(f.key!==keepKey && openSwap.sel[f.key] && !swapMatches().length)
+      delete openSwap.sel[f.key];
+  });
+  openSwap.ft.forEach(function(f){
+    if(openSwap.on.has(f.id) && !swapMatches().length) openSwap.on.delete(f.id);
+  });
+  /* Nới khoảng giá để bao hết các mã khớp bộ lọc mới */
+  var m=swapMatches();
+  if(m.length){
+    var ps=m.map(function(p){return p.gia;}).sort(function(a,b){return a-b;});
+    var lo=Math.max(SWAP_MIN,Math.floor(ps[0]/500)*500);
+    var hi=Math.min(SWAP_MAX,Math.ceil(ps[ps.length-1]/500)*500);
+    if(openSwap.lo>lo) openSwap.lo=lo;
+    if(openSwap.hi<hi) openSwap.hi=hi;
+  }
+}
+
+/* Một hàng chip lọc */
+function fRow(fi){
+  var f=openSwap.fx[fi];
+  var cur=openSwap.sel[f.key];
+  var html='<button class="fchip'+(cur?'':' on')+'" onclick="setSwapFacet('+fi+',-1)">Tất cả</button>';
+  f.values.forEach(function(v,vi){
+    var n=countWith(f.key, v.id), on=(cur===v.id);
+    html+='<button class="fchip'+(on?' on':'')+(n?'':' dim')+'" '+
+      (n?'onclick="setSwapFacet('+fi+','+vi+')"':'disabled')+'>'+v.label+'</button>';
+  });
+  return '<div class="fltBlock"><div class="fltLbl">'+f.label+'</div>'+
+         '<div class="chipRow">'+html+'</div></div>';
+}
+/* Hàng tính năng — chọn được nhiều */
+function featRow(){
+  var ft=openSwap.ft;
+  if(!ft.length) return '';
+  var html=ft.map(function(f,i){
+    var n=countWithFeat(f.id), on=openSwap.on.has(f.id);
+    return '<button class="fchip'+(on?' on':'')+((n||on)?'':' dim')+'" '+
+      ((n||on)?'onclick="toggleSwapFeat('+i+')"':'disabled')+'>'+
+      (f.ic?ic(f.ic,13):'')+f.label+'</button>';
+  }).join('');
+  return '<div class="fltBlock"><div class="fltLbl">Tính năng</div>'+
+         '<div class="chipRow">'+html+'</div></div>';
 }
 
 function renderSwap(){
@@ -2772,46 +3231,14 @@ function renderSwap(){
   if(card)card.classList.add('wide');
   const g=openSwap.g;
 
-  const pool0=DB.filter(p=>p.nhom===g);
-
-  /* Danh sách hãng có trong nhóm */
-  const brands={};
-  pool0.forEach(p=>{ const b=p.hang||'Khác'; brands[b]=(brands[b]||0)+1; });
-  const brandList=Object.keys(brands).sort((a,b)=>brands[b]-brands[a]);
-
-  /* Các thuộc tính có thật trong nhóm — chỉ hiện bộ lọc khi có từ 2 giá trị */
-  const inchList=[...new Set(pool0.map(p=>p.inch).filter(Boolean))].sort((a,b)=>a-b);
-  const panelOrder=['MicroRGB','MiniRGB','MicroLED','QD-MiniLED','Neo QLED','MiniLED','OLED','QLED','LED'];
-  const panelList=[...new Set(pool0.map(p=>p.panel).filter(Boolean))]
-    .sort((a,b)=>{
-      const ia=panelOrder.indexOf(a), ib=panelOrder.indexOf(b);
-      return (ia<0?99:ia)-(ib<0?99:ib);
-    });
-  const resOrder=['8K','4K','FHD','HD'];
-  const resList=[...new Set(pool0.map(p=>p.res).filter(Boolean))]
-    .sort((a,b)=>resOrder.indexOf(a)-resOrder.indexOf(b));
-  const hasVoice=pool0.some(p=>p.voice);
-
   host.innerHTML=
    '<div class="swapPanel">'+
     '<div class="swapHead">'+
       '<b>'+gi(g,20)+' Chọn '+G[g].name.toLowerCase()+' khác</b>'+
       '<button class="swapClose" onclick="closeSwap()">'+ic('close',15)+'Đóng</button></div>'+
 
-    /* --- Các bộ lọc liên động: giá trị không có hàng sẽ bị làm mờ --- */
-    (brandList.length>1 ? fRow('Hãng','brand',brandList) : '')+
-    (inchList.length>1  ? fRow('Kích thước','inch',inchList,function(v){return v+' inch';}) : '')+
-    (panelList.length>1 ? fRow('Công nghệ màn hình','panel',panelList) : '')+
-    (resList.length>1   ? fRow('Độ phân giải','res',resList) : '')+
-    (hasVoice ?
-      '<div class="fltBlock"><div class="fltLbl">Tính năng</div><div class="chipRow">'+
-        (function(){
-          var n=swapCount('voice',1);
-          return '<button class="fchip'+(openSwap.voice?' on':'')+(n?'':' dim')+'" '+
-            (n?'onclick="setSwapAttr(\'voice\','+(openSwap.voice?0:1)+')"':'disabled')+'>'+
-            ic('mic',14)+'Điều khiển giọng nói</button>';
-        })()+
-      '</div></div>' : '')+
+    openSwap.fx.map(function(f,i){ return fRow(i); }).join('')+
+    featRow()+
 
     /* --- Lọc theo mức giá nhanh --- */
     '<div class="fltBlock"><div class="fltLbl">Mức giá</div>'+
@@ -2847,76 +3274,19 @@ function renderSwap(){
      prices:swapMatches().map(function(p){return p.gia;})});
   onSwap();
 }
-function setSwapBrand(b){ setSwapAttr('brand',b); }
-function setSwapAttr(k,v){
-  if(!openSwap)return;
-  openSwap[k]=v;
-  /* Tiêu chí nào giờ không còn hàng thì tự bỏ, tránh khách bị kẹt ở 0 kết quả */
-  ['brand','inch','panel','res'].forEach(function(key){
-    if(key!==k && openSwap[key]!=='all' && !swapFilter(swapState()).length){
-      openSwap[key]='all';
-    }
-  });
-  if(openSwap.voice && !swapFilter(swapState()).length) openSwap.voice=0;
-  /* Nới khoảng giá để bao hết các mã khớp bộ lọc mới */
-  const m=swapMatches();
-  if(m.length){
-    const ps=m.map(p=>p.gia).sort((a,b)=>a-b);
-    const lo=Math.max(SWAP_MIN,Math.floor(ps[0]/500)*500);
-    const hi=Math.min(SWAP_MAX,Math.ceil(ps[ps.length-1]/500)*500);
-    if(openSwap.lo>lo) openSwap.lo=lo;
-    if(openSwap.hi<hi) openSwap.hi=hi;
-  }
-  renderSwap();
-}
-/* Lọc theo một bộ tiêu chí bất kỳ, CHƯA xét khoảng giá */
-function swapFilter(f){
-  return DB.filter(function(p){
-    if(p.nhom !== openSwap.g) return false;
-    if(f.brand !== 'all' && (p.hang || 'Khác') !== f.brand) return false;
-    if(f.inch  !== 'all' && p.inch  !== f.inch)  return false;
-    if(f.panel !== 'all' && p.panel !== f.panel) return false;
-    if(f.res   !== 'all' && p.res   !== f.res)   return false;
-    if(f.voice && !p.voice) return false;
-    return true;
-  });
-}
-/* Bộ tiêu chí đang chọn */
-function swapState(){
-  return {brand:openSwap.brand, inch:openSwap.inch, panel:openSwap.panel,
-          res:openSwap.res, voice:openSwap.voice};
-}
-function swapMatches(){ return openSwap ? swapFilter(swapState()) : []; }
 
-/* Nếu đổi một tiêu chí thành giá trị v thì còn bao nhiêu mã?
-   Dùng để làm mờ những lựa chọn không có hàng.                    */
-function swapCount(key, v){
-  var f = swapState();
-  f[key] = v;
-  return swapFilter(f).length;
-}
-/* Sinh một hàng chip lọc, tự làm mờ giá trị không có hàng */
-function fRow(label, key, values, fmtLabel){
-  var cur = openSwap[key];
-  var html = '<button class="fchip' + (cur === 'all' ? ' on' : '') + '" ' +
-             'onclick="setSwapAttr(\'' + key + '\',\'all\')">Tất cả</button>';
-  values.forEach(function(v){
-    var n  = swapCount(key, v);
-    var on = (cur === v);
-    var q  = (typeof v === 'number') ? v : "'" + String(v).replace(/'/g, "\\'") + "'";
-    html += '<button class="fchip' + (on ? ' on' : '') + (n ? '' : ' dim') + '" ' +
-            (n ? 'onclick="setSwapAttr(\'' + key + '\',' + q + ')"' : 'disabled') + '>' +
-            (fmtLabel ? fmtLabel(v) : v) + '</button>';
-  });
-  return '<div class="fltBlock"><div class="fltLbl">' + label + '</div>' +
-         '<div class="chipRow">' + html + '</div></div>';
-}
-/* Chip thuộc tính hiển thị trong danh sách đổi mẫu */
+/* Chip thuộc tính hiển thị trong danh sách đổi mẫu — theo đúng ngành hàng */
 function attrChip(p){
   var out='';
   if(p.inch)  out+='<span class="aChip">'+p.inch+'"</span>';
   if(p.panel) out+='<span class="aChip hi">'+p.panel+'</span>';
   if(p.res)   out+='<span class="aChip">'+p.res+'</span>';
+  if(p.lit)   out+='<span class="aChip hi">'+p.lit+' lít</span>';
+  if(p.kg)    out+='<span class="aChip hi">'+p.kg+(p.kgSay?'/'+p.kgSay:'')+' kg</span>';
+  if(p.btu)   out+='<span class="aChip hi">'+p.btu.toLocaleString('vi-VN')+' BTU</span>';
+  if(p.door)  out+='<span class="aChip">'+p.door+'</span>';
+  if(p.wtype) out+='<span class="aChip">'+p.wtype+'</span>';
+  if(p.inv)   out+='<span class="aChip">Inverter</span>';
   return out;
 }
 function setSwapQuick(lo,hi){
@@ -2930,13 +3300,7 @@ function onSwap(){
     openSwap.lo=a;openSwap.hi=b;
     const v=document.getElementById('swVal');
     if(v)v.textContent=fmt(a)+'  –  '+fmt(b);
-    const g=openSwap.g, br=openSwap.brand||'all';
-    let list=DB.filter(p=>p.nhom===g&&p.gia>=a&&p.gia<=b);
-    if(br!=='all')              list=list.filter(p=>(p.hang||'Khác')===br);
-    if(openSwap.inch!=='all')   list=list.filter(p=>p.inch===openSwap.inch);
-    if(openSwap.panel!=='all')  list=list.filter(p=>p.panel===openSwap.panel);
-    if(openSwap.res!=='all')    list=list.filter(p=>p.res===openSwap.res);
-    if(openSwap.voice)          list=list.filter(p=>p.voice);
+    let list=swapMatches().filter(p=>p.gia>=a&&p.gia<=b);
     list.sort((x,y)=>(y.ton-x.ton)||(x.gia-y.gia));
     const nStock=list.filter(p=>p.ton===1).length;
 
@@ -2946,7 +3310,8 @@ function onSwap(){
       el.classList.toggle('none',!list.length);
     }
     /* Mã nào nằm ngoài khoảng phù hợp với phòng thì báo cho khách biết */
-    const roomId=openSwap.k.split(':')[0];
+    const g=openSwap.g;
+    const roomId=openSwap.room;
     const sp=idealSpec(g,roomId);
     const okSpec=p=>!sp||!p[sp.key]||(p[sp.key]>=sp.min&&p[sp.key]<=sp.max);
 
@@ -2970,9 +3335,72 @@ function onSwap(){
     const lh=document.getElementById('swList');
     if(lh)lh.innerHTML=list.length?html:
       '<div class="swapEmpty">Không có mã nào khớp bộ lọc.<br>'+
-      'Thử chọn hãng khác hoặc kéo rộng khoảng giá.</div>';
+      'Thử bỏ bớt tiêu chí hoặc kéo rộng khoảng giá.</div>';
   });
 }
+/* ===== ĐÓNG / MỞ CÁC KHỐI Ở MÀN KẾT QUẢ ===== */
+/* Đóng mở một phòng — thao tác trực tiếp trên DOM cho mượt, không dựng lại cả trang */
+function toggleRoomBox(rid){
+  if(!S.openRooms) S.openRooms=new Set();
+  const el=document.querySelector('.roomMod[data-room="'+rid+'"]');
+  if(S.openRooms.has(rid)){
+    S.openRooms.delete(rid);
+    if(openSwap && roomOfSlot(openSwap.k)===rid) closeSwap();
+  } else S.openRooms.add(rid);
+  if(el){
+    const op=S.openRooms.has(rid);
+    el.classList.toggle('open',op);
+    const h=el.querySelector('.roomModHead');
+    if(h)h.setAttribute('aria-expanded',op?'true':'false');
+  }
+}
+/* Mở phần chi tiết của một thẻ sản phẩm */
+function toggleCard(k){
+  const el=document.getElementById('pc-'+k.replace(':','-'));
+  if(S.openCards.has(k)){
+    S.openCards.delete(k);
+    if(openSwap && openSwap.k===k) closeSwap();
+  } else S.openCards.add(k);
+  if(el) el.classList.toggle('open',S.openCards.has(k));
+}
+/* Danh sách thiết bị theo phòng trong bảng tổng quan (chỉ gập trên điện thoại) */
+function toggleRms(){
+  const el=document.getElementById('sideSum');
+  if(!el)return;
+  const on=el.classList.toggle('rmsOpen');
+  const t=document.getElementById('rmsTglTxt');
+  if(t)t.textContent = on ? 'Ẩn danh sách theo phòng' : 'Xem thiết bị theo phòng';
+}
+/* Bấm thanh rút gọn ở đầu trang thì quay lại khối tổng kết */
+function scrollToSummary(){
+  const el=document.getElementById('sideSum');
+  if(el&&el.scrollIntoView) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+/* Cuộn xuống thì header và thanh KPI gộp lại còn một hàng.
+   Header thấp đi làm nội dung phía dưới bị kéo lên, nên bù lại đúng
+   phần chiều cao đã mất. Hai ngưỡng khác nhau (200 / 60) để tránh
+   trạng thái nhấp nháy đóng–mở liên tục quanh một mốc duy nhất.   */
+var _hdrMini=false;
+function onScrollHeader(){
+  if(!document.body.classList.contains('onResult')){
+    if(_hdrMini) setHdrMini(false);
+    return;
+  }
+  const y=window.scrollY;
+  if(!_hdrMini && y>200) setHdrMini(true);
+  else if(_hdrMini && y<60) setHdrMini(false);
+}
+function setHdrMini(on){
+  const h=document.querySelector('header');
+  if(!h)return;
+  const before=h.offsetHeight;
+  _hdrMini=on;
+  h.classList.toggle('mini',on);
+  const d=before-h.offsetHeight;
+  if(d) window.scrollBy(0,-d);
+}
+window.addEventListener('scroll', onScrollHeader, {passive:true});
+
 function chooseModel(k,model){
   S.pinned[k]=model;
   openSwap=null;
